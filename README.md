@@ -1,2 +1,2 @@
 # hoggorm
-Multivariate explariative statistics in Python
+Exploratory multivariate statistics in Python
