@@ -15,6 +15,7 @@ Date: 20.06.2009
 import numpy
 import numpy.linalg
 
+
 def RVcoeff(dataList):
     """
     This function computes the Rv coefficients between two matrices at the
@@ -49,7 +50,6 @@ def RVcoeff(dataList):
         C[index[0], index[1]] = Rv
 
     return C
-
 
 
 
@@ -93,86 +93,6 @@ def RV2coeff(dataList):
 
 
 
-def RV2coeff_VEC(dataList):
-    """
-    This function computes the RV2 coefficients between two matrices at the
-    time. The RV2 coefficient is a modified version of the RV coefficient
-    with values -1 <= RV2 <= 1. RV2 is independent of object and variable
-    size.
-
-    REF: A.K. Smilde, et al. Bioinformatics (2009) Vol 25, no 3, 401-405
-
-    <dataList>: type list holding rectangular matrices (no need for equal dim)
-    """
-
-    # Then compute the scalar product matrices for each data set X
-    scalArrList = []
-
-    for arr in dataList:
-        scalArr = numpy.dot(arr, numpy.transpose(arr))
-        diego = numpy.diag(numpy.diag(scalArr))
-        scalArrMod = scalArr - diego
-        scalArrList.append(scalArrMod)
-
-
-    # Now compute the 'between study cosine matrix' C
-    C = numpy.zeros((len(dataList), len(dataList)), float)
-
-
-    for index, element in numpy.ndenumerate(C):
-        nom1 = numpy.ndarray.flatten(scalArrList[index[0]], 'F')
-        nom2 = numpy.ndarray.flatten(scalArrList[index[1]], 'F')        
-        nom = numpy.dot(numpy.transpose(nom1), nom2)
-        
-        denom1 = numpy.dot(numpy.transpose(nom1), nom1)
-        denom2 = numpy.dot(numpy.transpose(nom2), nom2)
-
-        Rv = nom / numpy.sqrt(numpy.dot(denom1, denom2))
-        C[index[0], index[1]] = Rv
-
-    return C
-
-
-
-def normProcrSim(dataList):
-    """
-    This function computes the normalised Procrustes similarity between two 
-    matrices at the time. The results are stored in a matrix described as 
-    'between cosine matrix' and is labled C.
-
-    REF: E. Qannari, H. MacFie, P. Courcoux
-         Food Quality and Preference 10 (1999) 17-21
-
-    <dataList>: type list holding rectangular matrices (no need for equal dim)
-    """
-
-    # First centre matrices column-wise
-    centArrList = []
-    for arr in dataList:
-        colMeans = numpy.mean(arr, axis=0)
-        centArr = arr - colMeans
-        centArrList.append(centArr)
-
-
-    # Now compute the 'between study cosine matrix' C
-    C = numpy.zeros((len(dataList), len(dataList)), float)
-
-
-    for index, element in numpy.ndenumerate(C):
-        nom = numpy.trace(numpy.dot(numpy.transpose(centArrList[index[0]]), \
-            centArrList[index[1]]))
-        denom1 = numpy.trace(numpy.dot(numpy.transpose(centArrList[index[0]]), \
-            centArrList[index[0]]))
-        denom2 = numpy.trace(numpy.dot(numpy.transpose(centArrList[index[1]]), \
-            centArrList[index[1]]))
-        NPS = nom / numpy.sqrt(denom1) * numpy.sqrt(denom2)
-        C[index[0], index[1]] = NPS
-
-    return C
-
-
-
-
 def ortho(arr1, arr2):
     """
     This function orthogonalises arr1 with respect to arr2. The function then
@@ -194,25 +114,6 @@ def ortho(arr1, arr2):
     return arr1_orth
     
     
-    
-def centre_old(Y):
-    """
-    This function centers an array column-wise.
-    """
-
-    # First make a copy of input matrix and make it a matrix with float
-    # elements
-    X = numpy.array(Y, float)
-    numberOfObjects, numberOfVariables = numpy.shape(X)
-    variableMean = numpy.average(X, 0)
-
-    # Now center by subtracting column means.
-    for row in range(0, numberOfObjects):
-        X[row] = X[row] - variableMean
-
-    return X
-
-
 
 def centre(Y, axis=0):
     """
@@ -281,7 +182,6 @@ def STD(Y, selection):
         stdTransX = centTransX / transColSTD
         stdX = numpy.transpose(stdTransX)
         
-
     return stdX
 
 
@@ -298,61 +198,3 @@ def matrixRank(arr, tol=1e-8):
     s = numpy.linalg.svd(arr, compute_uv=0)
     return numpy.sum(numpy.where(s>tol, 1, 0))
 
-    
-
-
-class arrayIO:
-    def __init__(self, fileName):
-        """
-        This class reads data from text files. First row are variable names
-        and first row are object names. 
-        
-        INPUT:
-        <fileName>: type string
-        """
-        
-        # File is opened using name that is given by
-        # the file-open dialog in the main file.
-        dataFile = open(fileName, 'r')
-
-
-        # All the data is read into a list.
-        allText = dataFile.readlines()
-        
-        
-        # Initiate lists that will hold variable names, object names and data. 
-        varNames = []
-        objNames = []
-        data = []
-        
-        
-        # Loop through allText and extract variable names, object names and
-        # data. 
-        for ind, row in enumerate(allText):
-            
-            # Get variable names from first row
-            if ind == 0:
-                firstRowList = row.split('\t')
-                firstRowList[-1] = firstRowList[-1][:-1]
-                varNames = firstRowList[1:]
-            
-            # Split remaining rows into object names and data
-            else:
-                rowObjectsList = row.split('\t')
-                objNames.append(rowObjectsList[0])
-                rowObjectsList.pop(0)
-                
-                # Convert strings into floats
-                floatList = []
-                for item in rowObjectsList:
-                    floatList.append(float(item))
-                    
-                data.append(floatList)
-            
-        
-        # Make variable names, object names and data available as 
-        # class variables.
-        self.varNames = varNames[:]
-        self.objNames = objNames[:]
-        self.data = numpy.array(data)
-        
