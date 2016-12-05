@@ -1,20 +1,8 @@
 # -*- coding: utf-8 -*-
+""" PCA module
+
+Principal Component Analysis implemented using NIPALS algorithm.
 """
-Created on Thu May 15 16:36:05 2014
-Author: Josef Perktold
-License: BSD-3
-"""
-
-"""
-Created on Fri Jun 21 13:10:44 2011
-
-__author__:  Oliver Tomic, <olivertomic@yahoo.com>
-__version__: 1.0.0
-__date__:    28.10.2016
-
-"""
-
-
 
 # Import necessary modules
 import numpy as np

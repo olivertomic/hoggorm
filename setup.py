@@ -1,17 +1,27 @@
 # -*- coding: utf-8 -*-
 
+import os
+import re
 from setuptools import setup, find_packages
 
 
-with open('README.md') as f:
-    readme = f.read()
+def get_version():
+    VERSIONFILE = os.path.join('hoggorm', 'version.py')
+    initfile_lines = open(VERSIONFILE, 'rt').readlines()
+    VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
+    for line in initfile_lines:
+        mo = re.search(VSRE, line, re.M)
+        if mo:
+            return mo.group(1)
+    raise RuntimeError('Unable to find version string in %s.' % (VERSIONFILE,))
 
-with open('LICENSE') as f:
-    license = f.read()
+
+with open('README.rst') as f:
+    readme = f.read()
 
 setup(
     name='hoggorm',
-    version='0.1.0',
+    version=get_version(),
 
     description='Package for explorative multivariate statistics',
     long_description=readme,
@@ -26,7 +36,7 @@ setup(
     maintainer='Thomas Graff',
     maintainer_email='graff.thomas@gmail.com',
 
-    license=license,
+    license='BSD License',
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Jul 11 11:02:42 2011
+"""PLSR module
 
+Partial Least Squares Regression
 """
 
 # Import necessary modules

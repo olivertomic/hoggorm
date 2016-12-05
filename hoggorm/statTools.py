@@ -1,17 +1,9 @@
 # -*- coding: utf-8 -*-
+""" StatTools module
+
+A collection of tools for data analysis
 """
-statTools.py
 
-Info: A collection of tools for data analysis
-
-Author: Oliver Tomic
-
-Date: 20.06.2009
-
-@update 01: 27.01.2011
-- Added function matrixRank
-
-"""
 import numpy
 import numpy.linalg
 

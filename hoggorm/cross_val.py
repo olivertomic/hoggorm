@@ -1,5 +1,4 @@
-"""
-Utilities for cross validation.
+""" Utilities for cross validation.
 
 taken from scikits.learn
 

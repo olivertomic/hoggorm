@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Fri Jun 21 13:10:44 2011
+"""PCR module
 
-__author__:  Oliver Tomic, <olivertomic@yahoo.com>
-__version__: 1.0.0
-__date__:    12.09.2016
-
+Principal Component Regression implemented using NIPALS algorithm for PCA part and MLR for regression part
 """
 
 # Import necessary modules
