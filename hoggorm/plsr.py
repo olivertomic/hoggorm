@@ -2263,9 +2263,7 @@ class nipalsPLS2:
         self.settingsDict['Ystand'] = self.Ystand
         self.settingsDict['analysed X'] = self.arrX
         self.settingsDict['analysed Y'] = self.arrY
-        self.print(self.cvType)
         self.settingsDict['cv type'] = self.cvType
-        
         return self.settingsDict
 
     
@@ -2892,8 +2890,4 @@ class nipalsPLS2:
         sets.
         """
         return self.cvTrainAndTestDataList
-    
-
-
-
-#            
+#
