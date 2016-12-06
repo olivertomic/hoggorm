@@ -68,6 +68,6 @@ setup(
 
     packages=find_packages(exclude=('tests', 'docs')),
     install_requires=[
-        'Numpy>=1.10',
+        'numpy',
     ],
 )
