@@ -114,9 +114,9 @@ def centre(Y, axis=0):
     Examples:
     --------
     
-    centData = statTools.centre(data, axis=0) centres column-wise
+    centData = statTools.centre(data, axis=0) # Column centred
     
-    centData = statTools.centre(datak axis=1) centres row-wise
+    centData = statTools.centre(data, axis=1) # Row centred
     """
 
     # First make a copy of input matrix and make it a matrix with float
@@ -140,24 +140,18 @@ def centre(Y, axis=0):
 
 
 
-def STD(Y, selection):
+def standardise(Y, selection):
     """
     This function standardises the input array either 
     column-wise (selection = 0) or row-wise (selection = 1).
     """
     # First make a copy of input array
-    #X = array(Y, float)
     X = Y.copy()
-    numberOfObjects, numberOfVariables = numpy.shape(X)
-    colMeans = numpy.mean(X, axis=0)
-    #rowMeans = numpy.mean(X, axis=1)
     
-    colSTD = numpy.std(X, axis=0, ddof=1)
-    #rowSTD = numpy.std(X, axis=1, ddof=1)
-
-
     # Standardisation column-wise
     if selection == 0:
+        colMeans = numpy.mean(X, axis=0)
+        colSTD = numpy.std(X, axis=0, ddof=1)
         centX = X - colMeans
         stdX = centX / colSTD
 
@@ -169,7 +163,6 @@ def STD(Y, selection):
         transX = numpy.transpose(X)
         transColMeans = numpy.mean(transX, axis=0)
         transColSTD = numpy.mean(transX, axis=0)
-        
         centTransX = transX - transColMeans
         stdTransX = centTransX / transColSTD
         stdX = numpy.transpose(stdTransX)
