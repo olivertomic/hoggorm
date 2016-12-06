@@ -1,13 +1,20 @@
 # -*- coding: utf-8 -*-
+"""A setuptools based setup module.
+See:
+https://packaging.python.org/en/latest/distributing.html
+https://github.com/pypa/sampleproject
+"""
 
-import os
 import re
+from os import path
+# To use a consistent encoding
+from codecs import open
 from setuptools import setup, find_packages
 
 
 def get_version():
-    VERSIONFILE = os.path.join('hoggorm', 'version.py')
-    initfile_lines = open(VERSIONFILE, 'rt').readlines()
+    VERSIONFILE = path.join('hoggorm', 'version.py')
+    initfile_lines = open(VERSIONFILE, 'rt', encoding='utf-8').readlines()
     VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
     for line in initfile_lines:
         mo = re.search(VSRE, line, re.M)
@@ -16,8 +23,9 @@ def get_version():
     raise RuntimeError('Unable to find version string in %s.' % (VERSIONFILE,))
 
 
-with open('README.rst') as f:
+with open('README.rst', encoding='utf-8') as f:
     readme = f.read()
+
 
 setup(
     name='hoggorm',
@@ -33,8 +41,8 @@ setup(
     author_email='olivertomic@zoho.com',
 
     # Maintainer details
-    maintainer='Thomas Graff',
-    maintainer_email='graff.thomas@gmail.com',
+    #maintainer='Thomas Graff',
+    #maintainer_email='graff.thomas@gmail.com',
 
     license='BSD License',
 
