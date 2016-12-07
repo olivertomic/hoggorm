@@ -14,7 +14,7 @@ from setuptools import setup, find_packages
 
 def get_version():
     VERSIONFILE = path.join('hoggorm', 'version.py')
-    initfile_lines = open(VERSIONFILE, 'rt', encoding='utf-8').readlines()
+    initfile_lines = open(VERSIONFILE, 'r', encoding='utf-8').readlines()
     VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
     for line in initfile_lines:
         mo = re.search(VSRE, line, re.M)
@@ -23,7 +23,7 @@ def get_version():
     raise RuntimeError('Unable to find version string in %s.' % (VERSIONFILE,))
 
 
-with open('README.rst', encoding='utf-8') as f:
+with open('README.rst', 'r', encoding='utf-8') as f:
     readme = f.read()
 
 

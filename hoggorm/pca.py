@@ -7,8 +7,8 @@ Principal Component Analysis implemented using NIPALS algorithm.
 # Import necessary modules
 import numpy as np
 import numpy.linalg as npla
-import statTools as st
-import cross_val as cv
+import hoggorm.statTools as st
+import hoggorm.cross_val as cv
 
 
 

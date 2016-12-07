@@ -6,9 +6,9 @@ Partial Least Squares Regression
 
 # Import necessary modules
 import numpy as np
-import statTools as st
 import numpy.linalg as npla
-import cross_val as cv
+import hoggorm.statTools as st
+import hoggorm.cross_val as cv
 
 
 
