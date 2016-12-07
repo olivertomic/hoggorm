@@ -6,21 +6,27 @@ Hoggorm is a Python package for explorative multivariate statistics in Python. I
 Unlike scikit-learn, which an excellent python machine learning package that focuses on classification and predicition, hoggorm rather aims at understanding and interpretation of the variance in the data. 
 
 
+Installation
+------------
+
+.. code-block:: bash
+
+	pip install hoggorm
+
+
 Requirements
 ------------
 
 - numpy
 
 
-Installation
-------------
-
-.. code-block:: bash
-
-    pip install hoggorm
-
-
 Documentation
 -------------
 
 Coming.
+
+
+Latest changes
+--------------
+
+None.
