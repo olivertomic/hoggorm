@@ -11,7 +11,7 @@ It contains PCA (principal component analysis), PCR (principal component regress
 
 from .version import __version__
 
-from .statTools import (RVcoeff, RV2coeff, ortho, centre, STD, matrixRank)
+from .statTools import (RVcoeff, RV2coeff, ortho, centre, standardise, matrixRank)
 from .pca import nipalsPCA
 from .pcr import nipalsPCR
 from .plsr import (nipalsPLS1, nipalsPLS2)
