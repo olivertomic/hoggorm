@@ -14,10 +14,66 @@ import hoggorm.cross_val as cv
 
 class nipalsPLS1:
     """
-    GENERAL INFO
-    ------------
-    This class carries out Partial Least Squares Regression (PLS1) between a 
-    data matrix X and a vector y.
+    This class carries out partial least squares regression (PLSR) for two 
+    arrays using NIPALS algorithm. The y array is univariate, which is why
+    PLS1 is applied.
+    
+    
+    PARAMETERS
+    ----------
+    arrX : numpy array 
+        This is X in the PLS1 model. Number and order of objects (rows) must 
+        match those of vecy.
+    vecy : numpy array of shape (n x 1).  
+        This is y in the PLS1 model. Number and order of objects (rows)
+        must match those of arrX.
+    numComp : int
+        An integer that defines how many components are to be computed. If not
+        provided, the maximum possible number of components is used.
+    Xstand : boolean 
+        False : columns of arrX are mean centred (default)
+        True : columns of arrX are mean centred and devided by their own 
+            standard deviation
+    Ystand : boolean 
+        False : columns of arrY are mean centred (default)
+        True : columns of arrY are mean centred and devided by their own 
+            standard deviation
+    cvType : list
+        The list defines cross validation settings when computing the model. 
+        Choose cross validation type from the following:
+        
+        loo : leave one out / a.k.a. full cross validation (default)
+        cvType = ["loo"]
+        
+        KFold : leave out one fold or segment
+        cvType = ["KFold", numFolds]
+            numFolds: int 
+            number of folds or segments
+    
+            
+    RETURNS
+    -------
+    Returns PLS1 model. Use the attributes of class nipalsPLS1 to access    
+    computational results of PLS1 model.
+                           
+                           
+    EXAMPLES
+    --------
+    >>> import hoggorm as ho 
+    
+    >>> np.shape(my_X_data)
+    (14, 292)
+    
+    >>> np.shape(my_y_data)
+    (14, 1)
+    
+    >>> model = ho.nipalsPLS1(arrX=my_X_data, vecy=my_y_data, numComp=5)
+    >>> model = ho.nipalsPLS1(arrX=my_X_data, vecy=my_y_data)
+    >>> model = ho.nipalsPLS1(arrX=my_X_data, vecy=my_y_data, numComp=3, Ystand=True)
+    >>> model = ho.nipalsPLS1(arrX=my_X_data, vecy=my_y_data, Xstand=False, Ystand=True)
+    >>> model = ho.nipalsPLS1(arrX=my_X_data, vecy=my_y_data, cvType=["loo"])
+    >>> model = ho.nipalsPLS1(arrX=my_X_data, vecy=my_y_data, cvType=["lpo", 4])
+    
     """
     
     def __init__(self, arrX, vecy, **kargs):
@@ -35,13 +91,13 @@ class nipalsPLS1:
         # variables of X, whichever is smaller (maxPC). If number of  
         # PC's IS provided, then number is checked against maxPC and set to
         # maxPC if provided number is larger.
-        if 'numPC' not in kargs.keys():
+        if 'numComp' not in kargs.keys():
             self.numPC = min(np.shape(arrX))
         else:
-            if kargs['numPC'] > min(np.shape(arrX)):
+            if kargs['numComp'] > min(np.shape(arrX)):
                 self.numPC = min(np.shape(arrX))
             else:
-                self.numPC = kargs['numPC']
+                self.numPC = kargs['numComp']
         
         # Define X and y within class such that the data can be accessed from
         # all attributes in class.
@@ -382,9 +438,9 @@ class nipalsPLS1:
         
         
         # ---------------------------------------------------------------------
-        self.PRESSEarr = np.array(self.PRESSE_total_dict.values())
-        self.MSEEarr = np.array(self.MSEE_total_dict.values())
-        self.RMSEEarr = np.array(self.RMSEE_total_dict.values())
+        self.PRESSEarr = np.array(list(self.PRESSE_total_dict.values()))
+        self.MSEEarr = np.array(list(self.MSEE_total_dict.values()))
+        self.RMSEEarr = np.array(list(self.RMSEE_total_dict.values()))
         # ---------------------------------------------------------------------
 
 
@@ -653,9 +709,9 @@ class nipalsPLS1:
             # -----------------------------------------------------------------
             
             # -----------------------------------------------------------------
-            self.PRESSCVarr = np.array(self.PRESSCV_total_dict.values())
-            self.MSECVarr = np.array(self.MSECV_total_dict.values())
-            self.RMSECVarr = np.array(self.RMSECV_total_dict.values())
+            self.PRESSCVarr = np.array(list(self.PRESSCV_total_dict.values()))
+            self.MSECVarr = np.array(list(self.MSECV_total_dict.values()))
+            self.RMSECVarr = np.array(list(self.RMSECV_total_dict.values()))
             # -----------------------------------------------------------------
             
             
@@ -777,10 +833,10 @@ class nipalsPLS1:
         
     def modelSettings(self):
         """
-        Collect settings under which PLS1 was run.
+        Returns a dictionary holding settings under which PLS1 was run.
         """
         settingsDict = {}
-        settingsDict['numPC'] = self.numPC
+        settingsDict['numComp'] = self.numPC
         settingsDict['X'] = self.arrX_input
         settingsDict['y'] = self.vecy_input
         settingsDict['analysed X'] = self.arrX
@@ -794,21 +850,24 @@ class nipalsPLS1:
     
     def X_means(self):
         """
-        Returns an array holding the column means of X. 
+        Returns array holding the column means of X. 
         """
         return np.average(self.arrX_input, axis=0).reshape(1,-1)
     
     
     def X_scores(self):
         """
-        Returns an array holding X scores. First column for component 1, etc.
+        Returns array holding scores of array X. First column holds scores 
+        for component 1, second column holds scores for component 2, etc.
         """
         return self.arrT
     
     
     def X_loadings(self):
         """
-        Returns an array holding X loadings. First column for component 1, etc.
+        Returns array holding loadings of array X. Rows represent variables
+        and columns represent components. First column holds loadings for 
+        component 1, second column holds scores for component 2, etc.
         """
         return self.arrP
     
@@ -822,8 +881,9 @@ class nipalsPLS1:
     
     def X_corrLoadings(self):
         """
-        Returns array holding correlation loadings for X. First column holds
-        correlation loadings for PC1, second column holds scores for PC2, etc.
+        Returns array holding correlation loadings of array X. First column 
+        holds correlation loadings for component 1, second column holds 
+        correlation loadings for component 2, etc.
         """
 
         # Creates empty matrix for correlation loadings
@@ -831,7 +891,7 @@ class nipalsPLS1:
             np.shape(self.arrP)[0]), float)
         
         # Compute correlation loadings:
-        # For each PC in score matrix
+        # For each component in score matrix
         for PC in range(np.shape(self.arrT)[1]):
             PCscores = self.arrT[:, PC]
             
@@ -848,8 +908,8 @@ class nipalsPLS1:
     
     def X_residuals(self):
         """
-        Returns a dictionary holding the residual arrays E for array X after 
-        each computed PC. Dictionary key represents order of PC..
+        Returns a dictionary holding the residual arrays for array X after 
+        each computed component. Dictionary key represents order of component.
         """
         # Create empty dictionary that will hold residuals
         X_residualsDict = {}
@@ -863,138 +923,152 @@ class nipalsPLS1:
     
     def X_calExplVar(self):
         """
-        Returns list holding calibrated explained variance for each PC in 
-        array X.
+        Returns a list holding the calibrated explained variance for 
+        each component. First number in list is for component 1, second number 
+        for component 2, etc.
         """
         return self.XcalExplVarList
     
     
     def X_cumCalExplVar_indVar(self):
         """
-        Returns array holding cumulative calibrated explained variance of each 
-        variable in array X for. Cols represent variables in array X. Rows 
-        represent number of components.
+        Returns an array holding the cumulative calibrated explained variance
+        for each variable in X after each component. First row represents zero
+        components, second row represents one component, third row represents 
+        two components, etc. Columns represent variables.
         """
         return self.cumCalExplVarXarr_indVar
     
     
     def X_cumCalExplVar(self):
         """
-        Returns list holding cumulative calibrated explained variance in X.
+        Returns a list holding the cumulative calibrated explained variance 
+        for array X after each component. 
         """
         return self.XcumCalExplVarList
     
     
     def X_predCal(self):
         """
-        Returns dictionary holding arrays of predicted Xhat after each component 
-        from calibration. Dictionary key represents order of PC. Xhat is 
-        computed with Xhat = T*P'
+        Returns a dictionary holding the predicted arrays Xhat from 
+        calibration after each computed component. Dictionary key represents 
+        order of component.
         """
         return self.calXpredDict
     
     
     def X_PRESSE_indVar(self):
         """
-        Returns array holding PRESSE for each individual variable acquired
-        through calibration after each computed PC. First row is PRESSE for 
-        zero components, second row component 1, third row for component 2, etc.
+        Returns array holding PRESSE for each individual variable in X
+        acquired through calibration after each computed component. First row 
+        is PRESSE for zero components, second row for component 1, third row 
+        for component 2, etc.
         """
         return self.PRESSEarr_indVar_X
     
     
     def X_PRESSE(self):
         """
-        Returns an array holding PRESSE across all variables in array X acquired  
-        through calibration after each computed PC. First row is PRESSE for 
-        zero components, second row component 1, third row for component 2, etc.
+        Returns array holding PRESSE across all variables in X acquired  
+        through calibration after each computed component. First row is PRESSE 
+        for zero components, second row for component 1, third row for 
+        component 2, etc.
         """   
         return self.PRESSE_total_list_X
     
     
     def X_MSEE_indVar(self):
         """
-        Returns an arrary holding MSEE from calibration for each variable in 
-        array X. First row is MSEE for zero components, second row for 
-        component 1, etc.
+        Returns an array holding MSEE for each variable in array X acquired 
+        through calibration after each computed component. First row holds MSEE 
+        for zero components, second row for component 1, third row for 
+        component 2, etc.
         """
         return self.MSEEarr_indVar_X
     
     
     def X_MSEE(self):
         """
-        Returns an array holding MSEE across all variables in array X acquired 
-        through calibration after each computed PC. First row is MSEE for zero
-        components, second row component 1, third row for component 2, etc.
+        Returns an array holding MSEE across all variables in X acquired 
+        through calibration after each computed component. First row is MSEE 
+        for zero components, second row for component 1, third row for 
+        component 2, etc.
         """   
         return self.MSEE_total_list_X
     
     
     def X_RMSEE_indVar(self):
         """
-        Returns an arrary holding RMSEE from calibration for each variable in 
-        array X. First row is RMSEE for zero components, second row for 
-        component 1, etc.
+        Returns an array holding RMSEE for each variable in array X acquired 
+        through calibration after each component. First row holds RMSEE 
+        for zero components, second row for component 1, third row for 
+        component 2, etc.
         """
         return self.RMSEEarr_indVar_X
     
     
     def X_RMSEE(self):
         """
-        Returns an array holding RMSEE across all variables in array X acquired
-        through calibration after each computed PC. First row is RMSEE for zero
-        components, second row component 1, third row for component 2, etc.
+        Returns an array holding RMSEE across all variables in X acquired 
+        through calibration after each computed component. First row is RMSEE 
+        for zero components, second row for component 1, third row for 
+        component 2, etc.
         """   
         return self.RMSEE_total_list_X
     
     
     def X_valExplVar(self):
         """
-        Returns list holding validated explained variance for each PC in 
-        array X.
+        Returns a list holding the validated explained variance for X after
+        each component. First number in list is for component 1, second number 
+        for component 2, third number for component 3, etc.
         """
         return  self.XvalExplVarList
     
     
     def X_cumValExplVar_indVar(self):
         """
-        Returns array holding cumulative validated explained variance in 
-        array X for each variable. Columns represent variables in array X. Rows 
-        represent number of components.
+        Returns an array holding the cumulative validated explained variance
+        for each variable in X after each component. First row represents 
+        zero components, second row represents component 1, third row for 
+        compnent 2, etc. Columns represent variables.
         """
         return self.cumValExplVarXarr_indVar
     
     
     def X_cumValExplVar(self):
         """
-        Returns list holding cumulative validated explained variance in array X.
+        Returns a list holding the cumulative validated explained variance 
+        for array X after each component. First number represents zero 
+        components, second number represents component 1, etc. 
         """
         return self.XcumValExplVarList
     
     
     def X_predVal(self):
         """
-        Returns dictionary holding arrays of predicted Xhat after each  
-        component from cross validation. Dictionary key represents order of PC.
+        Returns dictionary holding arrays of predicted Xhat after each 
+        component from validation. Dictionary key represents order of 
+        component.
         """
         return self.valXpredDict
     
     
     def X_PRESSCV_indVar(self):
         """
-        Returns array holding PRESSCV for each individual variable in array X 
-        acquired through cross validation after each computed PC. First row is 
-        PRESSCV for zero components, second row component 1, third row for 
-        component 2, etc.
+        Returns array holding PRESSCV for each individual variable in X 
+        acquired through cross validation after each computed component. First 
+        row is PRESSCV for zero components, second row for component 1, third 
+        row for component 2, etc.
         """
         return self.PRESSCVarr_indVar_X
     
     
     def X_PRESSCV(self):
         """
-        Returns an array holding PRESSCV across all variables in array X 
-        acquired through cross validation after each computed PC. First row is 
-        PRESSCV for zero components, second row component 1, third row for 
+        Returns an array holding PRESSCV across all variables in X acquired  
+        through cross validation after each computed component. First row is 
+        PRESSCV for zero components, second row for component 1, third row for 
         component 2, etc.
         """   
         return self.PRESSCV_total_list_X
@@ -1002,82 +1076,93 @@ class nipalsPLS1:
     
     def X_MSECV_indVar(self):
         """
-        Returns an arrary holding MSECV from cross validation for each variable  
-        in array X. First row is MSECV for zero components, second row for 
-        component 1, etc.
+        Returns an arrary holding MSECV for each variable in X acquired through  
+        cross validation. First row is MSECV for zero components, second row 
+        for component 1, etc.
         """
         return self.MSECVarr_indVar_X
     
     
     def X_MSECV(self):
         """
-        Returns an array holding MSECV across all variables in array X acquired 
-        through cross validation after each computed PC. First row is MSECV for 
-        zero components, second row component 1, third row for component 2, etc.
+        Returns an array holding MSECV across all variables in X acquired 
+        through cross validation after each computed component. First row is 
+        MSECV for zero components, second row for component 1, third row for 
+        component 2, etc.
         """   
         return self.MSECV_total_list_X
     
     
     def X_RMSECV_indVar(self):
         """
-        Returns an arrary holding RMSECV from cross validation for each variable
-        in array X. First row is RMSECV for zero components, second row for 
-        component 1,  etc.
+        Returns an arrary holding RMSECV for each variable in X acquired 
+        through cross validation after each computed component. First row is 
+        RMSECV for zero components, second row for component 1, third row for 
+        component 2, etc.
         """
         return self.RMSECVarr_indVar_X
     
     
     def X_RMSECV(self):
         """
-        Returns an array holding RMSECV across all variables in array X acquired 
-        through cross validation after each computed PC. First row is RMSECV 
-        for zero components, second row component 1, third row for component 2, 
-        etc.
+        Returns an array holding RMSECV across all variables in X acquired 
+        through cross validation after each computed component. First row is 
+        RMSECV for zero components, second row for component 1, third row for 
+        component 2, etc.
         """   
         return self.RMSECV_total_list_X
 
         
-    def X_scores_predict(self, Xnew, numPC=1):
+    def X_scores_predict(self, Xnew, numComp=1):
         """
-        Return predicted yhat from new measurements X. 
+        Returns array of X scores from new X data using the exsisting model. 
+        Rows represent objects and columns represent components.
         """
-        # 'Module 7: Partial least squares regression I' - section 7.2 
-        # Prediction for PLS2.
+        # Collect all predicted y (1 x 1) from one row of Xnew (1 x k) in a list
+        XpredScoresList = []
         
-        # First pre-process new X data accordingly
-        if self.Xstand == True:
         
-            x_new = (Xnew - np.average(self.arrX_input, axis=0)) / \
-                    np.std(self.arrX_input, ddof=1)
+        # Loop through each row in Xnew
+        for X_rowInd in range(0, np.shape(Xnew)[0]):
         
-        else:
+            # 'Module 7: Partial least squares regression I' - section 7.2 
+            # Prediction for PLS2.
             
-            x_new = (Xnew - np.average(self.arrX_input, axis=0))
+            # First pre-process new X data accordingly
+            if self.Xstand == True:
+            
+                x_new = (Xnew[X_rowInd, :] - np.average(self.arrX_input, axis=0)) / \
+                        np.std(self.arrX_input, ddof=1)
+            
+            else:
                 
-                 
-        t_list = []
-        for ind in range(numPC):
-            
-            # Module 8: Prediction STEP 1
-            # ---------------------------
-            t = np.dot(x_new, self.arrW[:, ind]).reshape(-1, 1)
-            
-            # Module 8: Prediction STEP 2
-            # ---------------------------
-            p = self.arrP[:, ind].reshape(-1, 1)                    
-            x_old = x_new
-            x_new = x_old - np.dot(t, np.transpose(p))
-            
-            # Generate a vector t that gets longer by one element with
-            # each PC
-            t_list.append(list(t)[0])                   
+                x_new = (Xnew[X_rowInd, :] - np.average(self.arrX_input, axis=0))
+                    
+                     
+            t_list = []
+            for ind in range(numComp):
+                
+                # Module 8: Prediction STEP 1
+                # ---------------------------
+                t = np.dot(x_new, self.arrW[:, ind]).reshape(-1, 1)
+                
+                # Module 8: Prediction STEP 2
+                # ---------------------------
+                p = self.arrP[:, ind].reshape(-1, 1)                    
+                x_old = x_new
+                x_new = x_old - np.dot(t, np.transpose(p))
+                
+                # Generate a vector t that gets longer by one element with
+                # each PC
+                t_list.append(list(t)[0])
+            XpredScoresList.append(t_list)            
 
-        return np.array(t_list)    
+        return np.transpose(np.hstack(XpredScoresList))    
         
     
     def Y_means(self):
         """
-        Returns an array holding the column means of array Y. 
+        Returns an array holding the mean of vector y. 
         """
         return np.average(self.vecy_input)
     
@@ -1086,22 +1171,24 @@ class nipalsPLS1:
         """
         Returns scores of array Y (NOT IMPLEMENTED)
         """
+        print("Not implemented")
         return None
     
     
     def Y_loadings(self):
         """
-        Returns an array holding loadings of array Y. First column for 
-        component 1, etc.
+        Returns an array holding loadings of vector y. Columns represent 
+        components. First column for component 1, second columns for 
+        component 2, etc.
         """
         return self.arrQ
     
     
     def Y_corrLoadings(self):
         """
-        Returns array holding correlation loadings of array Y. First column 
-        holds correlation loadings for PC1, second column holds scores for PC2, 
-        etc.
+        Returns an array holding correlation loadings of vector y. Columns 
+        represent components. First column for component 1, second columns for 
+        component 2, etc.
         """
 
         # Creates empty matrix for correlation loadings
@@ -1126,7 +1213,7 @@ class nipalsPLS1:
     
     def Y_residuals(self):
         """
-        Returns list of arrays holding residuals F of array Y after each 
+        Returns list of arrays holding residuals of vector y after each 
         component.
         """
         Y_residualsDict = {}
@@ -1137,41 +1224,42 @@ class nipalsPLS1:
     
     def Y_calExplVar(self):
         """
-        Returns list holding calibrated explained variance for each PC in 
-        array Y.
+        Returns list holding calibrated explained variance for each component 
+        in vector y.
         """
         return self.YcalExplVarList
     
     
     def Y_cumCalExplVar(self):
         """
-        Returns list holding cumulative calibrated explained variance in 
-        array Y.
+        Returns a list holding the calibrated explained variance for 
+        each component. First number represent zero components, second number 
+        one component, etc.
         """
         return self.YcumCalExplVarList
     
     
     def Y_predCal(self):
         """
-        Returns dictionary holding arrays of predicted Yhat after each component 
-        from calibration. Dictionary key represents order of PC.
+        Returns dictionary holding arrays of predicted yhat after each component 
+        from calibration. Dictionary key represents order of components.
         """
         return self.calYpredDict
     
     
     def Y_PRESSE(self):
         """
-        Returns an array holding PRESSE across all variables in array Y acquired  
-        through calibration after each computed PC. First row is PRESSE for zero
-        components, second row component 1, third row for component 2, etc.
+        Returns an array holding PRESSE for y acquired through calibration 
+        after each computed component. First row is PRESSE for zero components, 
+        second row component 1, third row for component 2, etc.
         """   
         return self.PRESSEarr
     
     
     def Y_MSEE(self):
         """
-        Returns an array holding MSEE across all variables in array Y acquired 
-        through calibration after each computed PC. First row is MSEE for zero
+        Returns an array holding MSEE of vector y acquired through 
+        calibration after each component. First row holds MSEE for zero
         components, second row component 1, third row for component 2, etc.
         """   
         return self.MSEEarr
@@ -1179,8 +1267,8 @@ class nipalsPLS1:
     
     def Y_RMSEE(self):
         """
-        Returns an array holding RMSEE across all variables in array Y acquired  
-        through calibration after each computed PC. First row is RMSEE for zero
+        Returns an array holding RMSEE of vector y acquired through calibration  
+        after each computed component. First row is RMSEE for zero
         components, second row component 1, third row for component 2, etc.
         """   
         return self.RMSEEarr
@@ -1188,8 +1276,8 @@ class nipalsPLS1:
     
     def Y_valExplVar(self):
         """
-        Returns list holding validated explained variance for each PC in 
-        array Y.
+        Returns list holding validated explained variance for each component in 
+        vector y.
         """
         return  self.YvalExplVarList
     
@@ -1197,33 +1285,33 @@ class nipalsPLS1:
     def Y_cumValExplVar(self):
         """
         Returns list holding cumulative validated explained variance in 
-        array Y.
+        vector y.
         """
         return self.YcumValExplVarList
     
     
     def Y_predVal(self):
         """
-        Returns dictionary holding arrays of predicted Yhat after each  
-        component from cross validation. Dictionary key represents order of PC.
+        Returns dictionary holding arrays of predicted yhat after each 
+        component from validation. Dictionary key represents order of component.
         """
         return self.valYpredDict
     
     
     def Y_PRESSCV(self):
         """
-        Returns an array holding PRESSCV across all variables in array Y 
-        acquired through cross validation after each computed PC. First row is 
-        PRESSCV for zero components, second row component 1, third row for 
-        component 2, etc.
+        Returns an array holding PRESSECV for Y acquired through cross 
+        validation after each computed component. First row is PRESSECV for 
+        zero components, second row component 1, third row for component 2, 
+        etc.
         """   
         return self.PRESSCVarr
     
     
     def Y_MSECV(self):
         """
-        Returns an array holding MSECV across all variables in array Y acquired  
-        through cross validation after each computed PC. First row is MSECV for 
+        Returns an array holding MSECV of vector y acquired  through cross 
+        validation after each computed component. First row is MSECV for 
         zero components, second row component 1, third row for component 2, etc.
         """   
         return self.MSECVarr
@@ -1231,71 +1319,89 @@ class nipalsPLS1:
     
     def Y_RMSECV(self):
         """
-        Returns an array holding RMSECV across all variables in array Y acquired  
-        through cross validation after each computed PC. First row is RMSECV for 
-        zero components, second row component 1, third row for component 2, etc.
+        Returns an array holding RMSECV for vector y acquired through cross 
+        validation after each computed component. First row is RMSECV for zero 
+        components, second row component 1, third row for component 2, etc.
         """   
         return self.RMSECVarr
     
     
-    def Y_predict(self, Xnew, numPC=1):
+    def Y_predict(self, Xnew, numComp=1):
         """
         Return predicted yhat from new measurements X. 
         """
-        # 'Module 7: Partial least squares regression I' - section 7.2 
-        # Prediction for PLS2.
+        # Collect all predicted y (1 x 1) from one row of Xnew (1 x k) in a list
+        ypredList = []
         
-        # First pre-process new X data accordingly
-        if self.Xstand == True:
         
-            x_new = (Xnew - np.average(self.arrX_input, axis=0)) / \
-                    np.std(self.arrX_input, ddof=1)
-        
-        else:
-            
-            x_new = (Xnew - np.average(self.arrX_input, axis=0))
-                
-              
-        t_list = []
-        for ind in range(numPC):
-            
-            # Module 8: Prediction STEP 1
-            # ---------------------------
-            t = np.dot(x_new, self.arrW[:, ind]).reshape(-1, 1)
-            
-            # Module 8: Prediction STEP 2
-            # ---------------------------
-            p = self.arrP[:, ind].reshape(-1, 1)                    
-            x_old = x_new
-            x_new = x_old - np.dot(t, np.transpose(p))
-            
-            # Generate a vector t that gets longer by one element with
-            # each PC
-            t_list.append(list(t)[0])                   
-            t_vec = np.transpose(np.array(t_list))
+        # Loop through each row in Xnew
+        for X_rowInd in range(0, np.shape(Xnew)[0]):
 
-            # Give vector y_train_mean the correct dimension in 
-            # numpy, so matrix multiplication will be possible
-            # i.e from dimension (x,) to (1,x)                    
-            ytm = np.average(self.vecy_input).reshape(1, -1)
-            
-            # Get relevant part of Q for specific number of PC's
-            part_arrQ = self.arrQ[0, 0:ind+1]
-            
-            # Module 8: Prediction STEP 3
-            # ---------------------------
-            # First compute yhat                                      
-            if self.ystand == True:
-                tCQ = np.dot(t_vec, part_arrQ) * \
-                        np.std(self.vecy_input, ddof=1).reshape(1, -1)
-            else:
-                tCQ = np.dot(t_vec, part_arrQ)
-            
-            yhat = ytm + tCQ
-            
-        return yhat
-            
         
+            # 'Module 7: Partial least squares regression I' - section 7.2 
+            # Prediction for PLS2.
+            
+            # First pre-process new X data accordingly
+            if self.Xstand == True:
+            
+                x_new = (Xnew[X_rowInd, :] - np.average(self.arrX_input, axis=0)) / \
+                        np.std(self.arrX_input, ddof=1)
+            
+            else:
+                
+                x_new = (Xnew[X_rowInd, :] - np.average(self.arrX_input, axis=0))
+                    
+                  
+            t_list = []
+            for ind in range(numComp):
+                
+                # Module 8: Prediction STEP 1
+                # ---------------------------
+                t = np.dot(x_new, self.arrW[:, ind]).reshape(-1, 1)
+                
+                # Module 8: Prediction STEP 2
+                # ---------------------------
+                p = self.arrP[:, ind].reshape(-1, 1)                    
+                x_old = x_new
+                x_new = x_old - np.dot(t, np.transpose(p))
+                
+                # Generate a vector t that gets longer by one element with
+                # each PC
+                t_list.append(list(t)[0])                   
+                t_vec = np.transpose(np.array(t_list))
+    
+                # Give vector y_train_mean the correct dimension in 
+                # numpy, so matrix multiplication will be possible
+                # i.e from dimension (x,) to (1,x)                    
+                ytm = np.average(self.vecy_input).reshape(1, -1)
+                
+                # Get relevant part of Q for specific number of PC's
+                part_arrQ = self.arrQ[0, 0:ind+1]
+                
+                # Module 8: Prediction STEP 3
+                # ---------------------------
+                # First compute yhat                                      
+                if self.ystand == True:
+                    tCQ = np.dot(t_vec, part_arrQ) * \
+                            np.std(self.vecy_input, ddof=1).reshape(1, -1)
+                else:
+                    tCQ = np.dot(t_vec, part_arrQ)
+                
+                yhat = ytm + tCQ
+            
+            ypredList.append(yhat)
+            
+        return np.vstack(ypredList)
+
+        
+    def cvTrainAndTestData(self):
+        """
+        Returns a list consisting of dictionaries holding training and test 
+        sets.
+        """
+        return self.cvTrainAndTestDataList
+    
+
     def corrLoadingsEllipses(self):
         """
         Returns coordinates of ellipses that represent 50% and 100% expl. 
@@ -1322,24 +1428,70 @@ class nipalsPLS1:
         ellipses['y100perc'] = ycords100perc
         
         return ellipses
-    
-    
-    def cvTrainAndTestData(self):
-        """
-        Returns a list consisting of dictionaries holding training and test 
-        sets.
-        """
-        return self.cvTrainAndTestDataList
-    
 
-
-
+        
+        
 class nipalsPLS2:
     """
-    GENERAL INFO
-    ------------
-    This class carries out Partial Least Squares Regression (PLS2) between the 
-    two data matrices X and Y.
+    This class carries out partial least squares regression (PLSR) for two 
+    arrays using NIPALS algorithm. The Y array is multivariate, which is why
+    PLS2 is applied.
+        
+    
+    PARAMETERS
+    ----------
+    arrX : numpy array 
+        This is X in the PLS2 model. Number and order of objects (rows) must 
+        match those of vecy.
+    arrY : numpy array
+        This is Y in the PLS2 model. Number and order of objects (rows) must 
+        match those of arrX.
+    numComp : int
+        An integer that defines how many components are to be computed. If not
+        provided, the maximum possible number of components is used.
+    Xstand : boolean 
+        False : columns of arrX are mean centred prior to PCR (default)
+        True : columns of arrX are mean centred and devided by their own 
+            standard deviation.
+    Ystand : boolean 
+        False : columns of arrY are mean centred (default)
+        True : columns of arrY are mean centred and devided by their own 
+            standard deviation.
+    cvType : list
+        The list defines cross validation settings when computing the model.
+        Choose cross validation type from the following:
+        
+        loo : leave one out / a.k.a. full cross validation (default)
+        cvType = ["loo"]
+        
+        KFold : leave out one fold or segment
+        cvType = ["KFold", numFolds]
+            numFolds: int 
+            number of folds or segments 
+
+    
+    RETURNS
+    -------
+    Returns PLS2 model. Use the attributes of class nipalsPLS2 to access    
+    computational results of PLS2 model.
+                           
+                           
+    EXAMPLES
+    --------
+    >>> import hoggorm as ho 
+    
+    >>> np.shape(my_X_data)
+    (14, 292)
+    
+    >>> np.shape(my_Y_data)
+    (14, 5)
+       
+    >>> model = ho.nipalsPLS2(arrX=my_X_data, arrY=my_Y_data, numComp=5)
+    >>> model = ho.nipalsPLS2(arrX=my_X_data, arrY=my_Y_data)
+    >>> model = ho.nipalsPLS2(arrX=my_X_data, arrY=my_Y_data, numComp=3, Ystand=True)
+    >>> model = ho.nipalsPLS2(arrX=my_X_data, arrY=my_Y_data, Xstand=False, Ystand=True)
+    >>> model = ho.nipalsPLS2(arrX=my_X_data, arrY=my_Y_data, cvType=["loo"])
+    >>> model = ho.nipalsPLS2(arrX=my_X_data, arrY=my_Y_data, cvType=["lpo", 4])
     """
     
     def __init__(self, arrX, arrY, **kargs):
@@ -1358,14 +1510,14 @@ class nipalsPLS2:
         # variables of X whichever is smallest (numPC). If number of  
         # PC's IS provided, then number is checked against maxPC and set to
         # numPC if provided number is larger.
-        if 'numPC' not in kargs.keys(): 
+        if 'numComp' not in kargs.keys(): 
             self.numPC = min(np.shape(arrX))
         else:
             maxNumPC = min(np.shape(arrX))           
-            if kargs['numPC'] > maxNumPC:
+            if kargs['numComp'] > maxNumPC:
                 self.numPC = maxNumPC
             else:
-                self.numPC = kargs['numPC']
+                self.numPC = kargs['numComp']
         
         
         # Define X and Y within class such that the data can be accessed from
@@ -2253,10 +2405,10 @@ class nipalsPLS2:
     
     def modelSettings(self):
         """
-        Collect settings under which PLS2 was run.
+        Returns a dictionary holding settings under which PLS2 was run.
         """
         self.settingsDict = {}
-        self.settingsDict['numPC'] = self.numPC
+        self.settingsDict['numComp'] = self.numPC
         self.settingsDict['arrX'] = self.arrX_input
         self.settingsDict['arrY'] = self.arrY_input
         self.settingsDict['Xstand'] = self.Xstand
@@ -2276,16 +2428,17 @@ class nipalsPLS2:
     
     def X_scores(self):
         """
-        Returns an array holding scores or array X. First column for 
-        component 1, etc.
+        Returns array holding scores of array X. First column holds scores 
+        for component 1, second column holds scores for component 2, etc.
         """
         return self.arrT
     
     
     def X_loadings(self):
         """
-        Returns an array holding loadings of array X. First column for 
-        component 1, etc.
+        Returns array holding loadings of array X. Rows represent variables
+        and columns represent components. First column holds loadings for 
+        component 1, second column holds scores for component 2, etc.
         """
         return self.arrP
     
@@ -2299,8 +2452,9 @@ class nipalsPLS2:
     
     def X_corrLoadings(self):
         """
-        Returns correlation loadings of array X. First column holds correlation
-        loadings for PC1, second column holds scores for PC2, etc.
+        Returns array holding correlation loadings of array X. First column 
+        holds correlation loadings for component 1, second column holds 
+        correlation loadings for component 2, etc.
         """
 
         # Creates empty matrix for correlation loadings
@@ -2325,8 +2479,8 @@ class nipalsPLS2:
     
     def X_residuals(self):
         """
-        Returns dictionary holding residuals E of array X after each component.
-        Dictionary key represents order of PC.
+        Returns a dictionary holding the residual arrays for array X after 
+        each computed component. Dictionary key represents order of component.
         """
         # Create empty dictionary that will hold residuals
         X_residualsDict = {}
@@ -2340,175 +2494,200 @@ class nipalsPLS2:
     
     def X_calExplVar(self):
         """
-        Returns list holding calibrated explained variance for each PC in 
-        array X.
+        Returns a list holding the calibrated explained variance for 
+        each component. First number in list is for component 1, second number 
+        for component 2, etc.
         """
         return self.XcalExplVarList
     
     
     def X_cumCalExplVar_indVar(self):
         """
-        Returns array holding cumulative calibrated explained variance in 
-        array X for each variable. Cols represent variables in array X. Rows 
-        represent number of components.
+        Returns an array holding the cumulative calibrated explained variance
+        for each variable in X after each component. First row represents zero
+        components, second row represents one component, third row represents 
+        two components, etc. Columns represent variables.
         """
         return self.cumCalExplVarXarr_indVar
     
     
     def X_cumCalExplVar(self):
         """
-        Returns list holding cumulative calibrated explained variance in 
-        array X.
+        Returns a list holding the cumulative calibrated explained variance 
+        for array X after each component.
         """
         return self.XcumCalExplVarList
     
     
     def X_predCal(self):
         """
-        Returns dictionary holding arrays of predicted Xhat after each component 
-        from calibration. Dictionary key represents order of PC. Xhat is 
-        computed with XYhat = T*P'
+        Returns a dictionary holding the predicted arrays Xhat from 
+        calibration after each computed component. Dictionary key represents 
+        order of component.
         """
         return self.calXpredDict
     
     
     def X_PRESSE_indVar(self):
         """
-        Returns array holding PRESSE for each variable in array X acquired 
-        through calibration after each computed PC. First row is PRESSE for zero
-        components, second row component 1, third row for component 2, etc.
+        Returns array holding PRESSE for each individual variable in X
+        acquired through calibration after each computed component. First row 
+        is PRESSE for zero components, second row for component 1, third row 
+        for component 2, etc.
         """
         return self.PRESSEarr_indVar_X
     
     
     def X_PRESSE(self):
         """
-        Returns an array holding PRESSE across all variables in X acquired  
-        through calibration after each computed PC. First row is PRESSE for zero
-        components, second row component 1, third row for component 2, etc.
+        Returns array holding PRESSE across all variables in X acquired  
+        through calibration after each computed component. First row is PRESSE 
+        for zero components, second row for component 1, third row for 
+        component 2, etc.
         """   
         return self.PRESSE_total_list_X
     
     
     def X_MSEE_indVar(self):
         """
-        Returns an arrary holding MSEE from calibration for each variable in 
-        array X. First row is MSEE for zero components, second row for 
-        component 1, etc.
+        Returns an array holding MSEE for each variable in array X acquired 
+        through calibration after each computed component. First row holds MSEE 
+        for zero components, second row for component 1, third row for 
+        component 2, etc.
         """
         return self.MSEEarr_indVar_X
     
     
     def X_MSEE(self):
         """
-        Returns an array holding MSE across all variables in array X acquired 
-        through calibration after each computed PC. First row is PRESSE for zero
-        components, second row component 1, third row for component 2, etc.
+        Returns an array holding MSEE across all variables in X acquired 
+        through calibration after each computed component. First row is MSEE 
+        for zero components, second row for component 1, third row for 
+        component 2, etc.
         """   
         return self.MSEE_total_list_X
     
     
     def X_RMSEE_indVar(self):
         """
-        Returns an arrary holding RMSEE from calibration for each variable in 
-        array X. First row is RMSEE for zero components, second row for 
-        component 1, etc.
+        Returns an array holding RMSEE for each variable in array X acquired 
+        through calibration after each component. First row holds RMSEE 
+        for zero components, second row for component 1, third row for 
+        component 2, etc.
         """
         return self.RMSEEarr_indVar_X
     
     
     def X_RMSEE(self):
         """
-        Returns an array holding RMSEE across all variables in array X acquired 
-        through calibration after each computed PC. First row is RMSEE for zero
-        components, second row component 1, third row for component 2, etc.
+        Returns an array holding RMSEE across all variables in X acquired 
+        through calibration after each computed component. First row is RMSEE 
+        for zero components, second row for component 1, third row for 
+        component 2, etc.
         """   
         return self.RMSEE_total_list_X
     
     
     def X_valExplVar(self):
         """
-        Returns list holding validated explained variance for each PC in 
-        array X.
+        Returns a list holding the validated explained variance for X after
+        each component. First number in list is for component 1, second number 
+        for component 2, third number for component 3, etc.
         """
         return self.XvalExplVarList
     
     
     def X_cumValExplVar_indVar(self):
         """
-        Returns array holding cumulative validated explained variance for
-        each variable in array X. Rows represent variables in X. Rows represent 
-        number of components.
+        Returns an array holding the cumulative validated explained variance
+        for each variable in X after each component. First row represents 
+        zero components, second row represents component 1, third row for 
+        compnent 2, etc. Columns represent variables.
         """
         return self.cumValExplVarXarr_indVar
     
     
     def X_cumValExplVar(self):
         """
-        Returns list holding cumulative validated explained variance in 
-        array X.
+        Returns a list holding the cumulative validated explained variance 
+        for array X after each component. First number represents zero 
+        components, second number represents component 1, etc. 
         """
         return self.XcumValExplVarList
     
     
     def X_predVal(self):
         """
-        Returns dictionary holding arrays of predicted Xhat after each component 
-        from validation. Dictionary key represents order of PC.
+        Returns dictionary holding arrays of predicted Xhat after each 
+        component from validation. Dictionary key represents order of 
+        component.
         """
         return self.valXpredDict
     
     
     def X_PRESSCV_indVar(self):
         """
-        Returns array holding PRESSCV for each individual variable in array X 
-        acquired through cross validation after each computed PC. First row is 
-        PRESSCV for zero components, second row component 1, third row for 
-        component 2, etc.
+        Returns array holding PRESSCV for each individual variable in X 
+        acquired through cross validation after each computed component. First 
+        row is PRESSCV for zero components, second row for component 1, third 
+        row for component 2, etc.
         """
         return self.PRESSCVarr_indVar_X
     
     
     def X_PRESSCV(self):
         """
-        Returns an array holding PRESS across all variables in arrray X acquired  
-        through cross validation after each computed PC. First row is PRESSCV 
-        for zero components, second row component 1, third row for component 2, 
-        etc.
+        Returns an array holding PRESSCV across all variables in X acquired  
+        through cross validation after each computed component. First row is 
+        PRESSCV for zero components, second row for component 1, third row for 
+        component 2, etc.
         """   
         return self.PRESSCV_total_list_X
     
     
     def X_MSECV_indVar(self):
         """
-        Returns an arrary holding MSECV from cross validation for each variable  
-        in array X. First row is MSECV for zero components, second row for 
-        component 1, etc.
+        Returns an arrary holding MSECV for each variable in X acquired through  
+        cross validation. First row is MSECV for zero components, second row 
+        for component 1, etc.
         """
         return self.MSECVarr_indVar_X
     
     
     def X_MSECV(self):
         """
-        Returns an array holding MSECV across all variables in array X acquired 
-        through cross validation after each computed PC. First row is MSECV for 
-        zero components, second row component 1, third row for component 2, etc.
+        Returns an array holding MSECV across all variables in X acquired 
+        through cross validation after each computed component. First row is 
+        MSECV for zero components, second row for component 1, third row for 
+        component 2, etc.
         """   
         return self.MSECV_total_list_X
     
     
     def X_RMSECV_indVar(self):
         """
-        Returns an arrary holding RMSECV from cross validation for each variable
-        in array X. First row is MSECV for zero components, second row for 
-        component 1, etc.
+        Returns an arrary holding RMSECV for each variable in X acquired 
+        through cross validation after each computed component. First row is 
+        RMSECV for zero components, second row for component 1, third row for 
+        component 2, etc.
         """
         return self.RMSECVarr_indVar_X
-    
-    
-    def X_scores_predict(self, Xnew, numPC=1):
+
+
+    def X_RMSECV(self):
         """
-        Return predicted Yhat from new measuremetns X. 
+        Returns an array holding RMSECV across all variables in X acquired 
+        through cross validation after each computed component. First row is 
+        RMSECV for zero components, second row for component 1, third row for 
+        component 2, etc.
+        """   
+        return self.RMSECV_total_list_X
+    
+    
+    def X_scores_predict(self, Xnew, numComp=1):
+        """
+        Returns array of X scores from new X data using the exsisting model. 
+        Rows represent objects and columns represent components.
         """        
         
         # First pre-process new X data accordingly
@@ -2524,7 +2703,7 @@ class nipalsPLS2:
         
         # Get all necessary matrices from calibration
         t_list = []
-        for ind in range(numPC):
+        for ind in range(numComp):
             
             # Module 8: Prediction STEP 1
             # ---------------------------
@@ -2541,16 +2720,14 @@ class nipalsPLS2:
             t_list.append(list(t)[0])                   
         
         return np.array(t_list)
-
     
-    def X_RMSECV(self):
+    
+    def scoresRegressionCoeffs(self):
         """
-        Returns an array holding RMSECV across all variables in array X acquired 
-        through cross validation after each computed PC. First row is PRESSCV 
-        for zero components, second row component 1, third row for component 2, 
-        etc.
-        """   
-        return self.RMSECV_total_list_X
+        Returns a one dimensional array holding regression coefficients between
+        scores of array X and Y.
+        """ 
+        return self.arrC    
     
     
     def Y_means(self):
@@ -2562,32 +2739,27 @@ class nipalsPLS2:
     
     def Y_scores(self):
         """
-        Returns an array holding scores of array Y. First column for 
-        component 1, etc.
+        Returns an array holding loadings C of array Y. Rows represent 
+        variables and columns represent components. First column for 
+        component 1, second columns for component 2, etc.
         """
         return self.arrU
     
     
     def Y_loadings(self):
         """
-        Returns an array holding loadings of array Y. First column for 
-        component 1, etc.
+        Returns an array holding loadings C of array Y. Rows represent 
+        variables and columns represent components. First column for 
+        component 1, second columns for component 2, etc.
         """
         return self.arrQ
     
     
-    def scoresRegressionCoeffs(self):
-        """
-        Returns a one dimensional array holding regression coefficients between
-        scores of array X and Y.
-        """ 
-        return self.arrC
-    
-    
     def Y_corrLoadings(self):
         """
-        Returns correlation loadings of array Y. First column holds correlation 
-        loadings for PC1, second column holds scores for PC2, etc.
+        Returns array holding correlation loadings of array X. First column 
+        holds correlation loadings for component 1, second column holds 
+        correlation loadings for component 2, etc.
         """
 
         # Creates empty matrix for correlation loadings
@@ -2612,7 +2784,8 @@ class nipalsPLS2:
     
     def Y_residuals(self):
         """
-        Returns dictionary holding residuals F of array Y after each component.
+        Returns a dictionary holding residuals F of array Y after each 
+        component. Dictionary key represents order of component.
         """
         # Create empty dictionary that will hold residuals
         Y_residualsDict = {}
@@ -2626,68 +2799,76 @@ class nipalsPLS2:
     
     def Y_calExplVar(self):
         """
-        Returns list holding calibrated explained variance for each PC in 
-        array Y.
+        Returns a list holding the calibrated explained variance for each
+        component. First number in list is for component 1, second number for 
+        component 2, etc.
         """
         return self.YcalExplVarList
     
     
     def Y_cumCalExplVar_indVar(self):
         """
-        Returns array holding cumulative validated explained variance for each  
-        each variable in array Y. Cols represent variables in array Y. Rows 
-        represent number of components.
+        Returns an array holding the cumulative calibrated explained variance
+        for each variable in Y after each component. First row represents zero
+        components, second row represents one component, third row represents 
+        two components, etc. Columns represent variables.
         """
         return self.cumCalExplVarYarr_indVar
     
     
     def Y_cumCalExplVar(self):
         """
-        Returns list holding cumulative calibrated explained variance in 
-        array Y.
+        Returns a list holding the cumulative calibrated explained variance 
+        for array X after each component. First number represents zero 
+        components, second number represents component 1, etc.
         """
         return self.YcumCalExplVarList
         
     
     def Y_predCal(self):
         """
-        Returns dictionary holding arrays of predicted Yhat after each component 
-        from calibration. Dictionary key represents order of PC. Yhat is 
-        computed with Yhat = T*Chat*Q'
+        Returns dictionary holding arrays of predicted Yhat after each 
+        component from calibration. Dictionary key represents order of 
+        components.
         """
         return self.calYpredDict
     
     def Y_PRESSE_indVar(self):
         """
-        Returns an array holding PRESSE for each variable in array Y acquired 
-        through calibration after each computed PC. First row is PRESSE for zero
-        components, second row component 1, third row for component 2, etc.
+        Returns array holding PRESSE for each individual variable in Y
+        acquired through calibration after each component. First row is 
+        PRESSE for zero components, second row for component 1, third row for 
+        component 2, etc.
         """   
         return self.PRESSEarr_indVar
     
     
     def Y_PRESSE(self):
         """
-        Returns a dictionary holding total PRESSE for array Y from cross 
-        validation after each computed PC. Dictionary key represents order 
-        of PC.
+        Returns array holding PRESSE across all variables in Y acquired  
+        through calibration after each computed component. First row is PRESSE 
+        for zero components, second row for component 1, third row for 
+        component 2, etc.
         """   
         return self.PRESSE_total_list
     
     
     def Y_MSEE_indVar(self):
         """
-        Returns an array holding MSEE of each variable in array Y acquired 
-        through cross validation after each computed PC. First row is MSEE for 
-        zero components, second row component 1, third row for component 2, etc.
+        Returns an array holding MSEE for each variable in array Y acquired 
+        through calibration after each computed component. First row holds MSEE 
+        for zero components, second row for component 1, third row for 
+        component 2, etc.
         """   
         return self.MSEEarr_indVar
     
     
     def Y_MSEE(self):
         """
-        Returns a dictionary holding total MSEE from cross validation after each
-        computed PC. Dictionary key represents order of PC.
+        Returns an array holding MSEE across all variables in Y acquired 
+        through calibration after each computed component. First row is MSEE 
+        for zero components, second row for component 1, third row for 
+        component 2, etc.
         """   
         return self.MSEE_total_list
     
@@ -2695,167 +2876,193 @@ class nipalsPLS2:
     def Y_RMSEE_indVar(self):
         """
         Returns an array holding RMSEE for each variable in array Y acquired 
-        through cross validation after each computed PC. First row is RMSEE for 
-        zero components, second row component 1, third row for component 2, etc.
+        through calibration after each component. First row holds RMSEE 
+        for zero components, second row for component 1, third row for 
+        component 2, etc.
         """   
         return self.RMSEEarr_indVar
     
     
     def Y_RMSEE(self):
         """
-        Returns a dictionary holding total RMSEE for array Y from cross 
-        validation after each computed PC. Dictionary key represents order of PC.
+        Returns an array holding RMSEE across all variables in Y acquired 
+        through calibration after each computed component. First row is RMSEE 
+        for zero components, second row for component 1, third row for 
+        component 2, etc.
         """   
         return self.RMSEE_total_list
     
     
     def Y_valExplVar(self):
         """
-        Returns list holding calibrated explained variance for each PC in 
-        array Y.
+        Returns a list holding the validated explained variance for Y after
+        each component. First number in list is for component 1, second number 
+        for component 2, third number for component 3, etc.
         """
         return  self.YvalExplVarList
     
     
     def Y_cumValExplVar_indVar(self):
         """
-        Returns array holding cumulative validated explained variance for each 
-        variable in array Y. Cols represent variables in Y. Rows represent 
-        number of components.
+        Returns an array holding the cumulative validated explained variance
+        for each variable in Y after each component. First row represents 
+        zero components, second row represents component 1, third row for 
+        compnent 2, etc. Columns represent variables.
         """
         return self.cumValExplVarYarr_indVar
     
     
     def Y_cumValExplVar(self):
         """
-        Returns list holding cumulative validated explained variance in 
-        array Y.
+        Returns a list holding the cumulative validated explained variance 
+        for array X after each component. First number represents zero 
+        components, second number represents component 1, etc.
         """
         return self.YcumValExplVarList
     
     
     def Y_predVal(self):
         """
-        Returns dictionary holding arrays of predicted Yhat after each component 
-        from cross validation. Dictionary key represents order of PC.
+        Returns dictionary holding arrays of predicted Yhat after each 
+        component from validation. Dictionary key represents order of 
+        component.
         """
         return self.valYpredDict
     
     
     def Y_PRESSCV_indVar(self):
         """
-        Returns an array holding PRESSCV of all variables in array Y acquired 
-        through cross validation after each computed PC. First row is PRESSCV 
-        for zero components, second row component 1, third row for component 2, 
-        etc.
+        Returns an array holding PRESSCV of each variable in array Y acquired 
+        through cross validation after each computed component. First row is 
+        PRESSCV for zero components, second row component 1, third row for 
+        component 2, etc.
         """   
         return self.PRESSCVarr_indVar
     
     
     def Y_PRESSCV(self):
         """
-        Returns a dictionary holding total PRESSCV for array Y from cross 
-        validation after each computed PC. Dictionary key represents order of PC.
+        Returns an array holding PRESSCV across all variables in Y acquired  
+        through cross validation after each computed component. First row is 
+        PRESSCV for zero components, second row component 1, third row for 
+        component 2, etc.
         """   
         return self.PRESSCV_total_list
     
     
     def Y_MSECV_indVar(self):
         """
-        Returns an array holding MSECV for each variable in array Y acquired 
-        through cross validation after each computed PC. First row is MSECV for 
-        zero components, second row component 1, third row for component 2, etc.
+        Returns an array holding MSECV of each variable in array Y acquired 
+        through cross validation after each computed component. First row is 
+        MSECV for zero components, second row component 1, third row for 
+        component 2, etc.
         """   
         return self.MSECVarr_indVar
     
     
     def Y_MSECV(self):
         """
-        Returns a dictionary holding total MSECV for array Y from cross 
-        validation after each computed PC. Dictionary key represents order of PC.
+        Returns an array holding MSECV across all variables in Y acquired  
+        through cross validation after each computed component. First row is 
+        MSECV for zero components, second row component 1, third row for 
+        component 2, etc.
         """   
         return self.MSECV_total_list
     
     
     def Y_RMSECV_indVar(self):
         """
-        Returns an array holding RMSECV of all variables in array Y acquired 
-        through cross validation after each computed PC. First row is RMSECV 
-        for zero components, second row component 1, third row for component 2, 
-        etc.
+        Returns an array holding RMSECV for each variable in array Y acquired 
+        through cross validation after each computed component. First row is 
+        RMSECV for zero components, second row component 1, third row for 
+        component 2, etc.
         """   
         return self.RMSECVarr_indVar
     
     
     def Y_RMSECV(self):
         """
-        Returns a dictionary holding total RMSECV for array Y from cross 
-        validation after each computed PC. Dictionary key represents order of PC.
+        Returns an array holding RMSECV across all variables in Y acquired 
+        through cross validation after each computed component. First row is 
+        RMSECV for zero components, second row component 1, third row for 
+        component 2, etc.
         """   
         return self.RMSECV_total_list
 
 
-    def Y_predict(self, Xnew, numPC=1):
+    def Y_predict(self, Xnew, numComp=1):
         """
-        Return predicted Yhat from new measuremetns X. 
+        Return predicted Yhat from new measurements X. 
         """        
+        pred_Y_list = []
+        for rowInd in range(np.shape(Xnew)[0]):
+            print('Object', rowInd)
         
-        # First pre-process new X data accordingly
-        if self.Xstand == True:
-        
-            x_new = (Xnew - np.average(self.arrX_input, axis=0)) / \
-                    np.std(self.arrX_input, ddof=1)
-        
-        else:
+            # First pre-process new X data accordingly
+            if self.Xstand == True:
             
-            x_new = (Xnew - np.average(self.arrX_input, axis=0))
-                
-        
-        # Get all necessary matrices from calibration
-        t_list = []
-        for ind in range(numPC):
+                x_new = (Xnew[rowInd, :] - np.average(self.arrX_input, axis=0)) / \
+                        np.std(self.arrX_input, ddof=1)
             
-            # Module 8: Prediction STEP 1
-            # ---------------------------
-            t = np.dot(x_new, self.arrW[:, ind]).reshape(-1, 1)
-            
-            # Module 8: Prediction STEP 2
-            # ---------------------------
-            p = self.arrP[:, ind].reshape(-1,1)                    
-            x_old = x_new
-            x_new = x_old - np.dot(t, np.transpose(p))
-            
-            # Generate a vector t that gets longer by one element with
-            # each PC
-            t_list.append(list(t)[0])                   
-            t_vec = np.transpose(np.array(t_list))
-
-            # Give vector y_train_means the correct dimension in 
-            # numpy, so matrix multiplication will be possible
-            # i.e from dimension (x,) to (1,x)                    
-            ytm = np.average(self.arrY_input, axis=0).reshape(1,-1)
-            
-            # Get relevant part of P, C anc Q for specific number of 
-            # PC's
-            part_arrQ = self.arrQ[:, 0:ind+1]
-            part_arrC = self.arrC[0:ind+1, 0:ind+1]
-            
-            # Module 8: Prediction STEP 3 
-            # ---------------------------                                       
-            # First compute yhat                    
-            if self.Ystand == True:
-                tCQ = np.dot(np.dot(t_vec, part_arrC), \
-                        np.transpose(part_arrQ)) * \
-                        np.std(self.arrY, ddof=1).reshape(1,-1)
             else:
-                tCQ = np.dot(np.dot(t_vec, part_arrC), \
-                        np.transpose(part_arrQ))
-            
-            yhat = ytm + tCQ
-        
-        return yhat
-            
                 
+                x_new = (Xnew[rowInd, :] - np.average(self.arrX_input, axis=0))
+        
+            # Get all necessary matrices from calibration
+            t_list = []
+            for ind in range(numComp):
+                
+                # Module 8: Prediction STEP 1
+                # ---------------------------
+                t = np.dot(x_new, self.arrW[:, ind]).reshape(-1, 1)
+                
+                # Module 8: Prediction STEP 2
+                # ---------------------------
+                p = self.arrP[:, ind].reshape(-1,1)
+                x_old = x_new
+                x_new = x_old - np.dot(t, np.transpose(p))
+                
+                # Generate a vector t that gets longer by one element with
+                # each PC
+                t_list.append(list(t)[0])                   
+                t_vec = np.transpose(np.array(t_list))
+    
+                # Give vector y_train_means the correct dimension in 
+                # numpy, so matrix multiplication will be possible
+                # i.e from dimension (x,) to (1,x)                    
+                ytm = np.average(self.arrY_input, axis=0).reshape(1,-1)
+                
+                # Get relevant part of P, C anc Q for specific number of 
+                # PC's
+                part_arrQ = self.arrQ[:, 0:ind+1]
+                part_arrC = self.arrC[0:ind+1, 0:ind+1]
+                
+                # Module 8: Prediction STEP 3 
+                # ---------------------------                                       
+                # First compute yhat                    
+                if self.Ystand == True:
+                    tCQ = np.dot(np.dot(t_vec, part_arrC), \
+                            np.transpose(part_arrQ)) * \
+                            np.std(self.arrY, ddof=1).reshape(1,-1)
+                else:
+                    tCQ = np.dot(np.dot(t_vec, part_arrC), \
+                            np.transpose(part_arrQ))
+                
+                yhat = ytm + tCQ
+            
+            pred_Y_list.append(yhat)
+        
+        return np.vstack(pred_Y_list)
+            
+    
+    def cvTrainAndTestData(self):
+        """
+        Returns a list consisting of dictionaries holding training and test 
+        sets.
+        """
+        return self.cvTrainAndTestDataList
+
+
     def corrLoadingsEllipses(self):
         """
         Returns the coordinates of ellipses that represent 50% and 100% expl. 
@@ -2882,12 +3089,3 @@ class nipalsPLS2:
         ellipses['y100perc'] = ycords100perc
         
         return ellipses
-    
-    
-    def cvTrainAndTestData(self):
-        """
-        Returns a list consisting of dictionaries holding training and test 
-        sets.
-        """
-        return self.cvTrainAndTestDataList
-#
