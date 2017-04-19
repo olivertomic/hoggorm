@@ -23,7 +23,7 @@ Requirements
 Documentation
 -------------
 
-Coming.
+Documentation is being added continuously. Please check the **docs** folder above. Currently there is a Jupyter notebook illustrating the application of PCA with hoggorm. 
 
 
 Latest changes
