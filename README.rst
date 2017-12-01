@@ -16,6 +16,7 @@ Installation
 
 Requirements
 ------------
+Make sure that Python 3.5 or higher is installed. A convenient way to install Python is to use the Anaconda distribution.
 
 - numpy
 
