@@ -40,6 +40,13 @@ class nipalsPCA:
         cvType = ["KFold", numFolds]
             numFolds: int 
             number of folds or segments 
+        
+        lolo: leave one label out
+        cvType = ["lolo", lablesList]
+            lablesList: list
+            sequence of lables. Must be same lenght as number of rows in 
+            input array X. Leaves out objects with same lable. 
+            
     
             
     RETURNS
@@ -68,7 +75,8 @@ class nipalsPCA:
     >>> model = ho.nipalsPCA(arrX=myData, numComp=3)
     >>> model = ho.nipalsPCA(arrX=myData, Xstand=True)
     >>> model = ho.nipalsPCA(arrX=myData, cvType=["loo"])
-    >>> model = ho.nipalsPCA(arrX=myData, cvType=["lpo", 4])
+    >>> model = ho.nipalsPCA(arrX=myData, cvType=["Kfold", 4])
+    >>> model = ho.nipalsPCA(arrX=myData, cvType=["lolo", [1, 2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5, 6, 7]])
         
     
     """
@@ -81,7 +89,7 @@ class nipalsPCA:
         """
         
 #===============================================================================
-#         Check what is provided by user for componentA
+#         Check what is provided by user
 #===============================================================================
         
         # Check whether number of components that are to be computed is provided.
@@ -162,7 +170,16 @@ class nipalsPCA:
         # Compute number of principal components as specified by user 
         for j in range(self.numPC): 
             
-            t = X_new[:,0].reshape(-1,1)
+            # Check if first column contains only zeros. If yes, then
+            # NIPALS will not converge and (npla.norm(num) will contain 
+            # nan's). Rather put in other starting values.
+            if not np.any(X_new[:, 0]):
+                X_repl_nonCent = np.arange(np.shape(X_new)[0])
+                X_repl = X_repl_nonCent - np.mean(X_repl_nonCent)
+                t = X_repl.reshape(-1,1)
+            
+            else:
+                t = X_new[:,0].reshape(-1,1)
             
             # Iterate until score vector converges according to threshold
             while 1:
@@ -243,7 +260,7 @@ class nipalsPCA:
         # Compute PRESS for each Xhat for 1, 2, 3, etc number of components
         # and compute explained variance
         for ind, Xhat in enumerate(self.calXpredList):
-            diffX = st.centre(self.arrX_input) - st.centre(Xhat)
+            diffX = self.arrX_input - Xhat
             PRESSE_indVar_X = np.sum(np.square(diffX), axis=0)
             self.PRESSEdict_indVar_X[ind+1] = PRESSE_indVar_X
                     
@@ -352,6 +369,9 @@ class nipalsPCA:
             elif self.cvType[0] == "KFold":
                 print("KFold")
                 cvComb = cv.KFold(numObj, k=self.cvType[1])
+            elif self.cvType[0] == "lolo":
+                print("lolo")
+                cvComb = cv.LeaveOneLabelOut(self.cvType[1])
             else:
                 print('Requested form of cross validation is not available')
             
@@ -360,11 +380,7 @@ class nipalsPCA:
             # dictionary according to number of component
             self.valXpredDict = {}
             for ind in range(1, self.numPC+1):
-                self.valXpredDict[ind] = []
-            
-            # Collect train and test set in dictionaries for each component 
-            # and put them in this list.            
-            self.cvTrainAndTestDataList = []            
+                self.valXpredDict[ind] = np.zeros(np.shape(self.arrX_input))
             
 
             # Collect: validation X scores T, validation X loadings P,
@@ -377,7 +393,7 @@ class nipalsPCA:
 
             # Collect train and test set in a dictionary for each component            
             self.cvTrainAndTestDataList = []
-            self.X_train_means_list = []          
+            self.X_train_means_arr = np.zeros(np.shape(self.arrX_input))          
             
             # First devide into combinations of training and test sets
             for train_index, test_index in cvComb:
@@ -405,7 +421,7 @@ class nipalsPCA:
                     # Center X test using mean from training set
                     X_test_proc = X_test - X_train_mean
                 # -------------------------------------------------------------
-                self.X_train_means_list.append(X_train_mean)
+                self.X_train_means_arr[test_index,] = X_train_mean
                 
         
                 # Here the NIPALS PCA algorithm starts
@@ -421,7 +437,16 @@ class nipalsPCA:
                 # Compute number of principal components as specified by user 
                 for j in range(self.numPC): 
                     
-                    t = X_new[:,0].reshape(-1,1)
+                    # Check if first column contains only zeros. If yes, then
+                    # NIPALS will not converge and (npla.norm(num) will contain 
+                    # nan's). Rather put in other starting values.
+                    if not np.any(X_new[:, 0]):
+                        X_repl_nonCent = np.arange(np.shape(X_new)[0])
+                        X_repl = X_repl_nonCent - np.mean(X_repl_nonCent)
+                        t = X_repl.reshape(-1,1)
+                    
+                    else:
+                        t = X_new[:,0].reshape(-1,1)
                     
                     # Iterate until score vector converges according to threshold
                     while 1:
@@ -477,18 +502,11 @@ class nipalsPCA:
                     else:
                         valPredX = valPredX_proc + X_train_mean
                     
-                    self.valXpredDict[ind+1].append(valPredX)
-                
-            
-            # Convert list of one-row arrays into one array such that it 
-            # corresponds to the orignial variable
-            for ind in range(1, dims+1):
-                self.valXpredDict[ind] = np.vstack(self.valXpredDict[ind])
+                    self.valXpredDict[ind+1][test_index, :] = valPredX
                 
 
             # Put all predicitons into an array that corresponds to the
-            # original variable
-            #self.valPredXarrList = []
+            # original array
             self.valXpredList = []
             valPreds = self.valXpredDict.values()
             for preds in valPreds:
@@ -511,16 +529,14 @@ class nipalsPCA:
             self.PRESSCVdict_indVar_X = {}
             
             # First compute PRESSCV for zero components            
-            varX = np.var(self.arrX_input, axis=0, ddof=1)
-            self.PRESSCV_0_indVar_X = (varX * np.square(np.shape(self.arrX_input)[0])) \
-                    / (np.shape(self.arrX_input)[0])
+            self.PRESSCV_0_indVar_X = np.sum(np.square(self.arrX_input - self.X_train_means_arr), axis=0)
             self.PRESSCVdict_indVar_X[0] = self.PRESSCV_0_indVar_X
             
             # Compute PRESSCV for each Yhat for 1, 2, 3, etc number of 
             # components and compute explained variance
             for ind, Xhat in enumerate(self.valXpredList):
                 #diffX = self.arrX_input - Xhat
-                diffX = st.centre(self.arrX_input) - st.centre(Xhat)
+                diffX = self.arrX_input - Xhat
                 PRESSCV_indVar_X = np.sum(np.square(diffX), axis=0)
                 self.PRESSCVdict_indVar_X[ind+1] = PRESSCV_indVar_X
                         
@@ -668,7 +684,7 @@ class nipalsPCA:
             for var in range(np.shape(self.arrX)[1]):
                 origVar = self.arrX[:, var]
                 corrs = np.corrcoef(PCscores, origVar)
-                arr_corrLoadings[PC, var] = corrs[0,1]
+                arr_corrLoadings[PC, var] = corrs[0, 1]
         
         self.arr_corrLoadings = np.transpose(arr_corrLoadings)
         
@@ -881,6 +897,9 @@ class nipalsPCA:
         Rows represent objects and columns represent components.
         """
                 
+        assert numComp <= self.numPC, ValueError('Maximum numComp = ' + str(self.numPC))
+        assert numComp > -1, ValueError('numComp must be >= 0')
+
         # First pre-process new X data accordingly
         if self.Xstand == True:
             
@@ -931,5 +950,3 @@ class nipalsPCA:
         ellipses['y100perc'] = ycords100perc
         
         return ellipses
-
-
