@@ -10,6 +10,7 @@ Welcome to Hoggorm's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   readme
    project-background
    main-methods
    utility-functions
