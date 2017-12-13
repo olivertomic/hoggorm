@@ -49,6 +49,12 @@ class nipalsPLS1:
         cvType = ["KFold", numFolds]
             numFolds: int 
             number of folds or segments
+        
+        lolo: leave one label out
+        cvType = ["lolo", lablesList]
+            lablesList: list
+            sequence of lables. Must be same lenght as number of rows in 
+            input array X. Leaves out objects with same lable.
     
             
     RETURNS
@@ -72,7 +78,8 @@ class nipalsPLS1:
     >>> model = ho.nipalsPLS1(arrX=my_X_data, vecy=my_y_data, numComp=3, Ystand=True)
     >>> model = ho.nipalsPLS1(arrX=my_X_data, vecy=my_y_data, Xstand=False, Ystand=True)
     >>> model = ho.nipalsPLS1(arrX=my_X_data, vecy=my_y_data, cvType=["loo"])
-    >>> model = ho.nipalsPLS1(arrX=my_X_data, vecy=my_y_data, cvType=["lpo", 4])
+    >>> model = ho.nipalsPLS1(arrX=my_X_data, vecy=my_y_data, cvType=["KFold", 7])
+    >>> model = ho.nipalsPLS1(arrX=my_X_data, vecy=my_y_data, cvType=["lolo", [1, 2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5, 6, 7]]])
     
     """
     
@@ -257,7 +264,7 @@ class nipalsPLS1:
         # Compute PRESS for each Xhat for 1, 2, 3, etc number of components
         # and compute explained variance
         for ind, Xhat in enumerate(self.calXpredList):
-            diffX = st.centre(self.arrX_input) - st.centre(Xhat)
+            diffX = self.arrX_input - Xhat
             PRESSE_indVar_X = np.sum(np.square(diffX), axis=0)
             self.PRESSEdict_indVar_X[ind+1] = PRESSE_indVar_X
                     
@@ -402,7 +409,7 @@ class nipalsPLS1:
         # Compute PRESS and MSEE for each Yhat for 1, 2, 3, etc number of 
         # components and compute explained variance
         for ind, yhat in enumerate(self.calYpredList):
-            diffy = st.centre(self.vecy_input) - st.centre(yhat)
+            diffy = self.vecy_input - yhat
             PRESSE = np.sum(np.square(diffy))
             self.PRESSE_total_dict[ind+1] = PRESSE
             self.MSEE_total_dict[ind+1] = PRESSE / np.shape(self.vecy_input)[0]
@@ -473,13 +480,13 @@ class nipalsPLS1:
             # dictionary according to numer of PC
             self.valYpredDict = {}
             for ind in range(1, self.numPC+1):
-                self.valYpredDict[ind] = []
+                self.valYpredDict[ind] = np.zeros(np.shape(self.vecy_input))
             
             # Construct a dictionary that holds predicted X (Xhat) from 
             # validation for each number of components. 
             self.valXpredDict = {}             
             for ind in range(1, self.numPC+1):
-                self.valXpredDict[ind] = []
+                self.valXpredDict[ind] = np.zeros(np.shape(self.arrX_input))
             
 
             # Collect train and test set in dictionaries for each PC and put
@@ -496,6 +503,8 @@ class nipalsPLS1:
             self.val_arrUlist = []
             self.val_arrQlist = []
             self.val_arrWlist = []            
+            all_ytm = np.zeros(np.shape(self.vecy_input))
+            all_xtm = np.zeros(np.shape(self.arrX_input))
             
             
             # First devide into combinations of training and test sets
@@ -583,7 +592,16 @@ class nipalsPLS1:
                 self.val_arrPlist.append(val_arrP)
                 self.val_arrQlist.append(val_arrQ)
                 self.val_arrWlist.append(val_arrW)
-                
+
+                # Give vector y_train_mean the correct dimension in 
+                # numpy, so matrix multiplication will be possible
+                # i.e from dimension (x,) to (1,x)                    
+                ytm = y_train_means.reshape(1,-1)
+                xtm = x_train_means.reshape(1,-1)
+                for ind_test in range(np.shape(y_test)[0]):
+                    all_ytm[test_index,] = ytm
+                    all_xtm[test_index,] = xtm
+               
                 
                                 
                 # 'Module 7: Partial least squares regression I' - section 7.2 
@@ -611,12 +629,6 @@ class nipalsPLS1:
                     t_list.append(t)                   
                     t_vec = np.hstack(t_list)
 
-                    # Give vector y_train_mean the correct dimension in 
-                    # numpy, so matrix multiplication will be possible
-                    # i.e from dimension (x,) to (1,x)                    
-                    ytm = y_train_means.reshape(1,-1)
-                    xtm = x_train_means.reshape(1,-1)
-                    
                     # Get relevant part of Q for specific number of PC's
                     part_val_arrP = val_arrP[:,0:ind+1]
                     part_val_arrQ = val_arrQ[0,0:ind+1]
@@ -631,7 +643,7 @@ class nipalsPLS1:
                         tCQ = np.dot(t_vec,part_val_arrQ)
                     
                     yhat = np.transpose(ytm + tCQ)
-                    self.valYpredDict[ind+1].append(yhat)
+                    self.valYpredDict[ind+1][test_index,] = yhat
                     
                     # Then compute Xhat
                     if self.Xstand == True:
@@ -641,7 +653,7 @@ class nipalsPLS1:
                         tP = np.dot(t_vec, np.transpose(part_val_arrP))
                     
                     xhat = xtm + tP
-                    self.valXpredDict[ind+1].append(xhat)
+                    self.valXpredDict[ind+1][test_index,] = xhat
                     
                     
                     
@@ -650,8 +662,6 @@ class nipalsPLS1:
             # -----------------------------------------------------------------            
             # Convert vectors from CV segments stored in lists into matrices 
             # for each PC            
-            for key in self.valYpredDict:
-                self.valYpredDict[key] = np.vstack(self.valYpredDict[key])
             self.valYpredList = list(self.valYpredDict.values())
             # -----------------------------------------------------------------
             
@@ -663,19 +673,17 @@ class nipalsPLS1:
             self.MSECV_total_dict = {}
             
             # Compute PRESS for validation
-            varY = np.var(self.vecy_input, ddof=1)
-            PRESSCV_0 = (varY * np.square(np.shape(self.vecy_input)[0])) \
-                    / np.shape(self.vecy_input)[0]
+            PRESSCV_0 = np.sum(np.square(self.vecy_input-all_ytm), axis=0)
             self.PRESSCV_total_dict[0] = PRESSCV_0
             MSECV_0 = PRESSCV_0 / np.shape(self.vecy_input)[0]
-            self.MSECV_total_dict[0] = MSECV_0
+            self.MSECV_total_dict[0] = list(MSECV_0)[0]
             # -----------------------------------------------------------------
             
             # -----------------------------------------------------------------
             # Compute PRESSCV and MSECV for each Yhat for 1, 2, 3, etc number  
             # of components and compute explained variance
             for ind, yhat in enumerate(self.valYpredList):
-                diffy = st.centre(self.vecy_input) - st.centre(yhat)
+                diffy = self.vecy_input - yhat
                 PRESSCV = np.sum(np.square(diffy))
                 self.PRESSCV_total_dict[ind+1] = PRESSCV
                 self.MSECV_total_dict[ind+1] = PRESSCV / \
@@ -687,7 +695,7 @@ class nipalsPLS1:
             self.YcumValExplVarList = []
             for ind, MSECV in enumerate(self.MSECV_total_list):
                 perc = (MSECV_0 - MSECV) / MSECV_0 * 100
-                self.YcumValExplVarList.append(perc)
+                self.YcumValExplVarList.append(perc[0])
             
             # Construct list with total validated explained variance in Y
             self.YvalExplVarList = []
@@ -721,8 +729,6 @@ class nipalsPLS1:
             # -----------------------------------------------------------------
             # Convert vectors from CV segments stored in lists into matrices 
             # for each PC            
-            for key in self.valXpredDict:
-                self.valXpredDict[key] = np.vstack(self.valXpredDict[key])
             self.valXpredList = self.valXpredDict.values()
             # -----------------------------------------------------------------
             
@@ -733,15 +739,13 @@ class nipalsPLS1:
             self.PRESSCVdict_indVar_X = {}
             
             # First compute PRESSCV for zero components            
-            varX = np.var(self.arrX_input, axis=0, ddof=1)
-            PRESSCV_0_indVar_X = (varX * np.square(np.shape(self.arrX_input)[0])) \
-                    / (np.shape(self.arrX_input)[0])
+            PRESSCV_0_indVar_X = np.sum(np.square(self.arrX_input-all_xtm), axis=0)
             self.PRESSCVdict_indVar_X[0] = PRESSCV_0_indVar_X
             
             # Compute PRESS for each Xhat for 1, 2, 3, etc number of components
             # and compute explained variance
             for ind, Xhat in enumerate(self.valXpredList):
-                diffX = st.centre(self.arrX_input) - st.centre(Xhat)
+                diffX = self.arrX_input - Xhat
                 PRESSCV_indVar_X = np.sum(np.square(diffX), axis=0)
                 self.PRESSCVdict_indVar_X[ind+1] = PRESSCV_indVar_X
                         
@@ -839,8 +843,8 @@ class nipalsPLS1:
         settingsDict['numComp'] = self.numPC
         settingsDict['X'] = self.arrX_input
         settingsDict['y'] = self.vecy_input
-        settingsDict['analysed X'] = self.arrX
-        settingsDict['analysed y'] = self.vecy 
+        settingsDict['arrX'] = self.arrX
+        settingsDict['arrY'] = self.vecy 
         settingsDict['Xstand'] = self.Xstand
         settingsDict['ystand'] = self.ystand
         settingsDict['cv type'] = self.cvType
@@ -1117,48 +1121,23 @@ class nipalsPLS1:
         """
         Returns array of X scores from new X data using the exsisting model. 
         Rows represent objects and columns represent components.
-        """
-        # Collect all predicted y (1 x 1) from one row of Xnew (1 x k) in a list
-        XpredScoresList = []
+        """        
         
-        
-        # Loop through each row in Xnew
-        for X_rowInd in range(0, np.shape(Xnew)[0]):
-        
-            # 'Module 7: Partial least squares regression I' - section 7.2 
-            # Prediction for PLS2.
-            
-            # First pre-process new X data accordingly
-            if self.Xstand == True:
-            
-                x_new = (Xnew[X_rowInd, :] - np.average(self.arrX_input, axis=0)) / \
-                        np.std(self.arrX_input, ddof=1)
-            
-            else:
-                
-                x_new = (Xnew[X_rowInd, :] - np.average(self.arrX_input, axis=0))
-                    
-                     
-            t_list = []
-            for ind in range(numComp):
-                
-                # Module 8: Prediction STEP 1
-                # ---------------------------
-                t = np.dot(x_new, self.arrW[:, ind]).reshape(-1, 1)
-                
-                # Module 8: Prediction STEP 2
-                # ---------------------------
-                p = self.arrP[:, ind].reshape(-1, 1)                    
-                x_old = x_new
-                x_new = x_old - np.dot(t, np.transpose(p))
-                
-                # Generate a vector t that gets longer by one element with
-                # each PC
-                t_list.append(list(t)[0])
-            XpredScoresList.append(t_list)            
+        assert numComp <= self.numPC, ValueError('Maximum numComp = '+str(self.numPC))
+        assert numComp>-1, ValueError('numComp must be >= 0')
 
-        return np.transpose(np.hstack(XpredScoresList))    
+        # First pre-process new X data accordingly
+        if self.Xstand == True:
+            x_new = (Xnew - np.average(self.arrX_input, axis=0)) / \
+                    np.std(self.arrX_input, ddof=1)
+        else:
+            x_new = (Xnew - np.average(self.arrX_input, axis=0))
+                
         
+        # x_new* W*inv(P'W)
+        return np.dot(x_new, np.dot(self.arrW[:,0:numComp], \
+                      np.linalg.inv(np.dot(np.transpose(self.arrP[:,0:numComp]), self.arrW[:,0:numComp]))))
+
     
     def Y_means(self):
         """
@@ -1325,73 +1304,47 @@ class nipalsPLS1:
         """   
         return self.RMSECVarr
     
-    
+
+    def regressionCoefficients(self, numComp=1):
+        """
+        Returns regression coefficients from the fitted model using all
+        available samples and a chosen number of components.
+        """
+        assert numComp <= self.numPC, ValueError('Maximum numComp = ' + str(self.numPC))
+        assert numComp > -1, ValueError('numComp must be >= 0')
+        
+        # B = W*inv(P'W)*Q'
+        if self.ystand == True:
+            return np.dot(np.dot(self.arrW[:, 0:numComp], \
+                   np.linalg.inv(np.dot(np.transpose(self.arrP[:, 0:numComp]), self.arrW[:, 0:numComp]))),\
+                   np.transpose(self.arrQ[:, 0:numComp])) \
+                   * np.std(self.vecy_input, ddof=1, axis=0).reshape(1, -1)
+        else:
+            return np.dot(np.dot(self.arrW[:, 0:numComp], \
+                   np.linalg.inv(np.dot(np.transpose(self.arrP[:, 0:numComp]), self.arrW[:, 0:numComp]))),\
+                   np.transpose(self.arrQ[:, 0:numComp]))
+
+        
     def Y_predict(self, Xnew, numComp=1):
         """
         Return predicted yhat from new measurements X. 
         """
-        # Collect all predicted y (1 x 1) from one row of Xnew (1 x k) in a list
-        ypredList = []
         
-        
-        # Loop through each row in Xnew
-        for X_rowInd in range(0, np.shape(Xnew)[0]):
+        assert numComp <= self.numPC, ValueError('Maximum numComp = ' + str(self.numPC))
+        assert numComp > -1, ValueError('numComp must be >= 0')
+
+        # First pre-process new X data accordingly
+        if self.Xstand == True:
+            x_new = (Xnew - np.average(self.arrX_input, axis=0)) / \
+                    np.std(self.arrX_input, ddof=1, axis=0)
+        else:
+            x_new = (Xnew - np.average(self.arrX_input, axis=0))
 
         
-            # 'Module 7: Partial least squares regression I' - section 7.2 
-            # Prediction for PLS2.
-            
-            # First pre-process new X data accordingly
-            if self.Xstand == True:
-            
-                x_new = (Xnew[X_rowInd, :] - np.average(self.arrX_input, axis=0)) / \
-                        np.std(self.arrX_input, ddof=1)
-            
-            else:
-                
-                x_new = (Xnew[X_rowInd, :] - np.average(self.arrX_input, axis=0))
-                    
-                  
-            t_list = []
-            for ind in range(numComp):
-                
-                # Module 8: Prediction STEP 1
-                # ---------------------------
-                t = np.dot(x_new, self.arrW[:, ind]).reshape(-1, 1)
-                
-                # Module 8: Prediction STEP 2
-                # ---------------------------
-                p = self.arrP[:, ind].reshape(-1, 1)                    
-                x_old = x_new
-                x_new = x_old - np.dot(t, np.transpose(p))
-                
-                # Generate a vector t that gets longer by one element with
-                # each PC
-                t_list.append(list(t)[0])                   
-                t_vec = np.transpose(np.array(t_list))
-    
-                # Give vector y_train_mean the correct dimension in 
-                # numpy, so matrix multiplication will be possible
-                # i.e from dimension (x,) to (1,x)                    
-                ytm = np.average(self.vecy_input).reshape(1, -1)
-                
-                # Get relevant part of Q for specific number of PC's
-                part_arrQ = self.arrQ[0, 0:ind+1]
-                
-                # Module 8: Prediction STEP 3
-                # ---------------------------
-                # First compute yhat                                      
-                if self.ystand == True:
-                    tCQ = np.dot(t_vec, part_arrQ) * \
-                            np.std(self.vecy_input, ddof=1).reshape(1, -1)
-                else:
-                    tCQ = np.dot(t_vec, part_arrQ)
-                
-                yhat = ytm + tCQ
-            
-            ypredList.append(yhat)
-            
-        return np.vstack(ypredList)
+        return np.dot(x_new, self.regressionCoefficients(numComp)) \
+                + np.mean(self.vecy_input)
+        
+
 
         
     def cvTrainAndTestData(self):
@@ -1467,7 +1420,13 @@ class nipalsPLS2:
         KFold : leave out one fold or segment
         cvType = ["KFold", numFolds]
             numFolds: int 
-            number of folds or segments 
+            number of folds or segments
+        
+        lolo: leave one label out
+        cvType = ["lolo", lablesList]
+            lablesList: list
+            sequence of lables. Must be same lenght as number of rows in 
+            input array X. Leaves out objects with same lable.
 
     
     RETURNS
@@ -1491,7 +1450,8 @@ class nipalsPLS2:
     >>> model = ho.nipalsPLS2(arrX=my_X_data, arrY=my_Y_data, numComp=3, Ystand=True)
     >>> model = ho.nipalsPLS2(arrX=my_X_data, arrY=my_Y_data, Xstand=False, Ystand=True)
     >>> model = ho.nipalsPLS2(arrX=my_X_data, arrY=my_Y_data, cvType=["loo"])
-    >>> model = ho.nipalsPLS2(arrX=my_X_data, arrY=my_Y_data, cvType=["lpo", 4])
+    >>> model = ho.nipalsPLS2(arrX=my_X_data, arrY=my_Y_data, cvType=["KFold", 7])
+    >>> model = ho.nipalsPLS2(arrX=my_X_data, arrY=my_Y_data, cvType=["lolo", [1, 2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5, 6, 7]])
     """
     
     def __init__(self, arrX, arrY, **kargs):
@@ -1575,6 +1535,7 @@ class nipalsPLS2:
         self.y_scoresList = []
         self.x_loadingsList = []
         self.y_loadingsList = []
+        self.y_loadingsList_alt = []
         self.x_loadingsWeightsList = []
         self.coeffList = []
         self.Y_residualsList = [self.arrY]
@@ -1592,8 +1553,14 @@ class nipalsPLS2:
         # Compute number of principal components as specified by user 
         for j in range(self.numPC): 
             
-            # Module 8: STEP 1            
-            u_new = Y_new[:,0].copy().reshape(-1,1)
+            # Module 8: STEP 1
+            if not np.any(Y_new[:, 0]):
+                Y_repl_nonCent = np.arange(np.shape(Y_new)[0])
+                Y_repl = Y_repl_nonCent - np.mean(Y_repl_nonCent)
+                u_new = Y_repl.reshape(-1,1)
+            
+            else:
+                u_new = Y_new[:,0].copy().reshape(-1,1)
             
             # Iterate until Y score vector converges according to threshold
             runs = 0
@@ -1612,6 +1579,8 @@ class nipalsPLS2:
                 q_num = np.dot(np.transpose(Y_new), t)
                 q_denom = npla.norm(q_num)
                 q = q_num / q_denom
+                q_denom_alt = np.dot(np.transpose(t), t)
+                q_alt = q_num / q_denom_alt
                 
                 # Module 8: STEP 5
                 u_old = u_new.copy()
@@ -1647,6 +1616,7 @@ class nipalsPLS2:
             self.x_loadingsList.append(p.reshape(-1))
             self.y_scoresList.append(u_new.reshape(-1))
             self.y_loadingsList.append(q.reshape(-1))
+            self.y_loadingsList_alt.append(q_alt.reshape(-1))
             self.x_loadingsWeightsList.append(w.reshape(-1))
             self.coeffList.append(c.reshape(-1))
             
@@ -1660,6 +1630,7 @@ class nipalsPLS2:
         self.arrP = np.array(np.transpose(self.x_loadingsList))
         self.arrU = np.array(np.transpose(self.y_scoresList))
         self.arrQ = np.array(np.transpose(self.y_loadingsList))
+        self.arrQ_alt = np.array(np.transpose(self.y_loadingsList_alt))
         self.arrW = np.array(np.transpose(self.x_loadingsWeightsList))
         self.arrC = np.eye(self.numPC) * np.array(np.transpose(self.coeffList))
         
@@ -1702,7 +1673,7 @@ class nipalsPLS2:
         # Compute PRESS for each Yhat for 1, 2, 3, etc number of components
         # and compute explained variance
         for ind, Yhat in enumerate(self.calYpredList):
-            diffY = st.centre(self.arrY_input) - st.centre(Yhat)
+            diffY = self.arrY_input - Yhat
             PRESSE_indVar = np.sum(np.square(diffY), axis=0)
             self.PRESSEdict_indVar[ind+1] = PRESSE_indVar
                     
@@ -1832,7 +1803,7 @@ class nipalsPLS2:
         # Compute PRESS for each Xhat for 1, 2, 3, etc number of components
         # and compute explained variance
         for ind, Xhat in enumerate(self.calXpredList):
-            diffX = st.centre(self.arrX_input) - st.centre(Xhat)
+            diffX = self.arrX_input - Xhat
             PRESSE_indVar_X = np.sum(np.square(diffX), axis=0)
             self.PRESSEdict_indVar_X[ind+1] = PRESSE_indVar_X
                     
@@ -1956,13 +1927,13 @@ class nipalsPLS2:
             # dictionary according to nubmer of PC
             self.valYpredDict = {}
             for ind in range(1, self.numPC+1):
-                self.valYpredDict[ind] = []
+                self.valYpredDict[ind] = np.zeros(np.shape(self.arrY_input))
             
             # Collect predicted x (i.e. xhat) for each CV segment in a
             # dictionary according to number of PC
             self.valXpredDict = {}
             for ind in range(1, self.numPC+1):
-                self.valXpredDict[ind] = []
+                self.valXpredDict[ind] = np.zeros(np.shape(self.arrX_input))
             
 
             # Collect train and test set in dictionaries for each PC and put
@@ -1980,6 +1951,8 @@ class nipalsPLS2:
             self.val_arrQlist = []
             self.val_arrWlist = []
             self.val_arrClist = []            
+            all_ytm = np.zeros(np.shape(self.arrY_input))
+            all_xtm = np.zeros(np.shape(self.arrX_input))
             
             
             # First devide into combinations of training and test sets
@@ -2028,11 +2001,27 @@ class nipalsPLS2:
                     Y_new = y_train - y_train_means
                 
                 
+                # Give vector y_train_means the correct dimension in 
+                # numpy, so matrix multiplication will be possible
+                # i.e from dimension (x,) to (1,x)                    
+                ytm = y_train_means.reshape(1,-1)
+                xtm = x_train_means.reshape(1,-1)                
+                
+                for ind_test in range(np.shape(y_test)[0]):
+                    all_ytm[test_index,] = ytm
+                    all_xtm[test_index,] = xtm
+                                          
                 # Compute number of principal components as specified by user 
                 for j in range(self.numPC): 
                     
-                    # Module 8: STEP 1            
-                    u_new = Y_new[:,0].copy().reshape(-1,1)
+                    # Module 8: STEP 1
+                    if not np.any(Y_new[:, 0]):
+                        Y_repl_nonCent = np.arange(np.shape(Y_new)[0])
+                        Y_repl = Y_repl_nonCent - np.mean(Y_repl_nonCent)
+                        u_new = Y_repl.reshape(-1,1)
+                    
+                    else:
+                        u_new = Y_new[:,0].copy().reshape(-1,1)
                     
                     # Iterate until Y score vector converges according to threshold
                     runs = 0
@@ -2131,12 +2120,6 @@ class nipalsPLS2:
                     # each PC
                     t_list.append(t)                   
                     t_arr = np.hstack(t_list)
-
-                    # Give vector y_train_means the correct dimension in 
-                    # numpy, so matrix multiplication will be possible
-                    # i.e from dimension (x,) to (1,x)                    
-                    ytm = y_train_means.reshape(1,-1)
-                    xtm = x_train_means.reshape(1,-1)
                     
                     # Get relevant part of P, C anc Q for specific number of 
                     # PC's
@@ -2156,7 +2139,7 @@ class nipalsPLS2:
                                 np.transpose(part_val_arrQ))
                     
                     yhat = ytm + tCQ
-                    self.valYpredDict[ind+1].append(yhat)
+                    self.valYpredDict[ind+1][test_index,] = yhat
                     
                     # Then compute xhat
                     if self.Xstand == True:
@@ -2166,16 +2149,8 @@ class nipalsPLS2:
                         tP = np.dot(t_arr, np.transpose(part_val_arrP))
                     
                     xhat = xtm + tP
-                    self.valXpredDict[ind+1].append(xhat)
+                    self.valXpredDict[ind+1][test_index,] = xhat
                     
-                        
-            # Convert vectors from CV segments stored in lists into matrices 
-            # for each PC            
-            for key in self.valYpredDict:
-                self.valYpredDict[key] = np.vstack(self.valYpredDict[key])
-            
-            for key in self.valXpredDict:
-                self.valXpredDict[key] = np.vstack(self.valXpredDict[key])
             
             
             
@@ -2191,17 +2166,13 @@ class nipalsPLS2:
             self.PRESSdict_indVar = {}
             
             # First compute PRESSCV for zero components
-#            Y_cent = self.arrY_input - np.average(self.arrY_input, axis=0)
-#            self.PRESSCV_0_indVar = np.sum(np.square(Y_cent), axis=0)            
-            varY = np.var(self.arrY_input, axis=0, ddof=1)
-            self.PRESSCV_0_indVar = (varY * np.square(np.shape(self.arrY_input)[0])) \
-                    / (np.shape(self.arrY_input)[0])
+            self.PRESSCV_0_indVar = np.sum(np.square(self.arrY_input - all_ytm), axis=0)
             self.PRESSdict_indVar[0] = self.PRESSCV_0_indVar
             
             # Compute PRESSCV for each Yhat for 1, 2, 3, etc number of components
             # and compute explained variance
             for ind, Yhat in enumerate(self.valYpredList):
-                diffY = st.centre(self.arrY_input) - st.centre(Yhat)
+                diffY = self.arrY_input - Yhat
                 PRESSCV_indVar = np.sum(np.square(diffY), axis=0)
                 self.PRESSdict_indVar[ind+1] = PRESSCV_indVar
                         
@@ -2304,16 +2275,13 @@ class nipalsPLS2:
             self.PRESSdict_indVar_X = {}
             
             # First compute PRESSCV for zero components            
-            varX = np.var(self.arrX_input, axis=0, ddof=1)
-            self.PRESSCV_0_indVar_X = (varX * np.square(np.shape(self.arrX_input)[0])) \
-                    / (np.shape(self.arrX_input)[0])
+            self.PRESSCV_0_indVar_X = np.sum(np.square(self.arrX_input - all_xtm), axis=0)
             self.PRESSdict_indVar_X[0] = self.PRESSCV_0_indVar_X
             
             # Compute PRESSCV for each Yhat for 1, 2, 3, etc number of 
             # components and compute explained variance
             for ind, Xhat in enumerate(self.valXpredList):
-                #diffX = self.arrX_input - Xhat
-                diffX = st.centre(self.arrX_input) - st.centre(Xhat)
+                diffX = self.arrX_input - Xhat
                 PRESSCV_indVar_X = np.sum(np.square(diffX), axis=0)
                 self.PRESSdict_indVar_X[ind+1] = PRESSCV_indVar_X
                         
@@ -2689,37 +2657,21 @@ class nipalsPLS2:
         Returns array of X scores from new X data using the exsisting model. 
         Rows represent objects and columns represent components.
         """        
+
+        assert numComp <= self.numPC, ValueError('Maximum numComp = ' + str(self.numPC))
+        assert numComp > -1, ValueError('numComp must be >= 0')
         
         # First pre-process new X data accordingly
         if self.Xstand == True:
-        
             x_new = (Xnew - np.average(self.arrX_input, axis=0)) / \
                     np.std(self.arrX_input, ddof=1)
-        
         else:
-            
             x_new = (Xnew - np.average(self.arrX_input, axis=0))
                 
         
-        # Get all necessary matrices from calibration
-        t_list = []
-        for ind in range(numComp):
-            
-            # Module 8: Prediction STEP 1
-            # ---------------------------
-            t = np.dot(x_new, self.arrW[:, ind]).reshape(-1, 1)
-            
-            # Module 8: Prediction STEP 2
-            # ---------------------------
-            p = self.arrP[:, ind].reshape(-1,1)                    
-            x_old = x_new
-            x_new = x_old - np.dot(t, np.transpose(p))
-            
-            # Generate a vector t that gets longer by one element with
-            # each PC
-            t_list.append(list(t)[0])                   
-        
-        return np.array(t_list)
+        # W*inv(P'W)
+        return np.dot(x_new, np.dot(self.arrW[:,0:numComp], \
+                      np.linalg.inv(np.dot(np.transpose(self.arrP[:,0:numComp]), self.arrW[:,0:numComp]))))
     
     
     def scoresRegressionCoeffs(self):
@@ -2752,7 +2704,7 @@ class nipalsPLS2:
         variables and columns represent components. First column for 
         component 1, second columns for component 2, etc.
         """
-        return self.arrQ
+        return self.arrQ_alt
     
     
     def Y_corrLoadings(self):
@@ -2990,70 +2942,46 @@ class nipalsPLS2:
         return self.RMSECV_total_list
 
 
+    def regressionCoefficients(self, numComp=1):
+        """
+        Returns regression coefficients from the fitted model using all
+        available samples and a chosen number of components.
+        """
+        assert numComp <= self.numPC, ValueError('Maximum numComp = ' + str(self.numPC))
+        assert numComp > -1, ValueError('numComp must be >= 0')
+        
+        # B = W*inv(P'W)*Q'
+        if self.Ystand == True:
+            return np.dot(np.dot(self.arrW[:,0:numComp], \
+                    np.linalg.inv(np.dot(np.transpose(self.arrP[:,0:numComp]), self.arrW[:,0:numComp]))),\
+                    np.transpose(self.arrQ_alt[:,0:numComp])) \
+                    * np.std(self.arrY_input, ddof=1, axis=0).reshape(1,-1)
+        else:
+            return np.dot(np.dot(self.arrW[:,0:numComp], \
+                    np.linalg.inv(np.dot(np.transpose(self.arrP[:,0:numComp]), self.arrW[:,0:numComp]))),\
+                    np.transpose(self.arrQ_alt[:,0:numComp]))
+
+        
     def Y_predict(self, Xnew, numComp=1):
         """
         Return predicted Yhat from new measurements X. 
-        """        
-        pred_Y_list = []
-        for rowInd in range(np.shape(Xnew)[0]):
-            print('Object', rowInd)
+        """
         
-            # First pre-process new X data accordingly
-            if self.Xstand == True:
-            
-                x_new = (Xnew[rowInd, :] - np.average(self.arrX_input, axis=0)) / \
-                        np.std(self.arrX_input, ddof=1)
-            
-            else:
-                
-                x_new = (Xnew[rowInd, :] - np.average(self.arrX_input, axis=0))
+        assert numComp <= self.numPC, ValueError('Maximum numComp = ' + str(self.numPC))
+        assert numComp > -1, ValueError('numComp must be >= 0')
+
+        # First pre-process new X data accordingly
+        if self.Xstand == True:
+            x_new = (Xnew - np.average(self.arrX_input, axis=0)) / \
+                    np.std(self.arrX_input, ddof=1, axis=0)
+        else:
+            x_new = (Xnew - np.average(self.arrX_input, axis=0))
+
         
-            # Get all necessary matrices from calibration
-            t_list = []
-            for ind in range(numComp):
-                
-                # Module 8: Prediction STEP 1
-                # ---------------------------
-                t = np.dot(x_new, self.arrW[:, ind]).reshape(-1, 1)
-                
-                # Module 8: Prediction STEP 2
-                # ---------------------------
-                p = self.arrP[:, ind].reshape(-1,1)
-                x_old = x_new
-                x_new = x_old - np.dot(t, np.transpose(p))
-                
-                # Generate a vector t that gets longer by one element with
-                # each PC
-                t_list.append(list(t)[0])                   
-                t_vec = np.transpose(np.array(t_list))
-    
-                # Give vector y_train_means the correct dimension in 
-                # numpy, so matrix multiplication will be possible
-                # i.e from dimension (x,) to (1,x)                    
-                ytm = np.average(self.arrY_input, axis=0).reshape(1,-1)
-                
-                # Get relevant part of P, C anc Q for specific number of 
-                # PC's
-                part_arrQ = self.arrQ[:, 0:ind+1]
-                part_arrC = self.arrC[0:ind+1, 0:ind+1]
-                
-                # Module 8: Prediction STEP 3 
-                # ---------------------------                                       
-                # First compute yhat                    
-                if self.Ystand == True:
-                    tCQ = np.dot(np.dot(t_vec, part_arrC), \
-                            np.transpose(part_arrQ)) * \
-                            np.std(self.arrY, ddof=1).reshape(1,-1)
-                else:
-                    tCQ = np.dot(np.dot(t_vec, part_arrC), \
-                            np.transpose(part_arrQ))
-                
-                yhat = ytm + tCQ
-            
-            pred_Y_list.append(yhat)
-        
-        return np.vstack(pred_Y_list)
-            
+        # x_new * beta_hat + mean(y)
+        return np.dot(x_new, self.regressionCoefficients(numComp)) \
+                + np.mean(self.arrY_input, axis=0)
+
     
     def cvTrainAndTestData(self):
         """
