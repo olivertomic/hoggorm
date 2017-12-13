@@ -48,7 +48,13 @@ class nipalsPCR:
         KFold : leave out one fold or segment
         cvType = ["KFold", numFolds]
             numFolds: int 
-            number of folds or segments  
+            number of folds or segments
+        
+        lolo: leave one label out
+        cvType = ["lolo", lablesList]
+            lablesList: list
+            sequence of lables. Must be same lenght as number of rows in 
+            input array X. Leaves out objects with same lable.
 
     
     RETURNS
@@ -72,7 +78,8 @@ class nipalsPCR:
     >>> model = ho.nipalsPCR(arrX=my_X_data, arrY=my_Y_data, numComp=3, Ystand=True)
     >>> model = ho.nipalsPCR(arrX=my_X_data, arrY=my_Y_data, Xstand=False, Ystand=True)
     >>> model = ho.nipalsPCR(arrX=my_X_data, arrY=my_Y_data, cvType=["loo"])
-    >>> model = ho.nipalsPCR(arrX=my_X_data, arrY=my_Y_data, cvType=["lpo", 4])
+    >>> model = ho.nipalsPCR(arrX=my_X_data, arrY=my_Y_data, cvType=["KFold", 7])
+    >>> model = ho.nipalsPCR(arrX=my_X_data, arrY=my_Y_data, cvType=["lolo", [1, 2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5, 6, 7]])
     """
     
     def __init__(self, arrX, arrY, **kargs):
@@ -183,7 +190,16 @@ class nipalsPCR:
         # Compute number of principal components as specified by user 
         for j in range(self.numPC): 
             
-            t = X_new[:,0].reshape(-1,1)
+            # Check if first column contains only zeros. If yes, then
+            # NIPALS will not converge and (npla.norm(num) will contain 
+            # nan's). Rather put in other starting values.
+            if not np.any(X_new[:, 0]):
+                X_repl_nonCent = np.arange(np.shape(X_new)[0])
+                X_repl = X_repl_nonCent - np.mean(X_repl_nonCent)
+                t = X_repl.reshape(-1,1)
+            
+            else:
+                t = X_new[:,0].reshape(-1,1)
             
             # Iterate until score vector converges according to threshold
             while 1:
@@ -270,7 +286,7 @@ class nipalsPCR:
         # Compute PRESS for each Xhat for 1, 2, 3, etc number of components
         # and compute explained variance
         for ind, Xhat in enumerate(self.calXpredList):
-            diffX = st.centre(self.arrX_input) - st.centre(Xhat)
+            diffX = self.arrX_input - Xhat
             PRESSE_indVar_X = np.sum(np.square(diffX), axis=0)
             self.PRESSEdict_indVar_X[ind+1] = PRESSE_indVar_X
                     
@@ -404,7 +420,7 @@ class nipalsPCR:
         # Compute PRESS for each Yhat for 1, 2, 3, etc number of components
         # and compute explained variance
         for ind, Yhat in enumerate(self.calYpredList):
-            diffY = st.centre(self.arrY_input) - st.centre(Yhat)
+            diffY = self.arrY_input - Yhat
             PRESSE_indVar = np.sum(np.square(diffY), axis=0)
             self.PRESSEdict_indVar[ind+1] = PRESSE_indVar
                     
@@ -526,13 +542,13 @@ class nipalsPCR:
             # dictionary according to nubmer of PC
             self.valYpredDict = {}
             for ind in range(1, self.numPC+1):
-                self.valYpredDict[ind] = []
+                self.valYpredDict[ind] = np.zeros(np.shape(self.arrY_input))
             
             # Collect predicted x (i.e. xhat) for each CV segment in a
             # dictionary according to number of PC
             self.valXpredDict = {}
             for ind in range(1, self.numPC+1):
-                self.valXpredDict[ind] = []
+                self.valXpredDict[ind] = np.zeros(np.shape(self.arrX_input))
             
             # Collect train and test set in dictionaries for each componentand put
             # them in this list.            
@@ -549,8 +565,8 @@ class nipalsPCR:
 
             # Collect train and test set in a dictionary for each component           
             self.cvTrainAndTestDataList = []
-            self.X_train_means_list = []
-            self.Y_train_means_list = []            
+            self.X_train_means_list = np.zeros(np.shape(self.arrX_input))          
+            self.Y_train_means_list = np.zeros(np.shape(self.arrY_input))          
             
             # First devide into combinations of training and test sets
             for train_index, test_index in cvComb:
@@ -582,7 +598,7 @@ class nipalsPCR:
                     # Center X test using mean from training set
                     X_test_proc = X_test - X_train_mean
                 # -------------------------------------------------------------
-                self.X_train_means_list.append(X_train_mean)
+                self.X_train_means_list[test_index,] = X_train_mean
                 
                 
                 # -------------------------------------------------------------                    
@@ -595,7 +611,7 @@ class nipalsPCR:
                     Y_train_mean = np.average(Y_train, axis=0)
                     Y_train_proc = Y_train - Y_train_mean
                 # -------------------------------------------------------------
-                self.Y_train_means_list.append(Y_train_mean)
+                self.Y_train_means_list[test_index,] = Y_train_mean
                 
         
                 # Here the NIPALS PCA algorithm starts
@@ -611,8 +627,16 @@ class nipalsPCR:
                 # Compute number of principal components as specified by user 
                 for j in range(self.numPC): 
                     
-                    t = X_new[:,0].reshape(-1,1)
-                    #t = X_new[:,0]
+                    # Check if first column contains only zeros. If yes, then
+                    # NIPALS will not converge and (npla.norm(num) will contain 
+                    # nan's). Rather put in other starting values.
+                    if not np.any(X_new[:, 0]):
+                        X_repl_nonCent = np.arange(np.shape(X_new)[0])
+                        X_repl = X_repl_nonCent - np.mean(X_repl_nonCent)
+                        t = X_repl.reshape(-1,1)
+                    
+                    else:
+                        t = X_new[:,0].reshape(-1,1)
                     
                     # Iterate until score vector converges according to threshold
                     while 1:
@@ -676,7 +700,7 @@ class nipalsPCR:
                     else:
                         valPredX = valPredX_proc + X_train_mean
                     
-                    self.valXpredDict[ind+1].append(valPredX)
+                    self.valXpredDict[ind+1][test_index,] = valPredX
                     
                     if self.Ystand == True:
                         valPredY =(valPredY_proc * Y_train_std) + \
@@ -684,18 +708,12 @@ class nipalsPCR:
                     else:
                         valPredY = valPredY_proc + Y_train_mean
                     
-                    self.valYpredDict[ind+1].append(valPredY)
+                    self.valYpredDict[ind+1][test_index,] = valPredY
                 
             
-            # Convert list of one-row arrays into one array such that it 
-            # corresponds to the orignial variable
-            for ind in range(1, dims+1):
-                self.valXpredDict[ind] = np.vstack(self.valXpredDict[ind])
-                self.valYpredDict[ind] = np.vstack(self.valYpredDict[ind])
 
             # Put all predicitons into an array that corresponds to the
             # original variable
-            #self.valPredXarrList = []
             self.valXpredList = []
             valPreds = self.valXpredDict.values()
             for preds in valPreds:
@@ -705,7 +723,6 @@ class nipalsPCR:
             
             # Put all predicitons into an array that corresponds to the
             # original variable
-            #self.valPredXarrList = []
             self.valYpredList = []
             valPreds = self.valYpredDict.values()
             for preds in valPreds:
@@ -728,16 +745,14 @@ class nipalsPCR:
             self.PRESSCVdict_indVar_X = {}
             
             # First compute PRESSCV for zero components            
-            varX = np.var(self.arrX_input, axis=0, ddof=1)
-            self.PRESSCV_0_indVar_X = (varX * np.square(np.shape(self.arrX_input)[0])) \
-                    / (np.shape(self.arrX_input)[0])
+            self.PRESSCV_0_indVar_X = np.sum(np.square(self.arrX_input-self.X_train_means_list), axis=0)
             self.PRESSCVdict_indVar_X[0] = self.PRESSCV_0_indVar_X
             
             # Compute PRESSCV for each Yhat for 1, 2, 3, etc number of 
             # components and compute explained variance
             for ind, Xhat in enumerate(self.valXpredList):
                 #diffX = self.arrX_input - Xhat
-                diffX = st.centre(self.arrX_input) - st.centre(Xhat)
+                diffX = self.arrX_input - Xhat
                 PRESSCV_indVar_X = np.sum(np.square(diffX), axis=0)
                 self.PRESSCVdict_indVar_X[ind+1] = PRESSCV_indVar_X
                         
@@ -838,15 +853,13 @@ class nipalsPCR:
             self.PRESSdict_indVar = {}
             
             # First compute PRESSCV for zero components            
-            varY = np.var(self.arrY_input, axis=0, ddof=1)
-            self.PRESSCV_0_indVar = (varY * np.square(np.shape(self.arrY_input)[0])) \
-                    / (np.shape(self.arrY_input)[0])
+            self.PRESSCV_0_indVar = np.sum(np.square(self.arrY_input-self.Y_train_means_list), axis=0)
             self.PRESSdict_indVar[0] = self.PRESSCV_0_indVar
             
             # Compute PRESSCV for each Yhat for 1, 2, 3, etc number of components
             # and compute explained variance
             for ind, Yhat in enumerate(self.valYpredList):
-                diffY = st.centre(self.arrY_input) - st.centre(Yhat)
+                diffY = self.arrY_input - Yhat
                 PRESSCV_indVar = np.sum(np.square(diffY), axis=0)
                 self.PRESSdict_indVar[ind+1] = PRESSCV_indVar
                         
@@ -1211,6 +1224,9 @@ class nipalsPCR:
         Rows represent objects and columns represent components.
         """        
         
+        assert numComp <= self.numPC, ValueError('Maximum numComp = ' + str(self.numPC))
+        assert numComp > -1, ValueError('numComp must be >= 0')
+        
         # First pre-process new X data accordingly
         if self.Xstand == True:
         
@@ -1388,7 +1404,7 @@ class nipalsPCR:
         each component. First number in list is for component 1, second number 
         for component 2, third number for component 3, etc.
         """
-        return  self.YvalExplVarList
+        return self.YvalExplVarList
     
     
     def Y_cumValExplVar_indVar(self):
@@ -1479,34 +1495,54 @@ class nipalsPCR:
         return self.RMSECV_total_list
     
     
+    def regressionCoefficients(self, numComp=1):
+        """
+        Returns regression coefficients from the fitted model using all
+        available samples and a chosen number of components.
+        """
+        assert numComp <= self.numPC, ValueError('Maximum numComp = ' + str(self.numPC))
+        assert numComp > -1, ValueError('numComp must be >= 0')
+        
+        # B = P*Q'
+        if self.Ystand == True:
+            return np.dot(self.arrP[:,0:numComp], np.transpose(self.arrQ[:,0:numComp])) \
+                 * np.std(self.arrY_input, ddof=1, axis=0).reshape(1,-1)
+        else:
+            return np.dot(self.arrP[:,0:numComp], np.transpose(self.arrQ[:,0:numComp]))
+
+        
     def Y_predict(self, Xnew, numComp=1):
         """
         Return predicted Yhat from new measurements X. 
         """        
         
-        # First pre-process new X data accordingly
-        if self.Xstand == True:
+        assert numComp <= self.numPC, ValueError('Maximum numComp = ' + str(self.numPC))
+        assert numComp >- 1, ValueError('numComp must be >= 0')
         
-            x_new = (Xnew - np.average(self.arrX_input, axis=0)) / \
-                    np.std(self.arrX_input, ddof=1)
-        
-        else:
+        # Return average if numComp == 0
+        if numComp == 0:
+            Yhat = np.zeros(np.shape(self.arrY_input)) + np.average(self.arrY_input, axis=0)
             
-            x_new = (Xnew - np.average(self.arrX_input, axis=0))
-        
-        
-        # Compute the scores for new object
-        projT = np.dot(x_new, self.arrP[:, 0:numComp+1])
-
-        # Compute processed responses
-        y_pred_proc = np.dot(projT, np.transpose(self.arrQ[:, 0:numComp+1]))
-        
-        # Compute predicted values back to original scale
-        if self.Ystand == True:
-            Yhat = (y_pred_proc * np.std(self.arrY, ddof=1).reshape(1,-1)) + \
-                    np.average(self.arrY_input, axis=0)
         else:
-            Yhat = y_pred_proc + np.average(self.arrY_input, axis=0)
+            # First pre-process new X data accordingly
+            if self.Xstand == True:
+                x_new = (Xnew - np.average(self.arrX_input, axis=0)) / \
+                        np.std(self.arrX_input, ddof=1, axis=0)
+            else:
+                x_new = (Xnew - np.average(self.arrX_input, axis=0))
+        
+            # Compute the scores for new object
+            projT = np.dot(x_new, self.arrP[:, 0:numComp])
+    
+            # Compute processed responses
+            y_pred_proc = np.dot(projT, np.transpose(self.arrQ[:, 0:numComp]))
+            
+            # Compute predicted values back to original scale
+            if self.Ystand == True:
+                Yhat = (y_pred_proc * np.std(self.arrY_input, ddof=1, axis=0).reshape(1,-1)) + \
+                        np.average(self.arrY_input, axis=0)
+            else:
+                Yhat = y_pred_proc + np.average(self.arrY_input, axis=0)
         
         return Yhat
     
@@ -1544,6 +1580,3 @@ class nipalsPCR:
         ellipses['y100perc'] = ycords100perc
         
         return ellipses
-
-
-
