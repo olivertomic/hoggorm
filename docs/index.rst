@@ -11,6 +11,8 @@ Welcome to Hoggorm's documentation!
    :caption: Contents:
 
    project-background
+   main-methods
+   utility-functions
 
 
 Indices and tables
