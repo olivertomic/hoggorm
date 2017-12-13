@@ -25,7 +25,7 @@ sys.path.insert(0, os.path.abspath('..'))
 
 # If your documentation needs a minimal Sphinx version, state it here.
 #
-# needs_sphinx = '1.0'
+needs_sphinx = '1.5'
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
@@ -46,8 +46,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Hoggorm'
-copyright = u'2017, Oliver Tomic <oliver.tomic@nmbu.no>'
-author = u'Oliver Tomic <oliver.tomic@nmbu.no>'
+copyright = u'2017, Oliver Tomic'
+author = u'Oliver Tomic'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -163,6 +163,3 @@ texinfo_documents = [
      author, 'Hoggorm', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-
