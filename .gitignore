@@ -1,4 +1,14 @@
-*.pyc
-_build
-_static
-_templates
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Unit test / coverage reports
+.cache
+
+# Sphinx documentation
+docs/_build/
