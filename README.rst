@@ -1,7 +1,8 @@
 Hoggorm
 =======
 
-![alt text](https://github.com/olivertomic/hoggorm/blob/master/docs/serpiente-00-300px.png "Hoggorm logo")
+![alt text]
+(https://github.com/olivertomic/hoggorm/blob/master/docs/serpiente-00-300px.png "Hoggorm logo")
 
 Hoggorm is a Python package for explorative multivariate statistics in Python. It contains PCA (principal component analysis), PCR (principal component regression), PLSR (partial least squares regression) and the matrix corrlation coefficients RV and RV2.
 
