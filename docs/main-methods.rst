@@ -8,13 +8,13 @@ Principal Component Analysis (PCA)
 .. automodule:: hoggorm.pca
    :members:
 
-## Principal Component Regression (PCR)
+Principal Component Regression (PCR)
 ---------------------------------------
 
 .. automodule:: hoggorm.pcr
    :members:
 
-## Partial Least Squares Regression (PLSR)
+Partial Least Squares Regression (PLSR)
 ------------------------------------------
 
 .. automodule:: hoggorm.plsr
