@@ -11,5 +11,6 @@ Functions in hoggorm.statTools module
 
 Cross validation classes in hoggorm.cross_val module
 ----------------------------------------------------
+This module consists of code from the 'cross_val.py' file of scikit-learn version 0.4. 
 .. automodule:: hoggorm.cross_val
    :members:
