@@ -24,7 +24,7 @@ Make sure that Python 3.5 or higher is installed. A convenient way to install Py
 Documentation
 -------------
 
-* Documentation at Read the Docs http://hoggorm.readthedocs.io/en/latest - automatic
+* Documentation at **Read the Docs** http://hoggorm.readthedocs.io/en/latest - automatic!
 * Jupyter notebooks
   * PCA
   * PLSR
