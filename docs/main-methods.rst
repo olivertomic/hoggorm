@@ -2,7 +2,8 @@
 Main methods
 ==================
 
-## Principal Component Analysis (PCA)
+Principal Component Analysis (PCA)
+----------------------------------
 
 .. automodule:: hoggorm.pca
    :members:
