@@ -24,10 +24,9 @@ Make sure that Python 3.5 or higher is installed. A convenient way to install Py
 Documentation
 -------------
 
-Documentation is being added continuously. Please check the **docs** folder above. Currently there is a Jupyter notebook illustrating the application of PCA with hoggorm. 
+* Documentation at [Read the Docs](http://hoggorm.readthedocs.io/en/latest/)
+* Jupyter notebooks
+  * PCA
+  * PLSR
+  * PCR
 
-
-Latest changes
---------------
-
-None.
