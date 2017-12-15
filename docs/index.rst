@@ -3,15 +3,16 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to the hoggorm documentation!
-=====================================
+Welcome to the hoggorm documentation
+====================================
+
+.. image:: serpiente-00-300px.png
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Content:
 
-   readme
-   project-background
+   quickstart
    main-methods
    utility-functions
 
