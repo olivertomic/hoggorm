@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-""" PCA module
-
-Principal Component Analysis implemented using NIPALS algorithm.
-"""
 
 # Import necessary modules
 import numpy as np
@@ -22,43 +18,56 @@ class nipalsPCA:
     PARAMETERS
     ----------
     arrX : numpy array
-        A numpy array containg the data 
+        A numpy array containing the data
+    
     numComp : int, optional
         An integer that defines how many components are to be computed
-    Xstand : boolean, optional 
-        False : columns of arrX are mean centred (default)
-        True : columns of arrX are mean centred and devided by their own 
-            standard deviation
-    cvType : list
-        The list defines cross validation settings when computing the
-        PCA model. Choose cross validation type from the following:
-        
-        loo : leave one out / a.k.a. full cross validation (default)
-        cvType = ["loo"]
-        
-        KFold : leave out one fold or segment
-        cvType = ["KFold", numFolds]
-            numFolds: int 
-            number of folds or segments 
-        
-        lolo: leave one label out
-        cvType = ["lolo", lablesList]
-            lablesList: list
-            sequence of lables. Must be same lenght as number of rows in 
-            input array X. Leaves out objects with same lable. 
-            
     
-            
+    Xstand : boolean, optional
+        Defines whether variables in ``arrX`` are to be standardised/scaled or centered
+	
+        False : columns of ``arrX`` are mean centred (default)
+            ``Xstand = False``
+	
+        True : columns of ``arrX`` are mean centred and devided by their own standard deviation
+            ``Xstand = True``
+    
+    cvType : list, optional
+        The list defines cross validation settings when computing the PCA model. Note if `cvType` is not provided, cross validation will not be performed and as such cross validation results will not be available. Choose cross validation type from the following:
+	
+        loo : leave one out / a.k.a. full cross validation (default)
+            ``cvType = ["loo"]``
+	
+        KFold : leave out one fold or segment
+            ``cvType = ["KFold", numFolds]``
+	
+            numFolds: int 
+	    
+            Number of folds or segments 
+			
+        lolo : leave one label out
+            ``cvType = ["lolo", lablesList]``
+	    
+            lablesList: list
+	    
+        Sequence of lables. Must be same lenght as number of rows in ``arrX``. Leaves out objects with same lable. 
+
+
     RETURNS
     -------
-    Returns the PCA model. Use the attributes of class nipalsPCA to access    
-    computational results of PCA model.
+    class
+        A class that contains the PCA model and computational results
     
     
     EXAMPLES
     --------
+
+    First import the hoggorm package.
+
     >>> import hoggorm as ho
-    
+
+    Import your data into a numpy array.
+
     >>> myData
     array([[ 5.7291665,  3.416667 ,  3.175    ,  2.6166668,  6.2208333],
            [ 6.0749993,  2.7416666,  3.6333339,  3.3833334,  6.1708336],
@@ -70,6 +79,8 @@ class nipalsPCA:
     >>> np.shape(myData)
     (14, 5)
     
+    Examples of how to compute a PCA model using different settings for the input parameters.
+
     >>> model = ho.nipalsPCA(arrX=myData, numComp=5, Xstand=False)
     >>> model = ho.nipalsPCA(arrX=myData)
     >>> model = ho.nipalsPCA(arrX=myData, numComp=3)
@@ -77,8 +88,13 @@ class nipalsPCA:
     >>> model = ho.nipalsPCA(arrX=myData, cvType=["loo"])
     >>> model = ho.nipalsPCA(arrX=myData, cvType=["Kfold", 4])
     >>> model = ho.nipalsPCA(arrX=myData, cvType=["lolo", [1, 2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5, 6, 7]])
-        
-    
+	
+    Examples of how to extract results from the PCA model.
+
+    >>> scores = model.X_scores()
+    >>> loadings = model.X_loadings()
+    >>> cumulativeCalibratedExplainedVariance_allVariables = model.X_cumCalExplVar_indVar()
+
     """
     
     def __init__(self, arrX, **kargs):

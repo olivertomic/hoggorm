@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-"""PCR module
-
-Principal Component Regression implemented using NIPALS algorithm for PCA part and MLR for regression part
-"""
 
 # Import necessary modules
 import numpy as np
@@ -15,63 +11,80 @@ import hoggorm.cross_val as cv
 
 class nipalsPCR:
     """
-    This class carries out Principal Component Regression for two arrays using
-    NIPALS algorithm.
-        
+    This class carries out Principal Component Regression for two arrays using NIPALS algorithm.
+    
     
     PARAMETERS
     ----------
     arrX : numpy array 
-        This is X in the PCR model. Number and order of objects (rows) must 
-        match those of vecy.
+        This is X in the PCR model. Number and order of objects (rows) must match those of ``arrY``.
+    
     arrY : numpy array
-        This is Y in the PCR model. Number and order of objects (rows) must 
-        match those of arrX.
-    numComp : int
-        An integer that defines how many components are to be computed. If not
-        provided, the maximum possible number of components is used.
-    Xstand : boolean 
-        False : columns of arrX are mean centred (default)
-        True : columns of arrX are mean centred and devided by their own 
-            standard deviation
-    Ystand : boolean 
-        False : columns of arrY are mean centred (default)
-        True : columns of arrY are mean centred and devided by their own 
-            standard deviation.
-    cvType : list
-        The list defines cross validation settings when computing the
-        PCR model. Choose cross validation type from the following:
+        This is Y in the PCR model. Number and order of objects (rows) must match those of ``arrX``.
+    
+    numComp : int, optional
+        An integer that defines how many components are to be computed. If not provided, the maximum possible number of components is used.
+    
+    Xstand : boolean, optional
+        Defines whether variables in ``arrX`` are to be standardised/scaled or centered.
         
+        False : columns of ``arrX`` are mean centred (default)
+            ``Xstand = False``
+
+        True : columns of ``arrX`` are mean centred and devided by their own standard deviation
+            ``Xstand = True``
+
+    Ystand : boolean, optional
+        Defines whether variables in ``arrY`` are to be standardised/scaled or centered.
+        
+        False : columns of ``arrY`` are mean centred (default)
+            ``Ystand = False``
+
+        True : columns of ``arrY`` are mean centred and devided by their own standard deviation
+            ``Ystand = True``
+
+    cvType : list, optional
+        The list defines cross validation settings when computing the PCA model. Note if `cvType` is not provided, cross validation will not be performed and as such cross validation results will not be available. Choose cross validation type from the following:
+	
         loo : leave one out / a.k.a. full cross validation (default)
-        cvType = ["loo"]
-        
+            ``cvType = ["loo"]``
+	
         KFold : leave out one fold or segment
-        cvType = ["KFold", numFolds]
+            ``cvType = ["KFold", numFolds]``
+	
             numFolds: int 
-            number of folds or segments
-        
-        lolo: leave one label out
-        cvType = ["lolo", lablesList]
-            lablesList: list
-            sequence of lables. Must be same lenght as number of rows in 
-            input array X. Leaves out objects with same lable.
+	    
+            Number of folds or segments 
+			
+    lolo : leave one label out
+            ``cvType = ["lolo", labelsList]``
+	    
+            labelsList: list
+	    
+            Sequence of lables. Must be same lenght as number of rows in ``arrX`` and ``arrY``. Leaves out objects with same lable.
 
     
     RETURNS
     -------
-    Returns PCR model. Use the attributes of class nipalsPCR to access    
-    computational results of PCR model.
+    class
+        A class that contains the PCR model and computational results
                            
                            
     EXAMPLES
     --------
+
+    First import the hoggormpackage
+
     >>> import hoggorm as ho 
+
+    Import your data into a numpy array.
     
     >>> np.shape(my_X_data)
     (14, 292)
-    
     >>> np.shape(my_Y_data)
     (14, 5)
+
+    Examples of how to compute a PCR model using different settings for the input parameters.
        
     >>> model = ho.nipalsPCR(arrX=my_X_data, arrY=my_Y_data, numComp=5)
     >>> model = ho.nipalsPCR(arrX=my_X_data, arrY=my_Y_data)
@@ -80,6 +93,15 @@ class nipalsPCR:
     >>> model = ho.nipalsPCR(arrX=my_X_data, arrY=my_Y_data, cvType=["loo"])
     >>> model = ho.nipalsPCR(arrX=my_X_data, arrY=my_Y_data, cvType=["KFold", 7])
     >>> model = ho.nipalsPCR(arrX=my_X_data, arrY=my_Y_data, cvType=["lolo", [1, 2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5, 6, 7]])
+    
+    Examples of how to extract results from the PCR model.
+
+    >>> X_scores = model.X_scores()
+    >>> X_loadings = model.X_loadings()
+    >>> Y_loadings = model.Y_loadings()
+    >>> X_cumulativeCalibratedExplainedVariance_allVariables = model.X_cumCalExplVar_indVar()
+    >>> Y_cumulativeValidatedExplainedVariance_total = model.Y_cumCalExplVar()
+
     """
     
     def __init__(self, arrX, arrY, **kargs):

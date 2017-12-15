@@ -1,5 +1,5 @@
-Hoggorm
-=======
+Quickstart
+==========
 
 Hoggorm is a Python package for explorative multivariate statistics in Python. It contains 
 

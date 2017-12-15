@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-"""PLSR module
-
-Partial Least Squares Regression
-"""
 
 # Import necessary modules
 import numpy as np
@@ -22,56 +18,75 @@ class nipalsPLS1:
     PARAMETERS
     ----------
     arrX : numpy array 
-        This is X in the PLS1 model. Number and order of objects (rows) must 
-        match those of vecy.
-    vecy : numpy array of shape (n x 1).  
-        This is y in the PLS1 model. Number and order of objects (rows)
-        must match those of arrX.
-    numComp : int
-        An integer that defines how many components are to be computed. If not
-        provided, the maximum possible number of components is used.
-    Xstand : boolean 
-        False : columns of arrX are mean centred (default)
-        True : columns of arrX are mean centred and devided by their own 
-            standard deviation
-    Ystand : boolean 
-        False : columns of arrY are mean centred (default)
-        True : columns of arrY are mean centred and devided by their own 
-            standard deviation
-    cvType : list
-        The list defines cross validation settings when computing the model. 
-        Choose cross validation type from the following:
-        
-        loo : leave one out / a.k.a. full cross validation (default)
-        cvType = ["loo"]
-        
-        KFold : leave out one fold or segment
-        cvType = ["KFold", numFolds]
-            numFolds: int 
-            number of folds or segments
-        
-        lolo: leave one label out
-        cvType = ["lolo", lablesList]
-            lablesList: list
-            sequence of lables. Must be same lenght as number of rows in 
-            input array X. Leaves out objects with same lable.
+        This is X in the PLS1 model. Number and order of objects (rows) must match those of ``arrY``.
     
-            
+    vecy : numpy array
+        This is y in the PLS1 model. Number and order of objects (rows) must match those of ``arrX``.
+    
+    numComp : int, optional
+        An integer that defines how many components are to be computed. If not provided, the maximum possible number of components is used.
+    
+    Xstand : boolean, optional
+        Defines whether variables in ``arrX`` are to be standardised/scaled or centered.
+        
+        False : columns of ``arrX`` are mean centred (default)
+            ``Xstand = False``
+
+        True : columns of ``arrX`` are mean centred and devided by their own standard deviation
+            ``Xstand = True``
+
+    Ystand : boolean, optional
+        Defines whether ``vecy`` is to be standardised/scaled or centered.
+        
+        False : ``vecy`` is to be mean centred (default)
+            ``Ystand = False``
+
+        True : ``vecy`` is to be mean centred and devided by its own standard deviation
+            ``Ystand = True``
+
+    cvType : list, optional
+        The list defines cross validation settings when computing the PCA model. Note if `cvType` is not provided, cross validation will not be performed and as such cross validation results will not be available. Choose cross validation type from the following:
+	
+        loo : leave one out / a.k.a. full cross validation (default)
+            ``cvType = ["loo"]``
+	
+        KFold : leave out one fold or segment
+            ``cvType = ["KFold", numFolds]``
+	
+            numFolds: int 
+	    
+            Number of folds or segments 
+			
+    lolo : leave one label out
+            ``cvType = ["lolo", labelsList]``
+	    
+            labelsList: list
+	    
+            Sequence of lables. Must be same lenght as number of rows in ``arrX`` and ``arrY``. Leaves out objects with same lable.
+
+    
     RETURNS
     -------
-    Returns PLS1 model. Use the attributes of class nipalsPLS1 to access    
-    computational results of PLS1 model.
+    class
+        A class that contains the PLS1 model and computational results
+    
                            
                            
     EXAMPLES
     --------
-    >>> import hoggorm as ho 
+
+    First import the hoggormpackage
+
+    >>> import hoggorm as ho
+
+    Import your data into a numpy array.
     
     >>> np.shape(my_X_data)
     (14, 292)
-    
     >>> np.shape(my_y_data)
     (14, 1)
+
+    Examples of how to compute a PLS1 model using different settings for the input parameters.
     
     >>> model = ho.nipalsPLS1(arrX=my_X_data, vecy=my_y_data, numComp=5)
     >>> model = ho.nipalsPLS1(arrX=my_X_data, vecy=my_y_data)
@@ -80,6 +95,14 @@ class nipalsPLS1:
     >>> model = ho.nipalsPLS1(arrX=my_X_data, vecy=my_y_data, cvType=["loo"])
     >>> model = ho.nipalsPLS1(arrX=my_X_data, vecy=my_y_data, cvType=["KFold", 7])
     >>> model = ho.nipalsPLS1(arrX=my_X_data, vecy=my_y_data, cvType=["lolo", [1, 2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5, 6, 7]]])
+
+    Examples of how to extract results from the PCR model.
+
+    >>> X_scores = model.X_scores()
+    >>> X_loadings = model.X_loadings()
+    >>> y_loadings = model.Y_loadings()
+    >>> X_cumulativeCalibratedExplainedVariance_allVariables = model.X_cumCalExplVar_indVar()
+    >>> Y_cumulativeValidatedExplainedVariance_total = model.Y_cumCalExplVar()
     
     """
     
@@ -1386,64 +1409,80 @@ class nipalsPLS1:
         
 class nipalsPLS2:
     """
-    This class carries out partial least squares regression (PLSR) for two 
-    arrays using NIPALS algorithm. The Y array is multivariate, which is why
-    PLS2 is applied.
+    This class carries out partial least squares regression (PLSR) for two arrays using NIPALS algorithm. The Y array is multivariate, which is why PLS2 is applied.
         
     
     PARAMETERS
     ----------
     arrX : numpy array 
-        This is X in the PLS2 model. Number and order of objects (rows) must 
-        match those of vecy.
+        This is X in the PCR model. Number and order of objects (rows) must match those of ``arrY``.
+    
     arrY : numpy array
-        This is Y in the PLS2 model. Number and order of objects (rows) must 
-        match those of arrX.
-    numComp : int
-        An integer that defines how many components are to be computed. If not
-        provided, the maximum possible number of components is used.
-    Xstand : boolean 
-        False : columns of arrX are mean centred prior to PCR (default)
-        True : columns of arrX are mean centred and devided by their own 
-            standard deviation.
-    Ystand : boolean 
-        False : columns of arrY are mean centred (default)
-        True : columns of arrY are mean centred and devided by their own 
-            standard deviation.
-    cvType : list
-        The list defines cross validation settings when computing the model.
-        Choose cross validation type from the following:
+        This is Y in the PCR model. Number and order of objects (rows) must match those of ``arrX``.
+    
+    numComp : int, optional
+        An integer that defines how many components are to be computed. If not provided, the maximum possible number of components is used.
+    
+    Xstand : boolean, optional
+        Defines whether variables in ``arrX`` are to be standardised/scaled or centered.
         
+        False : columns of ``arrX`` are mean centred (default)
+            ``Xstand = False``
+
+        True : columns of ``arrX`` are mean centred and devided by their own standard deviation
+            ``Xstand = True``
+
+    Ystand : boolean, optional
+        Defines whether variables in ``arrY`` are to be standardised/scaled or centered.
+        
+        False : columns of ``arrY`` are mean centred (default)
+            ``Ystand = False``
+
+        True : columns of ``arrY`` are mean centred and devided by their own standard deviation
+            ``Ystand = True``
+
+    cvType : list, optional
+        The list defines cross validation settings when computing the PCA model. Note if `cvType` is not provided, cross validation will not be performed and as such cross validation results will not be available. Choose cross validation type from the following:
+	
         loo : leave one out / a.k.a. full cross validation (default)
-        cvType = ["loo"]
-        
+            ``cvType = ["loo"]``
+	
         KFold : leave out one fold or segment
-        cvType = ["KFold", numFolds]
+            ``cvType = ["KFold", numFolds]``
+	
             numFolds: int 
-            number of folds or segments
-        
-        lolo: leave one label out
-        cvType = ["lolo", lablesList]
-            lablesList: list
-            sequence of lables. Must be same lenght as number of rows in 
-            input array X. Leaves out objects with same lable.
+	    
+            Number of folds or segments 
+			
+    lolo : leave one label out
+            ``cvType = ["lolo", labelsList]``
+	    
+            labelsList: list
+	    
+            Sequence of lables. Must be same lenght as number of rows in ``arrX`` and ``arrY``. Leaves out objects with same lable.
 
     
     RETURNS
     -------
-    Returns PLS2 model. Use the attributes of class nipalsPLS2 to access    
-    computational results of PLS2 model.
+    class
+        A class that contains the PLS2 model and computational results
                            
                            
     EXAMPLES
     --------
+
+    First import the hoggormpackage
+
     >>> import hoggorm as ho 
+
+    Import your data into a numpy array.
     
     >>> np.shape(my_X_data)
     (14, 292)
-    
     >>> np.shape(my_Y_data)
     (14, 5)
+
+    Examples of how to compute a PLS2 model using different settings for the input parameters.
        
     >>> model = ho.nipalsPLS2(arrX=my_X_data, arrY=my_Y_data, numComp=5)
     >>> model = ho.nipalsPLS2(arrX=my_X_data, arrY=my_Y_data)
@@ -1452,6 +1491,14 @@ class nipalsPLS2:
     >>> model = ho.nipalsPLS2(arrX=my_X_data, arrY=my_Y_data, cvType=["loo"])
     >>> model = ho.nipalsPLS2(arrX=my_X_data, arrY=my_Y_data, cvType=["KFold", 7])
     >>> model = ho.nipalsPLS2(arrX=my_X_data, arrY=my_Y_data, cvType=["lolo", [1, 2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5, 6, 7]])
+    
+    Examples of how to extract results from the PLS2 model.
+
+    >>> X_scores = model.X_scores()
+    >>> X_loadings = model.X_loadings()
+    >>> Y_loadings = model.Y_loadings()
+    >>> X_cumulativeCalibratedExplainedVariance_allVariables = model.X_cumCalExplVar_indVar()
+    >>> Y_cumulativeValidatedExplainedVariance_total = model.Y_cumCalExplVar()
     """
     
     def __init__(self, arrX, arrY, **kargs):
