@@ -43,10 +43,10 @@ Documentation
 - Jupyter notebooks with examples of how to use Hoggorm
   
   - for `PCA`_
-  - for PCR (not yet implemented)
-  - for PLSR1 (not yet implemented)
-  - for PLSR2 (not yet implemented)
-  - for matrix correlation ceoefficitents RV and RV2
+  - for PCR (coming soon)
+  - for PLSR1 (coming soon)
+  - for PLSR2 (coming soon)
+  - for matrix correlation ceoefficitents RV and RV2 (coming soon)
   
 
 .. _Read the Docs: http://hoggorm.readthedocs.io/en/latest
