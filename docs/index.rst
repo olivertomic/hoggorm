@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to the hoggorm documentation
+Welcome to the Hoggorm documentation
 ====================================
 
 .. image:: serpiente-00-300px.png
@@ -13,7 +13,10 @@ Welcome to the hoggorm documentation
    :caption: Content:
 
    quickstart
-   main-methods
+   pca
+   pcr
+   plsr
+   matrix_corr_coeff
    utility-functions
 
 
