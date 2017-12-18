@@ -11,7 +11,10 @@ Functions in hoggorm.statTools module
 
 Cross validation classes in hoggorm.cross_val module
 ----------------------------------------------------
-This module consists of code from the 'cross_val.py' file of scikit-learn version 0.4. 
+
+The cross validation classes in this module are used inside the multivariate statistical methods and may be called upon using the ``cvType`` 
+input parameter for these methods. They are not intended to be used outside the multivariate statistical methods, even though it is possible. 
+They are shown here to illustrate how the different cross validation options work. 
 
 .. automodule:: hoggorm.cross_val
    :members:

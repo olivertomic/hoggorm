@@ -1,10 +1,15 @@
-""" Utilities for cross validation.
+""" 
 
-taken from scikits.learn
+The code in this module is based on the cross_val.py module from scikt-learn 0.4. It is adapted to work with hoggorm.
 
-# Author: Alexandre Gramfort <alexandre.gramfort@inria.fr>,
-#         Gael Varoquaux    <gael.varoquaux@normalesup.org>
-# License: BSD Style.
+
+Authors: 
+
+Alexandre Gramfort <alexandre.gramfort@inria.fr>
+
+Gael Varoquaux    <gael.varoquaux@normalesup.org>
+
+License: BSD Style.
 
 """
 
@@ -25,7 +30,7 @@ except: # Using Python < 2.6
         if r <= 0:
             yield []
         else:
-            for i in xrange(len(seq)):
+            for i in range(len(seq)):
                 for cc in combinations(seq[i+1:], r-1):
                     yield [seq[i]]+cc
 
@@ -49,10 +54,10 @@ class LeaveOneOut(object):
 
         Examples
         --------
-        >>> from scikits.learn import cross_val
+        >>> import hoggorm as ho
         >>> X = [[1, 2], [3, 4]]
         >>> y = [1, 2]
-        >>> loo = cross_val.LeaveOneOut(2)
+        >>> loo = ho.LeaveOneOut(2)
         >>> for train_index, test_index in loo:
         ...    print "TRAIN:", train_index, "TEST:", test_index
         ...    X_train, X_test, y_train, y_test = cross_val.split(train_index, test_index, X, y)
@@ -104,10 +109,10 @@ class LeavePOut(object):
 
         Examples
         --------
-        >>> from scikits.learn import cross_val
+        >>> import hoggorm as ho
         >>> X = [[1, 2], [3, 4], [5, 6], [7, 8]]
         >>> y = [1, 2, 3, 4]
-        >>> lpo = cross_val.LeavePOut(4, 2)
+        >>> lpo = ho.LeavePOut(4, 2)
         >>> for train_index, test_index in lpo:
         ...    print "TRAIN:", train_index, "TEST:", test_index
         ...    X_train, X_test, y_train, y_test = cross_val.split(train_index, test_index, X, y)
@@ -163,10 +168,10 @@ class KFold(object):
 
         Examples
         --------
-        >>> from scikits.learn import cross_val
+        >>> import hoggorm as ho
         >>> X = [[1, 2], [3, 4], [1, 2], [3, 4]]
         >>> y = [1, 2, 3, 4]
-        >>> kf = cross_val.KFold(4, k=2)
+        >>> kf = ho.KFold(4, k=2)
         >>> for train_index, test_index in kf:
         ...    print "TRAIN:", train_index, "TEST:", test_index
         ...    X_train, X_test, y_train, y_test = cross_val.split(train_index, test_index, X, y)
@@ -226,11 +231,11 @@ class LeaveOneLabelOut(object):
 
         Examples
         --------
-        >>> from scikits.learn import cross_val
+        >>> import hoggorm as ho
         >>> X = [[1, 2], [3, 4], [5, 6], [7, 8]]
         >>> y = [1, 2, 1, 2]
         >>> labels = [1, 1, 2, 2]
-        >>> lol = cross_val.LeaveOneLabelOut(labels)
+        >>> lolo = ho.LeaveOneLabelOut(labels)
         >>> for train_index, test_index in lol:
         ...    print "TRAIN:", train_index, "TEST:", test_index
         ...    X_train, X_test, y_train, y_test = cross_val.split(train_index, \
@@ -282,7 +287,7 @@ def split(train_indexes, test_indexes, *args):
     return ret
 
 '''
- >>> cv = cross_val.LeaveOneLabelOut(X, y) # y making y optional and
+ >>> cv = ho.LeaveOneLabelOut(X, y) # y making y optional and
 possible to add other arrays of the same shape[0] too
  >>> for X_train, y_train, X_test, y_test in cv:
  ...      print np.sqrt((model.fit(X_train, y_train).predict(X_test)

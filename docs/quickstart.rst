@@ -11,7 +11,7 @@ Hoggorm is a Python package for explorative multivariate statistics in Python. I
   - PLSR2 for multivariate responses
 * matrix corrlation coefficients RV and RV2.
 
-Unlike `scikit-learn`_, whis is an excellent python machine learning package focusing on classification and predicition, Hoggorm rather aims at understanding and interpretation of the variance in the data. Hoggorm also also contains tools for prediction.
+Unlike `scikit-learn`_, whis is an excellent python machine learning package focusing on classification and predicition, Hoggorm rather aims at understanding and interpretation of the variance in the data. Hoggorm also contains tools for prediction.
 
 .. _scikit-learn: http://scikit-learn.org/stable/
 
@@ -35,6 +35,10 @@ Install Hoggorm easily from the command line from the `PyPI - the Python Packagi
 
 	pip install hoggorm
 
+If you need more information on how to install Python packages using pip, please see the `pip documentation`_.
+
+.. _pip documentation: https://pip.pypa.io/en/stable/#
+
 
 Documentation
 -------------
@@ -43,11 +47,35 @@ Documentation
 - Jupyter notebooks with examples of how to use Hoggorm
   
   - for `PCA`_
-  - for PCR (not yet implemented)
-  - for PLSR1 (not yet implemented)
-  - for PLSR2 (not yet implemented)
-  - for matrix correlation ceoefficitents RV and RV2
+  - for PCR (coming soon)
+  - for PLSR1 (coming soon)
+  - for PLSR2 (coming soon)
+  - for matrix correlation ceoefficitents RV and RV2 (coming soon)
   
 
 .. _Read the Docs: http://hoggorm.readthedocs.io/en/latest
 .. _PCA: https://github.com/olivertomic/hoggorm/blob/master/docs/PCA%20with%20hoggorm.ipynb
+
+
+Example
+-------
+
+.. code-block:: bash
+
+	import hoggorm as ho
+	
+	# Compute PCA model with
+	# - 5 components
+	# - standardised/scaled variables
+	# - KFold cross validation with 4 folds
+	model = ho.nipalsPCA(arrX=myData, numComp=5, Xstand=True, cvType=["Kfold", 4])
+	
+	# Extract results from PCA model
+	scores = model.X_scores()
+	loadings = model.X_loadings()
+	cumulativeCalibratedExplainedVariance_allVariables = model.X_cumCalExplVar_indVar()
+	cumulativeValidatedExplainedVariance_total = model.X_cumValExplVar()
+
+
+
+

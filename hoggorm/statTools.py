@@ -1,87 +1,11 @@
 # -*- coding: utf-8 -*-
-""" StatTools module
+"""
 
-A collection of tools for data analysis
+A collection of tools for multivariat explorative data analysis.
 """
 
 import numpy
 import numpy.linalg
-
-
-def RVcoeff(dataList):
-    """
-    This function computes the Rv coefficients between two matrices at the
-    time. The results are stored in a matrix described as 'between cosine
-    matrix' and is labled C.
-
-    REF: H. Abdi, D. Valentin; 'The STATIS method' (unofficial paper)
-
-    <dataList>: type list holding rectangular matrices (no need for equal dim)
-    """
-
-    # First compute the scalar product matrices for each data set X
-    scalArrList = []
-
-    for arr in dataList:
-        scalArr = numpy.dot(arr, numpy.transpose(arr))
-        scalArrList.append(scalArr)
-
-
-    # Now compute the 'between study cosine matrix' C
-    C = numpy.zeros((len(dataList), len(dataList)), float)
-
-
-    for index, element in numpy.ndenumerate(C):
-        nom = numpy.trace(numpy.dot(numpy.transpose(scalArrList[index[0]]), \
-            scalArrList[index[1]]))
-        denom1 = numpy.trace(numpy.dot(numpy.transpose(scalArrList[index[0]]), \
-            scalArrList[index[0]]))
-        denom2 = numpy.trace(numpy.dot(numpy.transpose(scalArrList[index[1]]), \
-            scalArrList[index[1]]))
-        Rv = nom / numpy.sqrt(numpy.dot(denom1, denom2))
-        C[index[0], index[1]] = Rv
-
-    return C
-
-
-
-def RV2coeff(dataList):
-    """
-    This function computes the RV2 coefficients between two matrices at the
-    time. The RV2 coefficient is a modified version of the RV coefficient
-    with values -1 <= RV2 <= 1. RV2 is independent of object and variable
-    size.
-
-    REF: A.K. Smilde, et al. Bioinformatics (2009) Vol 25, no 3, 401-405
-
-    <dataList>: type list holding rectangular matrices (no need for equal dim)
-    """
-
-    # First compute the scalar product matrices for each data set X
-    scalArrList = []
-
-    for arr in dataList:
-        scalArr = numpy.dot(arr, numpy.transpose(arr))
-        diego = numpy.diag(numpy.diag(scalArr))
-        scalArrMod = scalArr - diego
-        scalArrList.append(scalArrMod)
-
-
-    # Now compute the 'between study cosine matrix' C
-    C = numpy.zeros((len(dataList), len(dataList)), float)
-
-
-    for index, element in numpy.ndenumerate(C):
-        nom = numpy.trace(numpy.dot(numpy.transpose(scalArrList[index[0]]), \
-            scalArrList[index[1]]))
-        denom1 = numpy.trace(numpy.dot(numpy.transpose(scalArrList[index[0]]), \
-            scalArrList[index[0]]))
-        denom2 = numpy.trace(numpy.dot(numpy.transpose(scalArrList[index[1]]), \
-            scalArrList[index[1]]))
-        Rv = nom / numpy.sqrt(denom1 * denom2)
-        C[index[0], index[1]] = Rv
-
-    return C
 
 
 
@@ -89,6 +13,24 @@ def ortho(arr1, arr2):
     """
     This function orthogonalises arr1 with respect to arr2. The function then
     returns orthogonalised array arr1_orth.
+    
+    PARAMETERS
+    ----------
+    arr1 : numpy array
+        A numpy array containing some data
+    
+    arr2 : numpy array
+        A numpy array containing some data
+    
+    RETURNS
+    -------
+    numpy array
+        A numpy array holding orthogonalised numpy array ``arr1``.
+    
+    Examples
+    --------
+    some examples
+    
     """
 
     # Find number of rows, such that identity matrix I can be created
@@ -107,21 +49,33 @@ def ortho(arr1, arr2):
     
     
 
-def centre(Y, axis=0):
+def center(arr, axis=0):
     """
     This function centers an array column-wise or row-wise.
     
-    Examples:
+    PARAMETERS
+    ----------
+    arrX : numpy array
+        A numpy array containing the data
+    
+    RETURNS
+    -------
+    numpy array
+        Mean centered data.
+    
+    Examples
     --------
+    >>> import hoggorm as ho
+    >>> # Column centering of array
+    >>> centData = ho.center(data, axis=0)
     
-    centData = statTools.centre(data, axis=0) # Column centred
-    
-    centData = statTools.centre(data, axis=1) # Row centred
+    >>> # Row centering of array
+    >>> centData = ho.center(data, axis=1)
     """
 
     # First make a copy of input matrix and make it a matrix with float
     # elements
-    X = numpy.array(Y, float)
+    X = numpy.array(arr, float)
     
     # Check whether column or row centring is required.
     # Centreing column-wise
@@ -140,16 +94,39 @@ def centre(Y, axis=0):
 
 
 
-def standardise(Y, selection):
+def standardise(arr, mode=0):
     """
     This function standardises the input array either 
-    column-wise (selection = 0) or row-wise (selection = 1).
+    column-wise (mode = 0) or row-wise (mode = 1).
+    
+    PARAMETERS
+    ----------
+    arrX : numpy array
+        A numpy array containing the data
+    
+    selection : int
+        An integer indicating whether standardisation should happen column
+        wise or row wise.
+    
+    RETURNS
+    -------
+    numpy array
+        Standardised data.
+    
+    Examples
+    --------
+    >>> import hoggorm as ho
+    >>> # Standardise array column-wise
+    >>> standData = ho.standardise(data, mode=0)
+    
+    >>> # Standardise array row-wise
+    >>> standData = ho.standarise(data, mode=1)
     """
     # First make a copy of input array
-    X = Y.copy()
+    X = arr.copy()
     
     # Standardisation column-wise
-    if selection == 0:
+    if mode == 0:
         colMeans = numpy.mean(X, axis=0)
         colSTD = numpy.std(X, axis=0, ddof=1)
         centX = X - colMeans
@@ -159,7 +136,7 @@ def standardise(Y, selection):
     # Standardisation of row-wise
     # Transpose array first, such that broadcasting procedure works easier.
     # After standardisation transpose back to get final array.
-    if selection == 1:
+    if mode == 1:
         transX = numpy.transpose(X)
         transColMeans = numpy.mean(transX, axis=0)
         transColSTD = numpy.mean(transX, axis=0)
@@ -176,6 +153,20 @@ def matrixRank(arr, tol=1e-8):
     Computes the rank of an array/matrix, i.e. number of linearly independent
     variables. This is not the same as numpy.rank() which only returns the
     number of ways (2-way, 3-way, etc) an array/matrix has. 
+    
+    PARAMETERS
+    ----------
+    arrX : numpy array
+        A numpy array containing the data
+        
+    RETURNS
+    -------
+    scalar
+        Rank of matrix.
+    
+    Examples
+    --------
+    some examples
     """
     if len(arr.shape) != 2:
         raise ValueError('Input must be a 2-d array or Matrix object')
