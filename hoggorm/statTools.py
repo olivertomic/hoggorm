@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-
-A collection of tools for multivariat explorative data analysis.
-"""
 
 import numpy
 import numpy.linalg
@@ -166,7 +162,12 @@ def matrixRank(arr, tol=1e-8):
     
     Examples
     --------
-    some examples
+    >>> import hoggorm as ho
+    >>>
+    >>> # Get the rank of the data
+    >>> ho.matrixRank(myData)
+    >>> 8
+    
     """
     if len(arr.shape) != 2:
         raise ValueError('Input must be a 2-d array or Matrix object')
