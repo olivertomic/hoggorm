@@ -97,7 +97,7 @@ class nipalsPCA:
 
     """
     
-    def __init__(self, arrX, **kargs):
+    def __init__(self, arrX, numComp=None, Xstand=False, cvType=None):
         """
         On initialisation check how arrX and arrY are to be pre-processed 
         (Xstand and Ystand are either True or False). Then check whether 
@@ -113,14 +113,14 @@ class nipalsPCA:
         # variables of X whichever is smallest (numComp). If number of  
         # components IS provided, then number is checked against maxPC and set to
         # numComp if provided number is larger.
-        if 'numComp' not in kargs.keys(): 
+        if numComp is None:
             self.numPC = min(np.shape(arrX))
         else:
-            maxNumPC = min(np.shape(arrX))           
-            if kargs['numComp'] > maxNumPC:
+            maxNumPC = min(np.shape(arrX))
+            if numComp > maxNumPC:
                 self.numPC = maxNumPC
             else:
-                self.numPC = kargs['numComp']
+                self.numPC = numComp
         
         
         # Define X and Y within class such that the data can be accessed from
@@ -132,14 +132,11 @@ class nipalsPCA:
         # -------------------------------------------
         # Check whether standardisation of X and Y are requested by user. If 
         # NOT, then X and y are centred by default. 
-        if 'Xstand' not in kargs.keys():
-            self.Xstand = False
-        else:
-            self.Xstand = kargs['Xstand']
+        self.Xstand = Xstand
         
                 
         # Standardise X if requested by user, otherwise center X.
-        if self.Xstand == True:
+        if self.Xstand:
             self.Xmeans = np.average(self.arrX_input, axis=0)            
             self.Xstd = np.std(self.arrX_input, axis=0, ddof=1)
             self.arrX = (self.arrX_input - self.Xmeans) / self.Xstd
@@ -150,10 +147,7 @@ class nipalsPCA:
                 
         # Check whether cvType is provided. If NOT, then no cross validation
         # is carried out.
-        if 'cvType' not in kargs.keys():
-            self.cvType = None
-        else:
-            self.cvType = kargs['cvType']
+        self.cvType = cvType
         
         
         # Before PLS2 NIPALS algorithm starts initiate and lists in which
@@ -226,7 +220,7 @@ class nipalsPCA:
             self.X_residualsDict[j+1] = X_new
             self.calXhatDict_singPC[j+1] = Xhat_j
             
-            if self.Xstand == True:
+            if self.Xstand:
                 self.calXhatDict_singPC[j+1] = (Xhat_j * self.Xstd) + \
                         self.Xmeans            
             else:
@@ -256,7 +250,7 @@ class nipalsPCA:
             part_arrP = self.arrP[:,0:ind]
             predXcal = np.dot(part_arrT, np.transpose(part_arrP))
             
-            if self.Xstand == True:
+            if self.Xstand:
                 Xhat = (predXcal * self.Xstd) + self.Xmeans
             else:
                 Xhat = predXcal + self.Xmeans
@@ -336,7 +330,7 @@ class nipalsPCA:
 
         # Compute total cumulated calibrated explained variance in X
         self.XcumCalExplVarList = []
-        if self.Xstand == False:
+        if not self.Xstand:
             for ind, MSEE_X in enumerate(self.MSEE_total_list_X):
                 perc = (MSEE_0_X - MSEE_X) / MSEE_0_X * 100
                 self.MSEE_total_dict_X[ind] = MSEE_X
@@ -374,9 +368,7 @@ class nipalsPCA:
 #==============================================================================
 #         From here cross validation procedure starts
 #==============================================================================
-        if self.cvType == None:
-            pass
-        else:
+        if self.cvType is not None:
             numObj = np.shape(self.arrX)[0]
             
             if self.cvType[0] == "loo":
@@ -422,7 +414,7 @@ class nipalsPCA:
                 
                 # -------------------------------------------------------------                    
                 # Center or standardise X according to users choice 
-                if self.Xstand == True:
+                if self.Xstand:
                     X_train_mean = np.average(X_train, axis=0).reshape(1,-1)
                     X_train_std = np.std(X_train, axis=0, ddof=1).reshape(1,-1)
                     X_train_proc = (X_train - X_train_mean) / X_train_std
@@ -512,7 +504,7 @@ class nipalsPCA:
                     
                     # Depending on preprocessing re-process in same manner
                     # in order to get values that compare to original values.
-                    if self.Xstand == True:
+                    if self.Xstand:
                         valPredX = (valPredX_proc * X_train_std) + \
                                 X_train_mean
                     else:
@@ -611,7 +603,7 @@ class nipalsPCA:
 
             # Compute total validated explained variance in X
             self.XcumValExplVarList = []
-            if self.Xstand == False:
+            if not self.Xstand:
                 for ind, MSECV_X in enumerate(self.MSECV_total_list_X):
                     perc = (MSECV_0_X - MSECV_X) / MSECV_0_X * 100
                     self.MSECV_total_dict_X[ind] = MSECV_X
@@ -917,7 +909,7 @@ class nipalsPCA:
         assert numComp > -1, ValueError('numComp must be >= 0')
 
         # First pre-process new X data accordingly
-        if self.Xstand == True:
+        if self.Xstand:
             
             x_new = (Xnew - np.average(self.arrX_input, axis=0)) / \
                     np.std(self.arrX_input, ddof=1)
