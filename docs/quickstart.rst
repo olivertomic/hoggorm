@@ -24,8 +24,11 @@ Make sure that Python 3.5 or higher is installed. A convenient way to install Py
 - numpy
 
 
+Installation and updates
+------------------------
+
 Installation
-------------
+++++++++++++
 
 Install Hoggorm easily from the command line from the `PyPI - the Python Packaging Index`_. 
 
@@ -34,6 +37,16 @@ Install Hoggorm easily from the command line from the `PyPI - the Python Packagi
 .. code-block:: bash
 
 	pip install hoggorm
+
+Updating
+++++++++
+
+To update Hoggorm from an previously installed oudated version execute the following from the command line:
+
+.. code-block:: bash
+        
+        pip install --update hoggorm
+
 
 If you need more information on how to install Python packages using pip, please see the `pip documentation`_.
 
