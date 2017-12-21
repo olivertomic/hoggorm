@@ -281,7 +281,7 @@ class nipalsPLS1:
         self.PRESSEdict_indVar_X = {}
         
         # Compute PRESS for calibration / estimation
-        PRESSE_0_indVar_X = np.sum(np.square(st.centre(self.arrX_input)), \
+        PRESSE_0_indVar_X = np.sum(np.square(st.center(self.arrX_input)), \
                 axis=0)
         self.PRESSEdict_indVar_X[0] = PRESSE_0_indVar_X
         
@@ -425,7 +425,7 @@ class nipalsPLS1:
         
         # Compute PRESS and MSEE for calibration / estimation with zero
         # components
-        PRESSE_0 = np.sum(np.square(st.centre(self.vecy_input)))
+        PRESSE_0 = np.sum(np.square(st.center(self.vecy_input)))
         self.PRESSE_total_dict[0] = PRESSE_0
         MSEE_0 = PRESSE_0 / np.shape(self.vecy_input)[0]
         self.MSEE_total_dict[0] = MSEE_0

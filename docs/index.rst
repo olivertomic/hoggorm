@@ -10,7 +10,7 @@ Welcome to the Hoggorm documentation
 
 .. toctree::
    :maxdepth: 2
-   :caption: Content:
+   :caption: Content
 
    quickstart
    pca

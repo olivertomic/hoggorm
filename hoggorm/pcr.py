@@ -302,7 +302,7 @@ class nipalsPCR:
         self.PRESSEdict_indVar_X = {}
         
         # Compute PRESS for calibration / estimation
-        PRESSE_0_indVar_X = np.sum(np.square(st.centre(self.arrX_input)), axis=0)
+        PRESSE_0_indVar_X = np.sum(np.square(st.center(self.arrX_input)), axis=0)
         self.PRESSEdict_indVar_X[0] = PRESSE_0_indVar_X
         
         # Compute PRESS for each Xhat for 1, 2, 3, etc number of components
@@ -436,7 +436,7 @@ class nipalsPCR:
         self.PRESSEdict_indVar = {}
         
         # Compute PRESS for calibration / estimation
-        PRESSE_0_indVar = np.sum(np.square(st.centre(self.arrY_input)), axis=0)
+        PRESSE_0_indVar = np.sum(np.square(st.center(self.arrY_input)), axis=0)
         self.PRESSEdict_indVar[0] = PRESSE_0_indVar
         
         # Compute PRESS for each Yhat for 1, 2, 3, etc number of components
