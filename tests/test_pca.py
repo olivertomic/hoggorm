@@ -1,11 +1,11 @@
 '''
-PCA testing ideas:
- * Check max_pc
- * calc_n_pc to max_pc
- * Results sets and shapes
- * Check zero variance test
- * Check that res is a new copy each time (unique id?)
- * Calculation with missing data
+FIXME: PCA testing ideas:
+ * Well known datasets (iris)
+ * Combinations of input parameters
+ * Edge case datasets
+ * Big matrix for performance testing / profiling
+ * Illegale data and error handling (zero variance)
+ * Integer and float type matrix
 '''
 import os.path as osp
 
