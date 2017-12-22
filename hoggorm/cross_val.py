@@ -1,9 +1,9 @@
-""" 
+"""
 
 The code in this module is based on the cross_val.py module from scikt-learn 0.4. It is adapted to work with hoggorm.
 
 
-Authors: 
+Authors:
 
 Alexandre Gramfort <alexandre.gramfort@inria.fr>
 
@@ -293,4 +293,3 @@ possible to add other arrays of the same shape[0] too
  ...      print np.sqrt((model.fit(X_train, y_train).predict(X_test)
 - y_test) ** 2).mean())
 '''
-

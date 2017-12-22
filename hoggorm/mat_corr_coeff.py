@@ -6,32 +6,32 @@ import numpy
 
 def RVcoeff(dataList):
     """
-    This function computes the RV matrix correlation coefficients between pairs 
-    of arrays. The number and order of objects (rows) for the two arrays must 
+    This function computes the RV matrix correlation coefficients between pairs
+    of arrays. The number and order of objects (rows) for the two arrays must
     match. The number of variables in each array may vary.
 
     REF: `H. Abdi, D. Valentin; 'The STATIS method'`_
-    
+
     .. _H. Abdi, D. Valentin; 'The STATIS method': https://www.utdallas.edu/~herve/Abdi-Statis2007-pretty.pdf
 
     PARAMETERS
     ----------
     dataList : list
         A list holding numpy arrays for which the RV coefficient will be computed.
-    
+
     RETURNS
     -------
     numpy array
         A numpy array holding RV coefficients for pairs of numpy arrays. The
         diagonal in the result array holds ones, since RV is computed on
         identical arrays, i.e. first array in ``dataList`` against frist array
-        in 
-    
+        in
+
     Examples
     --------
     >>> import hoggorm as ho
     >>> import numpy as np
-    >>> 
+    >>>
     >>> # Generate some random data. Note that number of rows must match across arrays
     >>> arr1 = np.random.rand(50, 100)
     >>> arr2 = np.random.rand(50, 20)
@@ -47,7 +47,7 @@ def RVcoeff(dataList):
     >>> array([[ 1.        ,  0.41751839,  0.77769025],
                [ 0.41751839,  1.        ,  0.51194496],
                [ 0.77769025,  0.51194496,  1.        ]])
-    >>> 
+    >>>
     >>> # Get RV for arr1_cent and arr2_cent
     >>> rv_results[0, 1]
         0.41751838661314689
@@ -63,7 +63,7 @@ def RVcoeff(dataList):
     >>> # or
     >>> rv_results[2, 1]
         0.51194496245209853
-    
+
     """
 
     # First compute the scalar product matrices for each data set X
@@ -94,33 +94,33 @@ def RVcoeff(dataList):
 
 def RV2coeff(dataList):
     """
-    This function computes the RV matrix correlation coefficients between pairs 
-    of arrays. The number and order of objects (rows) for the two arrays must 
-    match. The number of variables in each array may vary. The RV2 coefficient 
-    is a modified version of the RV coefficient with values -1 <= RV2 <= 1. 
+    This function computes the RV matrix correlation coefficients between pairs
+    of arrays. The number and order of objects (rows) for the two arrays must
+    match. The number of variables in each array may vary. The RV2 coefficient
+    is a modified version of the RV coefficient with values -1 <= RV2 <= 1.
     RV2 is independent of object and variable size.
 
     REF: `A.K. Smilde, et al. Bioinformatics (2009) Vol 25, no 3, 401-405`_
-    
+
     .. _A.K. Smilde, et al. Bioinformatics (2009) Vol 25, no 3, 401-405: https://academic.oup.com/bioinformatics/article/25/3/401/244239
 
     PARAMETERS
     ----------
     dataList : list
-        A list holding an arbitrary number of numpy arrays for which the RV 
+        A list holding an arbitrary number of numpy arrays for which the RV
         coefficient will be computed.
-    
+
     RETURNS
     -------
     numpy array
-        A list holding an arbitrary number of numpy arrays for which the RV 
+        A list holding an arbitrary number of numpy arrays for which the RV
         coefficient will be computed.
-    
+
     Examples
     --------
     >>> import hoggorm as ho
     >>> import numpy as np
-    >>> 
+    >>>
     >>> # Generate some random data. Note that number of rows must match across arrays
     >>> arr1 = np.random.rand(50, 100)
     >>> arr2 = np.random.rand(50, 20)
@@ -136,7 +136,7 @@ def RV2coeff(dataList):
     >>> array([[ 1.        , -0.00563174,  0.04028299],
                [-0.00563174,  1.        ,  0.08733739],
                [ 0.04028299,  0.08733739,  1.        ]])
-    >>> 
+    >>>
     >>> # Get RV for arr1_cent and arr2_cent
     >>> rv_results[0, 1]
         -0.00563174
@@ -179,7 +179,3 @@ def RV2coeff(dataList):
         C[index[0], index[1]] = Rv
 
     return C
-
-
-
-
