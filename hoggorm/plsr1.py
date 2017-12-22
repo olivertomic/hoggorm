@@ -107,7 +107,7 @@ class nipalsPLS1:
     
     """
     
-    def __init__(self, arrX, vecy, **kargs):
+    def __init__(self, arrX, vecy, numComp=3, Xstand=False, Ystand=False, cvType=["loo"]):
         """
         On initialisation check how X and y are to be pre-processed (which
         mode is used). Then check whether number of PC's chosen by user is OK.
@@ -122,13 +122,14 @@ class nipalsPLS1:
         # variables of X, whichever is smaller (maxPC). If number of  
         # PC's IS provided, then number is checked against maxPC and set to
         # maxPC if provided number is larger.
-        if 'numComp' not in kargs.keys():
+        if numComp is None:
             self.numPC = min(np.shape(arrX))
         else:
-            if kargs['numComp'] > min(np.shape(arrX)):
-                self.numPC = min(np.shape(arrX))
+            maxNumPC = min(np.shape(arrX))
+            if numComp > maxNumPC:
+                self.numPC = maxNumPC
             else:
-                self.numPC = kargs['numComp']
+                self.numPC = numComp
         
         # Define X and y within class such that the data can be accessed from
         # all attributes in class.
@@ -140,19 +141,12 @@ class nipalsPLS1:
         # -------------------------------------------
         # Check whether standardisation of X and Y are requested by user. If 
         # NOT, then X and y are centred by default. 
-        if 'Xstand' not in kargs.keys():
-            self.Xstand = False
-        else:
-            self.Xstand = kargs['Xstand']
-        
-        if 'Ystand' not in kargs.keys():
-            self.ystand = False
-        else:
-            self.ystand = kargs['Ystand']
+        self.Xstand = Xstand
+        self.ystand = Ystand
         
                 
         # Standardise X if requested by user, otherwise center X.
-        if self.Xstand == True:
+        if self.Xstand:
             Xmeans = np.average(self.arrX_input, axis=0)            
             Xstd = np.std(self.arrX_input, axis=0, ddof=1)
             self.arrX = (self.arrX_input - Xmeans) / Xstd
@@ -161,7 +155,7 @@ class nipalsPLS1:
             self.arrX = self.arrX_input - Xmeans
         
         # Standardise Y if requested by user, otherwise center Y.
-        if self.ystand == True:            
+        if self.ystand:            
             vecyMean = np.average(self.vecy_input)
             yStd = np.std(self.vecy_input, ddof=1)
             self.vecy = (self.vecy_input - vecyMean) / yStd
@@ -172,10 +166,7 @@ class nipalsPLS1:
 
         # Check whether cvType is provided. If NOT, then no cross validation
         # is carried out.
-        if 'cvType' not in kargs.keys():
-            self.cvType = None
-        else:
-            self.cvType = kargs['cvType']
+        self.cvType = cvType
         
                 
         # Before PLS1 NIPALS algorithm starts initiate dictionaries and lists
@@ -257,7 +248,7 @@ class nipalsPLS1:
             part_arrP = self.arrP[:,0:ind]
             predXcal = np.dot(part_arrT, np.transpose(part_arrP))
             
-            if self.Xstand == True:
+            if self.Xstand:
                 Xhat = (predXcal * Xstd) + Xmeans
             else:
                 Xhat = predXcal + Xmeans
@@ -348,7 +339,7 @@ class nipalsPLS1:
 
         # Compute total calibrated explained variance in X
         self.XcumCalExplVarList = []
-        if self.Xstand == False:
+        if not self.Xstand:
             for ind, MSEE_X in enumerate(self.MSEE_total_list_X):
                 perc = (MSEE_0_X - MSEE_X) / MSEE_0_X * 100
                 self.MSEE_total_dict_X[ind] = MSEE_X
@@ -397,7 +388,7 @@ class nipalsPLS1:
             
             # Depending on whether Y was standardised or not compute Yhat
             # accordingly.            
-            if self.ystand == True:
+            if self.ystand:
                 yhat_stand = np.dot(x_scores, np.transpose(y_loadings))
                 yhat = (yhat_stand * yStd.reshape(1,-1)) + \
                         vecyMean.reshape(1,-1)
@@ -481,9 +472,7 @@ class nipalsPLS1:
         
         # Check whether cross validation is required by user. If required,
         # check what kind and build training and test sets thereafter.        
-        if self.cvType == None:
-            pass
-        else:
+        if self.cvType is not None:
             numObj = np.shape(self.vecy)[0]
             
             if self.cvType[0] == "loo":
@@ -553,7 +542,7 @@ class nipalsPLS1:
                 
                 
                 # Standardise X if requested by user, otherwise center X.
-                if self.Xstand == True:
+                if self.Xstand:
                     x_train_means = np.average(x_train, axis=0)            
                     x_train_std = np.std(x_train, axis=0, ddof=1)
                     X_new = (x_train - x_train_means) / x_train_std
@@ -562,7 +551,7 @@ class nipalsPLS1:
                     X_new = x_train - x_train_means
                 
                  # Standardise y if requested by user, otherwise center y.
-                if self.ystand == True:            
+                if self.ystand:            
                     y_train_means = np.average(y_train)
                     y_train_std = np.std(y_train, ddof=1)
                     y_new = (y_train - y_train_means) / y_train_std
@@ -630,7 +619,7 @@ class nipalsPLS1:
                                 
                 # 'Module 7: Partial least squares regression I' - section 7.2 
                 # Prediction for PLS2.
-                if self.Xstand == True:
+                if self.Xstand:
                     x_new = (x_test - x_train_means) / x_train_std
                 else:
                     x_new = x_test - x_train_means 
@@ -660,7 +649,7 @@ class nipalsPLS1:
                     # Module 8: Prediction STEP 3
                     # ---------------------------
                     # First compute yhat                                      
-                    if self.ystand == True:
+                    if self.ystand:
                         tCQ = np.dot(t_vec,part_val_arrQ) * \
                                 y_train_std.reshape(1,-1)
                     else:
@@ -670,7 +659,7 @@ class nipalsPLS1:
                     self.valYpredDict[ind+1][test_index,] = yhat
                     
                     # Then compute Xhat
-                    if self.Xstand == True:
+                    if self.Xstand:
                         tP = np.dot(t_vec,np.transpose(part_val_arrP)) * \
                                 x_train_std.reshape(1,-1)
                     else:
@@ -828,7 +817,7 @@ class nipalsPLS1:
 
             # Compute total validated explained variance in X
             self.XcumValExplVarList = []
-            if self.Xstand == False:
+            if not self.Xstand:
                 for ind, MSECV_X in enumerate(self.MSECV_total_list_X):
                     perc = (MSECV_0_X - MSECV_X) / MSECV_0_X * 100
                     self.MSECV_total_dict_X[ind] = MSECV_X
@@ -1151,7 +1140,7 @@ class nipalsPLS1:
         assert numComp>-1, ValueError('numComp must be >= 0')
 
         # First pre-process new X data accordingly
-        if self.Xstand == True:
+        if self.Xstand:
             x_new = (Xnew - np.average(self.arrX_input, axis=0)) / \
                     np.std(self.arrX_input, ddof=1)
         else:
@@ -1338,7 +1327,7 @@ class nipalsPLS1:
         assert numComp > -1, ValueError('numComp must be >= 0')
         
         # B = W*inv(P'W)*Q'
-        if self.ystand == True:
+        if self.ystand:
             return np.dot(np.dot(self.arrW[:, 0:numComp], \
                    np.linalg.inv(np.dot(np.transpose(self.arrP[:, 0:numComp]), self.arrW[:, 0:numComp]))),\
                    np.transpose(self.arrQ[:, 0:numComp])) \
@@ -1358,7 +1347,7 @@ class nipalsPLS1:
         assert numComp > -1, ValueError('numComp must be >= 0')
 
         # First pre-process new X data accordingly
-        if self.Xstand == True:
+        if self.Xstand:
             x_new = (Xnew - np.average(self.arrX_input, axis=0)) / \
                     np.std(self.arrX_input, ddof=1, axis=0)
         else:
