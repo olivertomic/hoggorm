@@ -79,12 +79,12 @@ def RVcoeff(dataList):
 
 
     for index, element in numpy.ndenumerate(C):
-        nom = numpy.trace(numpy.dot(numpy.transpose(scalArrList[index[0]]), \
-            scalArrList[index[1]]))
-        denom1 = numpy.trace(numpy.dot(numpy.transpose(scalArrList[index[0]]), \
-            scalArrList[index[0]]))
-        denom2 = numpy.trace(numpy.dot(numpy.transpose(scalArrList[index[1]]), \
-            scalArrList[index[1]]))
+        nom = numpy.trace(numpy.dot(numpy.transpose(scalArrList[index[0]]),
+                                    scalArrList[index[1]]))
+        denom1 = numpy.trace(numpy.dot(numpy.transpose(scalArrList[index[0]]),
+                                       scalArrList[index[0]]))
+        denom2 = numpy.trace(numpy.dot(numpy.transpose(scalArrList[index[1]]),
+                                       scalArrList[index[1]]))
         Rv = nom / numpy.sqrt(numpy.dot(denom1, denom2))
         C[index[0], index[1]] = Rv
 
@@ -169,12 +169,12 @@ def RV2coeff(dataList):
 
 
     for index, element in numpy.ndenumerate(C):
-        nom = numpy.trace(numpy.dot(numpy.transpose(scalArrList[index[0]]), \
-            scalArrList[index[1]]))
-        denom1 = numpy.trace(numpy.dot(numpy.transpose(scalArrList[index[0]]), \
-            scalArrList[index[0]]))
-        denom2 = numpy.trace(numpy.dot(numpy.transpose(scalArrList[index[1]]), \
-            scalArrList[index[1]]))
+        nom = numpy.trace(numpy.dot(numpy.transpose(scalArrList[index[0]]),
+                                    scalArrList[index[1]]))
+        denom1 = numpy.trace(numpy.dot(numpy.transpose(scalArrList[index[0]]),
+                                       scalArrList[index[0]]))
+        denom2 = numpy.trace(numpy.dot(numpy.transpose(scalArrList[index[1]]),
+                                       scalArrList[index[1]]))
         Rv = nom / numpy.sqrt(denom1 * denom2)
         C[index[0], index[1]] = Rv
 

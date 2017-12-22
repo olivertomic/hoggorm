@@ -6,6 +6,7 @@ import numpy.linalg as npla
 import hoggorm.statTools as st
 import hoggorm.cross_val as cv
 
+
 class nipalsPLS2:
     """
     This class carries out partial least squares regression (PLSR) for two arrays using NIPALS algorithm. The Y array is multivariate, which is why PLS2 is applied.
@@ -107,9 +108,9 @@ class nipalsPLS2:
         are to be pre-processed (whether 'Xstand' and 'Ystand' are used). Then
         run NIPALS PLS2 algorithm.
         """
-#===============================================================================
-#         Check what is provided by user for PLS2
-#===============================================================================
+        # ===============================================================================
+        #         Check what is provided by user for PLS2
+        # ===============================================================================
 
         # Check whether number of PC's that are to be computed is provided.
         # If NOT, then number of PC's is set to either number of objects or
@@ -178,9 +179,9 @@ class nipalsPLS2:
         self.X_residualsList = [self.arrX]
 
 
-#===============================================================================
-#        Here PLS2 NIPALS algorithm starts
-#===============================================================================
+        # ===============================================================================
+        #        Here PLS2 NIPALS algorithm starts
+        # ===============================================================================
         threshold = 1.0e-12
 
         X_new = self.arrX
@@ -227,7 +228,7 @@ class nipalsPLS2:
                 # iterations are reached.
                 diff = u_old - u_new
                 SS = np.sum(np.square(diff))
-                if SS <= threshold or runs==100:
+                if SS <= threshold or runs == 100:
                     break
 
             # Module 8: STEP 7
@@ -287,12 +288,10 @@ class nipalsPLS2:
             # Depending on whether Y was standardised or not compute Yhat
             # accordingly.
             if self.Ystand:
-                Yhat_stand = np.dot(np.dot(x_scores, c_regrCoeff), \
-                        np.transpose(y_loadings))
+                Yhat_stand = np.dot(np.dot(x_scores, c_regrCoeff), np.transpose(y_loadings))
                 Yhat = (Yhat_stand * Ystd.reshape(1,-1)) + Ymeans.reshape(1,-1)
             else:
-                Yhat = np.dot(np.dot(x_scores, c_regrCoeff), \
-                        np.transpose(y_loadings)) + Ymeans
+                Yhat = np.dot(np.dot(x_scores, c_regrCoeff), np.transpose(y_loadings)) + Ymeans
             self.calYpredList.append(Yhat)
         # ---------------------------------------------------------------------
 
@@ -316,8 +315,7 @@ class nipalsPLS2:
         # Now store all PRESSE values into an array. Then compute MSEE and
         # RMSEE.
         self.PRESSEarr_indVar = np.array(list(self.PRESSEdict_indVar.values()))
-        self.MSEEarr_indVar = self.PRESSEarr_indVar / \
-                np.shape(self.arrY_input)[0]
+        self.MSEEarr_indVar = self.PRESSEarr_indVar / np.shape(self.arrY_input)[0]
         self.RMSEEarr_indVar = np.sqrt(self.MSEEarr_indVar)
         # ---------------------------------------------------------------------
 
@@ -363,8 +361,7 @@ class nipalsPLS2:
         # Collect total MSEE across all variables in a dictionary. Also,
         # compute total calibrated explained variance in Y.
         self.MSEE_total_dict = {}
-        self.MSEE_total_list = np.sum(self.MSEEarr_indVar, axis=1) / \
-                np.shape(self.arrY_input)[1]
+        self.MSEE_total_list = np.sum(self.MSEEarr_indVar, axis=1) / np.shape(self.arrY_input)[1]
         MSEE_0 = self.MSEE_total_list[0]
 
         # Compute total calibrated explained variance in Y
@@ -381,9 +378,9 @@ class nipalsPLS2:
         # Construct list with total validated explained variance in Y
         self.YcalExplVarList = []
         for ind, item in enumerate(self.YcumCalExplVarList):
-            if ind == len(self.YcumCalExplVarList)-1: break
-            explVarComp = self.YcumCalExplVarList[ind+1] - \
-                    self.YcumCalExplVarList[ind]
+            if ind == len(self.YcumCalExplVarList)-1:
+                break
+            explVarComp = self.YcumCalExplVarList[ind+1] - self.YcumCalExplVarList[ind]
             self.YcalExplVarList.append(explVarComp)
 
         # Construct a dictionary that holds predicted Y (Yhat) from calibration
@@ -446,8 +443,7 @@ class nipalsPLS2:
         # Now store all PRESSE values into an array. Then compute MSEE and
         # RMSEE.
         self.PRESSEarr_indVar_X = np.array(list(self.PRESSEdict_indVar_X.values()))
-        self.MSEEarr_indVar_X = self.PRESSEarr_indVar_X / \
-                np.shape(self.arrX_input)[0]
+        self.MSEEarr_indVar_X = self.PRESSEarr_indVar_X / np.shape(self.arrX_input)[0]
         self.RMSEEarr_indVar_X = np.sqrt(self.MSEEarr_indVar_X)
         # ---------------------------------------------------------------------
 
@@ -493,8 +489,7 @@ class nipalsPLS2:
         # Collect total MSEE across all variables in a dictionary. Also,
         # compute total validated explained variance in X.
         self.MSEE_total_dict_X = {}
-        self.MSEE_total_list_X = np.sum(self.MSEEarr_indVar_X, axis=1) / \
-                np.shape(self.arrX_input)[1]
+        self.MSEE_total_list_X = np.sum(self.MSEEarr_indVar_X, axis=1) / np.shape(self.arrX_input)[1]
         MSEE_0_X = self.MSEE_total_list_X[0]
 
         # Compute total calibrated explained variance in X
@@ -511,9 +506,9 @@ class nipalsPLS2:
         # Construct list with total validated explained variance in X
         self.XcalExplVarList = []
         for ind, item in enumerate(self.XcumCalExplVarList):
-            if ind == len(self.XcumCalExplVarList)-1: break
-            explVarComp = self.XcumCalExplVarList[ind+1] - \
-                    self.XcumCalExplVarList[ind]
+            if ind == len(self.XcumCalExplVarList)-1:
+                break
+            explVarComp = self.XcumCalExplVarList[ind+1] - self.XcumCalExplVarList[ind]
             self.XcalExplVarList.append(explVarComp)
 
         # Construct a dictionary that holds predicted X (Xhat) from calibration
@@ -533,9 +528,9 @@ class nipalsPLS2:
             self.RMSEE_total_dict_X[ind] = RMSEE_X
         # ---------------------------------------------------------------------
 
-#==============================================================================
-#         Here starts the cross validation process
-#==============================================================================
+        # ==============================================================================
+        #         Here starts the cross validation process
+        # ==============================================================================
 
         # Check whether cross validation is required by user. If required,
         # check what kind and build training and test sets thereafter.
@@ -683,7 +678,7 @@ class nipalsPLS2:
                         # iterations are reached.
                         diff = u_old - u_new
                         SS = np.sum(np.square(diff))
-                        if SS <= threshold or runs==100:
+                        if SS <= threshold or runs == 100:
                             break
 
                     # Module 8: STEP 7
@@ -764,20 +759,17 @@ class nipalsPLS2:
                     # ---------------------------
                     # First compute yhat
                     if self.Ystand:
-                        tCQ = np.dot(np.dot(t_arr,part_val_arrC), \
-                                np.transpose(part_val_arrQ)) * \
-                                y_train_std.reshape(1,-1)
+                        tCQ = np.dot(np.dot(t_arr,part_val_arrC),
+                                     np.transpose(part_val_arrQ)) * y_train_std.reshape(1,-1)
                     else:
-                        tCQ = np.dot(np.dot(t_arr,part_val_arrC), \
-                                np.transpose(part_val_arrQ))
+                        tCQ = np.dot(np.dot(t_arr,part_val_arrC), np.transpose(part_val_arrQ))
 
                     yhat = ytm + tCQ
                     self.valYpredDict[ind+1][test_index,] = yhat
 
                     # Then compute xhat
                     if self.Xstand:
-                        tP = np.dot(t_arr,np.transpose(part_val_arrP)) * \
-                                x_train_std.reshape(1,-1)
+                        tP = np.dot(t_arr,np.transpose(part_val_arrP)) * x_train_std.reshape(1,-1)
                     else:
                         tP = np.dot(t_arr, np.transpose(part_val_arrP))
 
@@ -812,8 +804,7 @@ class nipalsPLS2:
             # Now store all PRESSCV values into an array. Then compute MSECV and
             # RMSECV.
             self.PRESSCVarr_indVar = np.array(list(self.PRESSdict_indVar.values()))
-            self.MSECVarr_indVar = self.PRESSCVarr_indVar / \
-                    np.shape(self.arrY_input)[0]
+            self.MSECVarr_indVar = self.PRESSCVarr_indVar / np.shape(self.arrY_input)[0]
             self.RMSECVarr_indVar = np.sqrt(self.MSECVarr_indVar)
             # -----------------------------------------------------------------
 
@@ -858,8 +849,7 @@ class nipalsPLS2:
             # Collect total MSECV across all variables in a dictionary. Also,
             # compute total validated explained variance in Y.
             self.MSECV_total_dict = {}
-            self.MSECV_total_list = np.sum(self.MSECVarr_indVar, axis=1) / \
-                    np.shape(self.arrY_input)[1]
+            self.MSECV_total_list = np.sum(self.MSECVarr_indVar, axis=1) / np.shape(self.arrY_input)[1]
             MSECV_0 = self.MSECV_total_list[0]
 
             # Compute total validated explained variance in Y
@@ -877,9 +867,9 @@ class nipalsPLS2:
             # each component
             self.YvalExplVarList = []
             for ind, item in enumerate(self.YcumValExplVarList):
-                if ind == len(self.YcumValExplVarList)-1: break
-                explVarComp = self.YcumValExplVarList[ind+1] - \
-                        self.YcumValExplVarList[ind]
+                if ind == len(self.YcumValExplVarList)-1:
+                    break
+                explVarComp = self.YcumValExplVarList[ind+1] - self.YcumValExplVarList[ind]
                 self.YvalExplVarList.append(explVarComp)
             # -----------------------------------------------------------------
 
@@ -921,8 +911,7 @@ class nipalsPLS2:
             # Now store all PRESSCV values into an array. Then compute MSECV
             # and RMSECV.
             self.PRESSCVarr_indVar_X = np.array(list(self.PRESSdict_indVar_X.values()))
-            self.MSECVarr_indVar_X = self.PRESSCVarr_indVar_X / \
-                    np.shape(self.arrX_input)[0]
+            self.MSECVarr_indVar_X = self.PRESSCVarr_indVar_X / np.shape(self.arrX_input)[0]
             self.RMSECVarr_indVar_X = np.sqrt(self.MSECVarr_indVar_X)
             # -----------------------------------------------------------------
 
@@ -967,8 +956,7 @@ class nipalsPLS2:
             # Collect total MSECV across all variables in a dictionary. Also,
             # compute total validated explained variance in X.
             self.MSECV_total_dict_X = {}
-            self.MSECV_total_list_X = np.sum(self.MSECVarr_indVar_X, axis=1) / \
-                    np.shape(self.arrX_input)[1]
+            self.MSECV_total_list_X = np.sum(self.MSECVarr_indVar_X, axis=1) / np.shape(self.arrX_input)[1]
             MSECV_0_X = self.MSECV_total_list_X[0]
 
             # Compute total validated explained variance in X
@@ -986,9 +974,9 @@ class nipalsPLS2:
             # each component
             self.XvalExplVarList = []
             for ind, item in enumerate(self.XcumValExplVarList):
-                if ind == len(self.XcumValExplVarList)-1: break
-                explVarComp = self.XcumValExplVarList[ind+1] - \
-                        self.XcumValExplVarList[ind]
+                if ind == len(self.XcumValExplVarList)-1:
+                    break
+                explVarComp = self.XcumValExplVarList[ind+1] - self.XcumValExplVarList[ind]
                 self.XvalExplVarList.append(explVarComp)
             # -----------------------------------------------------------------
 
@@ -1059,8 +1047,7 @@ class nipalsPLS2:
         """
 
         # Creates empty matrix for correlation loadings
-        arr_XcorrLoadings = np.zeros((np.shape(self.arrT)[1], \
-            np.shape(self.arrP)[0]), float)
+        arr_XcorrLoadings = np.zeros((np.shape(self.arrT)[1], np.shape(self.arrP)[0]), float)
 
         # Compute correlation loadings:
         # For each PC in score matrix
@@ -1296,15 +1283,15 @@ class nipalsPLS2:
 
         # First pre-process new X data accordingly
         if self.Xstand:
-            x_new = (Xnew - np.average(self.arrX_input, axis=0)) / \
-                    np.std(self.arrX_input, ddof=1)
+            x_new = (Xnew - np.average(self.arrX_input, axis=0)) / np.std(self.arrX_input, ddof=1)
         else:
             x_new = (Xnew - np.average(self.arrX_input, axis=0))
 
 
         # W*inv(P'W)
-        return np.dot(x_new, np.dot(self.arrW[:,0:numComp], \
-                      np.linalg.inv(np.dot(np.transpose(self.arrP[:,0:numComp]), self.arrW[:,0:numComp]))))
+        return np.dot(x_new, np.dot(self.arrW[:,0:numComp],
+                                    np.linalg.inv(np.dot(np.transpose(self.arrP[:,0:numComp]),
+                                                         self.arrW[:,0:numComp]))))
 
 
     def scoresRegressionCoeffs(self):
@@ -1348,8 +1335,7 @@ class nipalsPLS2:
         """
 
         # Creates empty matrix for correlation loadings
-        arr_YcorrLoadings = np.zeros((np.shape(self.arrT)[1], \
-            np.shape(self.arrQ)[0]), float)
+        arr_YcorrLoadings = np.zeros((np.shape(self.arrT)[1], np.shape(self.arrQ)[0]), float)
 
         # Compute correlation loadings:
         # For each PC in score matrix
@@ -1484,7 +1470,7 @@ class nipalsPLS2:
         each component. First number in list is for component 1, second number
         for component 2, third number for component 3, etc.
         """
-        return  self.YvalExplVarList
+        return self.YvalExplVarList
 
 
     def Y_cumValExplVar_indVar(self):
@@ -1585,14 +1571,13 @@ class nipalsPLS2:
 
         # B = W*inv(P'W)*Q'
         if self.Ystand:
-            return np.dot(np.dot(self.arrW[:,0:numComp], \
-                    np.linalg.inv(np.dot(np.transpose(self.arrP[:,0:numComp]), self.arrW[:,0:numComp]))),\
-                    np.transpose(self.arrQ_alt[:,0:numComp])) \
-                    * np.std(self.arrY_input, ddof=1, axis=0).reshape(1,-1)
+            return np.dot(np.dot(self.arrW[:,0:numComp],
+                                 np.linalg.inv(np.dot(np.transpose(self.arrP[:,0:numComp]), self.arrW[:,0:numComp]))),
+                          np.transpose(self.arrQ_alt[:,0:numComp])) * np.std(self.arrY_input, ddof=1, axis=0).reshape(1,-1)
         else:
-            return np.dot(np.dot(self.arrW[:,0:numComp], \
-                    np.linalg.inv(np.dot(np.transpose(self.arrP[:,0:numComp]), self.arrW[:,0:numComp]))),\
-                    np.transpose(self.arrQ_alt[:,0:numComp]))
+            return np.dot(np.dot(self.arrW[:,0:numComp],
+                                 np.linalg.inv(np.dot(np.transpose(self.arrP[:,0:numComp]), self.arrW[:,0:numComp]))),
+                          np.transpose(self.arrQ_alt[:,0:numComp]))
 
 
     def Y_predict(self, Xnew, numComp=1):
@@ -1605,15 +1590,13 @@ class nipalsPLS2:
 
         # First pre-process new X data accordingly
         if self.Xstand:
-            x_new = (Xnew - np.average(self.arrX_input, axis=0)) / \
-                    np.std(self.arrX_input, ddof=1, axis=0)
+            x_new = (Xnew - np.average(self.arrX_input, axis=0)) / np.std(self.arrX_input, ddof=1, axis=0)
         else:
             x_new = (Xnew - np.average(self.arrX_input, axis=0))
 
 
         # x_new * beta_hat + mean(y)
-        return np.dot(x_new, self.regressionCoefficients(numComp)) \
-                + np.mean(self.arrY_input, axis=0)
+        return np.dot(x_new, self.regressionCoefficients(numComp)) + np.mean(self.arrY_input, axis=0)
 
 
     def cvTrainAndTestData(self):

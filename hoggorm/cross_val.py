@@ -19,13 +19,13 @@ import numpy as np
 
 try:
     from itertools import combinations
-except: # Using Python < 2.6
+except:  # Using Python < 2.6
     def combinations(seq, r=None):
         """Generator returning combinations of items from sequence <seq>
         taken <r> at a time. Order is not significant. If <r> is not given,
         the entire sequence is returned.
         """
-        if r == None:
+        if r is None:
             r = len(seq)
         if r <= 0:
             yield []
@@ -86,7 +86,6 @@ class LeaveOneOut(object):
                                 )
 
 
-
 ################################################################################
 class LeavePOut(object):
     """
@@ -140,11 +139,11 @@ class LeavePOut(object):
 
     def __repr__(self):
         return '%s.%s(n=%i, p=%i)' % (
-                                self.__class__.__module__,
-                                self.__class__.__name__,
-                                self.n,
-                                self.p,
-                                )
+            self.__class__.__module__,
+            self.__class__.__name__,
+            self.n,
+            self.p,
+        )
 
 
 ################################################################################
@@ -182,8 +181,8 @@ class KFold(object):
         -----
         All the folds have size trunc(n/k), the last one has the complementary
         """
-        assert k>0, ValueError('cannot have k below 1')
-        assert k<n, ValueError('cannot have k=%d greater than %d'% (k, n))
+        assert k > 0, ValueError('cannot have k below 1')
+        assert k < n, ValueError('cannot have k=%d greater than %d' % (k, n))
         self.n = n
         self.k = k
 
@@ -195,7 +194,7 @@ class KFold(object):
 
         for i in range(k):
             test_index  = np.zeros(n, dtype=np.bool)
-            if i<k-1:
+            if i < k-1:
                 test_index[i*j:(i+1)*j] = True
             else:
                 test_index[i*j:] = True
@@ -205,11 +204,11 @@ class KFold(object):
 
     def __repr__(self):
         return '%s.%s(n=%i, k=%i)' % (
-                                self.__class__.__module__,
-                                self.__class__.__name__,
-                                self.n,
-                                self.k,
-                                )
+            self.__class__.__module__,
+            self.__class__.__name__,
+            self.n,
+            self.k,
+        )
 
 
 ################################################################################
@@ -259,17 +258,17 @@ class LeaveOneLabelOut(object):
         labels = np.array(self.labels, copy=True)
         for i in np.unique(labels):
             test_index  = np.zeros(len(labels), dtype=np.bool)
-            test_index[labels==i] = True
+            test_index[labels == i] = True
             train_index = np.logical_not(test_index)
             yield train_index, test_index
 
 
     def __repr__(self):
         return '%s.%s(labels=%s)' % (
-                                self.__class__.__module__,
-                                self.__class__.__name__,
-                                self.labels,
-                                )
+            self.__class__.__module__,
+            self.__class__.__name__,
+            self.labels,
+        )
 
 
 def split(train_indexes, test_indexes, *args):
@@ -285,6 +284,7 @@ def split(train_indexes, test_indexes, *args):
         ret.append(arg_train)
         ret.append(arg_test)
     return ret
+
 
 '''
  >>> cv = ho.LeaveOneLabelOut(X, y) # y making y optional and

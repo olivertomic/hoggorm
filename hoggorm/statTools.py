@@ -173,4 +173,4 @@ def matrixRank(arr, tol=1e-8):
         raise ValueError('Input must be a 2-d array or Matrix object')
 
     s = numpy.linalg.svd(arr, compute_uv=0)
-    return numpy.sum(numpy.where(s>tol, 1, 0))
+    return numpy.sum(numpy.where(s > tol, 1, 0))

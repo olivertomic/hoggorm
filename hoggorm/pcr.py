@@ -111,9 +111,9 @@ class nipalsPCR:
         whether number of components chosen by user is OK.
         """
 
-#===============================================================================
-#         Check what is provided by user for PCA-part of PCR
-#===============================================================================
+        # ===============================================================================
+        #         Check what is provided by user for PCA-part of PCR
+        # ===============================================================================
 
         # Check whether number of PC's that are to be computed is provided.
         # If NOT, then number of PC's is set to either number of objects or
@@ -193,9 +193,9 @@ class nipalsPCR:
         self.X_calExplainedVariancesList = []
 
 
-#===============================================================================
-#        Here the NIPALS PCA algorithm on X starts
-#===============================================================================
+        # ===============================================================================
+        #        Here the NIPALS PCA algorithm on X starts
+        # ===============================================================================
         threshold = 1.0e-8
         X_new = self.arrX.copy()
 
@@ -243,8 +243,7 @@ class nipalsPCR:
             self.calXhatDict_singPC[j+1] = Xhat_j
 
             if self.Xstand:
-                self.calXhatDict_singPC[j+1] = (Xhat_j * self.Xstd) + \
-                        self.Xmeans
+                self.calXhatDict_singPC[j+1] = (Xhat_j * self.Xstd) + self.Xmeans
 
             else:
                 self.calXhatDict_singPC[j+1] = Xhat_j + self.Xmeans
@@ -260,9 +259,9 @@ class nipalsPCR:
         self.arrQ = np.transpose(np.dot(term_1, term_2))
 
 
-#==============================================================================
-#         From here computation of CALIBRATED explained variance starts
-#==============================================================================
+        # ==============================================================================
+        #         From here computation of CALIBRATED explained variance starts
+        # ==============================================================================
 
 
         # ========== COMPUTATIONS FOR X ==========
@@ -305,8 +304,7 @@ class nipalsPCR:
         # Now store all PRESSE values into an array. Then compute MSEE and
         # RMSEE.
         self.PRESSEarr_indVar_X = np.array(list(self.PRESSEdict_indVar_X.values()))
-        self.MSEEarr_indVar_X = self.PRESSEarr_indVar_X / \
-                np.shape(self.arrX_input)[0]
+        self.MSEEarr_indVar_X = self.PRESSEarr_indVar_X / np.shape(self.arrX_input)[0]
         self.RMSEEarr_indVar_X = np.sqrt(self.MSEEarr_indVar_X)
         # ---------------------------------------------------------------------
 
@@ -352,8 +350,7 @@ class nipalsPCR:
         # Collect total MSEE across all variables in a dictionary. Also,
         # compute total validated explained variance in X.
         self.MSEE_total_dict_X = {}
-        self.MSEE_total_list_X = np.sum(self.MSEEarr_indVar_X, axis=1) / \
-                np.shape(self.arrX_input)[1]
+        self.MSEE_total_list_X = np.sum(self.MSEEarr_indVar_X, axis=1) / np.shape(self.arrX_input)[1]
         MSEE_0_X = self.MSEE_total_list_X[0]
 
         # Compute total calibrated explained variance in X
@@ -370,9 +367,9 @@ class nipalsPCR:
         # Construct list with total validated explained variance in X
         self.XcalExplVarList = []
         for ind, item in enumerate(self.XcumCalExplVarList):
-            if ind == len(self.XcumCalExplVarList)-1: break
-            explVarComp = self.XcumCalExplVarList[ind+1] - \
-                    self.XcumCalExplVarList[ind]
+            if ind == len(self.XcumCalExplVarList)-1:
+                break
+            explVarComp = self.XcumCalExplVarList[ind+1] - self.XcumCalExplVarList[ind]
             self.XcalExplVarList.append(explVarComp)
 
         # Construct a dictionary that holds predicted X (Xhat) from calibration
@@ -404,7 +401,7 @@ class nipalsPCR:
 
             x_scores = self.arrT[:,0:ind]
             y_loadings = self.arrQ[:,0:ind]
-            #c_regrCoeff = self.arrC[0:ind,0:ind]
+            # c_regrCoeff = self.arrC[0:ind,0:ind]
 
             # Depending on whether Y was standardised or not compute Yhat
             # accordingly.
@@ -439,8 +436,7 @@ class nipalsPCR:
         # Now store all PRESSE values into an array. Then compute MSEE and
         # RMSEE.
         self.PRESSEarr_indVar = np.array(list(self.PRESSEdict_indVar.values()))
-        self.MSEEarr_indVar = self.PRESSEarr_indVar / \
-                np.shape(self.arrY_input)[0]
+        self.MSEEarr_indVar = self.PRESSEarr_indVar / np.shape(self.arrY_input)[0]
         self.RMSEEarr_indVar = np.sqrt(self.MSEEarr_indVar)
         # ---------------------------------------------------------------------
 
@@ -486,8 +482,7 @@ class nipalsPCR:
         # Collect total MSEE across all variables in a dictionary. Also,
         # compute total calibrated explained variance in Y.
         self.MSEE_total_dict = {}
-        self.MSEE_total_list = np.sum(self.MSEEarr_indVar, axis=1) / \
-                np.shape(self.arrY_input)[1]
+        self.MSEE_total_list = np.sum(self.MSEEarr_indVar, axis=1) / np.shape(self.arrY_input)[1]
         MSEE_0 = self.MSEE_total_list[0]
 
         # Compute total calibrated explained variance in Y
@@ -504,9 +499,9 @@ class nipalsPCR:
         # Construct list with total validated explained variance in Y
         self.YcalExplVarList = []
         for ind, item in enumerate(self.YcumCalExplVarList):
-            if ind == len(self.YcumCalExplVarList)-1: break
-            explVarComp = self.YcumCalExplVarList[ind+1] - \
-                    self.YcumCalExplVarList[ind]
+            if ind == len(self.YcumCalExplVarList)-1:
+                break
+            explVarComp = self.YcumCalExplVarList[ind+1] - self.YcumCalExplVarList[ind]
             self.YcalExplVarList.append(explVarComp)
 
         # Construct a dictionary that holds predicted Y (Yhat) from calibration
@@ -529,9 +524,9 @@ class nipalsPCR:
 
 
 
-#==============================================================================
-#         From here cross validation procedure starts
-#==============================================================================
+        # ==============================================================================
+        #         From here cross validation procedure starts
+        # ==============================================================================
         if self.cvType is not None:
             numObj = np.shape(self.arrX)[0]
 
@@ -694,7 +689,7 @@ class nipalsPCR:
                 # then two, three, etc
                 for ind in range(0, dims):
 
-                    #part_projT = projT[:,0:ind+1].reshape(1,-1)
+                    # part_projT = projT[:,0:ind+1].reshape(1,-1)
                     part_projT = projT[:,0:ind+1]
                     part_valP = valP[:,0:ind+1]
                     valPredX_proc = np.dot(part_projT, np.transpose(part_valP))
@@ -705,16 +700,14 @@ class nipalsPCR:
                     # Depending on preprocessing re-process in same manner
                     # in order to get values that compare to original values.
                     if self.Xstand:
-                        valPredX = (valPredX_proc * X_train_std) + \
-                                X_train_mean
+                        valPredX = (valPredX_proc * X_train_std) + X_train_mean
                     else:
                         valPredX = valPredX_proc + X_train_mean
 
                     self.valXpredDict[ind+1][test_index,] = valPredX
 
                     if self.Ystand:
-                        valPredY =(valPredY_proc * Y_train_std) + \
-                                Y_train_mean
+                        valPredY = (valPredY_proc * Y_train_std) + Y_train_mean
                     else:
                         valPredY = valPredY_proc + Y_train_mean
 
@@ -740,9 +733,9 @@ class nipalsPCR:
                 self.valYpredList.append(pc_arr)
 
 
-#==============================================================================
-# From here VALIDATED explained variance is computed
-#==============================================================================
+            # ==============================================================================
+            # From here VALIDATED explained variance is computed
+            # ==============================================================================
 
             # ========== Computations for X ==========
             # -----------------------------------------------------------------
@@ -761,7 +754,7 @@ class nipalsPCR:
             # Compute PRESSCV for each Yhat for 1, 2, 3, etc number of
             # components and compute explained variance
             for ind, Xhat in enumerate(self.valXpredList):
-                #diffX = self.arrX_input - Xhat
+                # diffX = self.arrX_input - Xhat
                 diffX = self.arrX_input - Xhat
                 PRESSCV_indVar_X = np.sum(np.square(diffX), axis=0)
                 self.PRESSCVdict_indVar_X[ind+1] = PRESSCV_indVar_X
@@ -769,8 +762,7 @@ class nipalsPCR:
             # Now store all PRESSCV values into an array. Then compute MSECV
             # and RMSECV.
             self.PRESSCVarr_indVar_X = np.array(list(self.PRESSCVdict_indVar_X.values()))
-            self.MSECVarr_indVar_X = self.PRESSCVarr_indVar_X / \
-                    np.shape(self.arrX_input)[0]
+            self.MSECVarr_indVar_X = self.PRESSCVarr_indVar_X / np.shape(self.arrX_input)[0]
             self.RMSECVarr_indVar_X = np.sqrt(self.MSECVarr_indVar_X)
             # -----------------------------------------------------------------
 
@@ -815,8 +807,7 @@ class nipalsPCR:
             # Collect total MSECV across all variables in a dictionary. Also,
             # compute total validated explained variance in X.
             self.MSECV_total_dict_X = {}
-            self.MSECV_total_list_X = np.sum(self.MSECVarr_indVar_X, axis=1) / \
-                    np.shape(self.arrX_input)[1]
+            self.MSECV_total_list_X = np.sum(self.MSECVarr_indVar_X, axis=1) / np.shape(self.arrX_input)[1]
             MSECV_0_X = self.MSECV_total_list_X[0]
 
             # Compute total validated explained variance in X
@@ -834,9 +825,9 @@ class nipalsPCR:
             # each component
             self.XvalExplVarList = []
             for ind, item in enumerate(self.XcumValExplVarList):
-                if ind == len(self.XcumValExplVarList)-1: break
-                explVarComp = self.XcumValExplVarList[ind+1] - \
-                        self.XcumValExplVarList[ind]
+                if ind == len(self.XcumValExplVarList)-1:
+                    break
+                explVarComp = self.XcumValExplVarList[ind+1] - self.XcumValExplVarList[ind]
                 self.XvalExplVarList.append(explVarComp)
             # -----------------------------------------------------------------
 
@@ -876,8 +867,7 @@ class nipalsPCR:
             # Now store all PRESSCV values into an array. Then compute MSECV and
             # RMSECV.
             self.PRESSCVarr_indVar = np.array(list(self.PRESSdict_indVar.values()))
-            self.MSECVarr_indVar = self.PRESSCVarr_indVar / \
-                    np.shape(self.arrY_input)[0]
+            self.MSECVarr_indVar = self.PRESSCVarr_indVar / np.shape(self.arrY_input)[0]
             self.RMSECVarr_indVar = np.sqrt(self.MSECVarr_indVar)
             # -----------------------------------------------------------------
 
@@ -922,8 +912,7 @@ class nipalsPCR:
             # Collect total MSECV across all variables in a dictionary. Also,
             # compute total validated explained variance in Y.
             self.MSECV_total_dict = {}
-            self.MSECV_total_list = np.sum(self.MSECVarr_indVar, axis=1) / \
-                    np.shape(self.arrY_input)[1]
+            self.MSECV_total_list = np.sum(self.MSECVarr_indVar, axis=1) / np.shape(self.arrY_input)[1]
             MSECV_0 = self.MSECV_total_list[0]
 
             # Compute total validated explained variance in Y
@@ -941,9 +930,9 @@ class nipalsPCR:
             # each component
             self.YvalExplVarList = []
             for ind, item in enumerate(self.YcumValExplVarList):
-                if ind == len(self.YcumValExplVarList)-1: break
-                explVarComp = self.YcumValExplVarList[ind+1] - \
-                        self.YcumValExplVarList[ind]
+                if ind == len(self.YcumValExplVarList)-1:
+                    break
+                explVarComp = self.YcumValExplVarList[ind+1] - self.YcumValExplVarList[ind]
                 self.YvalExplVarList.append(explVarComp)
             # -----------------------------------------------------------------
 
@@ -1009,8 +998,7 @@ class nipalsPCR:
         """
 
         # Creates empty matrix for correlation loadings
-        arr_corrLoadings = np.zeros((np.shape(self.arrT)[1], \
-            np.shape(self.arrP)[0]), float)
+        arr_corrLoadings = np.zeros((np.shape(self.arrT)[1], np.shape(self.arrP)[0]), float)
 
         # Compute correlation loadings:
         # For each component in score matrix
@@ -1138,7 +1126,7 @@ class nipalsPCR:
         each component. First number in list is for component 1, second number
         for component 2, third number for component 3, etc.
         """
-        return  self.XvalExplVarList
+        return self.XvalExplVarList
 
 
     def X_cumValExplVar_indVar(self):
@@ -1240,8 +1228,7 @@ class nipalsPCR:
         # First pre-process new X data accordingly
         if self.Xstand:
 
-            x_new = (Xnew - np.average(self.arrX_input, axis=0)) / \
-                    np.std(self.arrX_input, ddof=1)
+            x_new = (Xnew - np.average(self.arrX_input, axis=0)) / np.std(self.arrX_input, ddof=1)
 
         else:
 
@@ -1278,8 +1265,7 @@ class nipalsPCR:
         """
 
         # Creates empty matrix for correlation loadings
-        arr_YcorrLoadings = np.zeros((np.shape(self.arrT)[1], \
-            np.shape(self.arrQ)[0]), float)
+        arr_YcorrLoadings = np.zeros((np.shape(self.arrT)[1], np.shape(self.arrQ)[0]), float)
 
         # Compute correlation loadings:
         # For each component in score matrix
@@ -1516,7 +1502,7 @@ class nipalsPCR:
         # B = P*Q'
         if self.Ystand:
             return np.dot(self.arrP[:,0:numComp], np.transpose(self.arrQ[:,0:numComp])) \
-                 * np.std(self.arrY_input, ddof=1, axis=0).reshape(1,-1)
+                * np.std(self.arrY_input, ddof=1, axis=0).reshape(1,-1)
         else:
             return np.dot(self.arrP[:,0:numComp], np.transpose(self.arrQ[:,0:numComp]))
 
@@ -1527,7 +1513,7 @@ class nipalsPCR:
         """
 
         assert numComp <= self.numPC, ValueError('Maximum numComp = ' + str(self.numPC))
-        assert numComp >- 1, ValueError('numComp must be >= 0')
+        assert numComp > -1, ValueError('numComp must be >= 0')
 
         # Return average if numComp == 0
         if numComp == 0:
@@ -1536,8 +1522,7 @@ class nipalsPCR:
         else:
             # First pre-process new X data accordingly
             if self.Xstand:
-                x_new = (Xnew - np.average(self.arrX_input, axis=0)) / \
-                        np.std(self.arrX_input, ddof=1, axis=0)
+                x_new = (Xnew - np.average(self.arrX_input, axis=0)) / np.std(self.arrX_input, ddof=1, axis=0)
             else:
                 x_new = (Xnew - np.average(self.arrX_input, axis=0))
 
@@ -1549,8 +1534,7 @@ class nipalsPCR:
 
             # Compute predicted values back to original scale
             if self.Ystand:
-                Yhat = (y_pred_proc * np.std(self.arrY_input, ddof=1, axis=0).reshape(1,-1)) + \
-                        np.average(self.arrY_input, axis=0)
+                Yhat = (y_pred_proc * np.std(self.arrY_input, ddof=1, axis=0).reshape(1,-1)) + np.average(self.arrY_input, axis=0)
             else:
                 Yhat = y_pred_proc + np.average(self.arrY_input, axis=0)
 
