@@ -104,7 +104,7 @@ class nipalsPCR:
 
     """
     
-    def __init__(self, arrX, arrY, **kargs):
+    def __init__(self, arrX, arrY, numComp=None, Xstand=False, Ystand=False, cvType=None):
         """
         On initialisation check how arrX and arrY are to be pre-processed 
         (parameters Xstand and Ystand are either True or False). Then check 
@@ -120,14 +120,14 @@ class nipalsPCR:
         # variables of X whichever is smallest (numPC). If number of  
         # PC's IS provided, then number is checked against maxcomponent and set to
         # numcomponent if provided number is larger.
-        if 'numComp' not in kargs.keys(): 
-            self.numcomponent = min(np.shape(arrX))
+        if numComp is None:
+            self.numPC = min(np.shape(arrX))
         else:
-            maxNumPC = min(np.shape(arrX))           
-            if kargs['numComp'] > maxNumPC:
+            maxNumPC = min(np.shape(arrX))
+            if numComp > maxNumPC:
                 self.numPC = maxNumPC
             else:
-                self.numPC = kargs['numComp']
+                self.numPC = numComp
         
         
         # Define X and Y within class such that the data can be accessed from
@@ -140,29 +140,22 @@ class nipalsPCR:
         # -------------------------------------------
         # Check whether standardisation of X and Y are requested by user. If 
         # NOT, then X and y are centred by default. 
-        if 'Xstand' not in kargs.keys():
-            self.Xstand = False
-        else:
-            self.Xstand = kargs['Xstand']
-        
-        if 'Ystand' not in kargs.keys():
-            self.Ystand = False
-        else:
-            self.Ystand = kargs['Ystand']
+        self.Xstand = Xstand
+        self.Ystand = Ystand
         
         
         # Standardise X if requested by user, otherwise center X.
-        if self.Xstand == True:
-            self.Xmeans = np.average(self.arrX_input, axis=0)            
+        if self.Xstand:
+            self.Xmeans = np.average(self.arrX_input, axis=0)
             self.Xstd = np.std(self.arrX_input, axis=0, ddof=1)
             self.arrX = (self.arrX_input - self.Xmeans) / self.Xstd
         else:
-            self.Xmeans = np.average(self.arrX_input, axis=0)            
+            self.Xmeans = np.average(self.arrX_input, axis=0)
             self.arrX = self.arrX_input - self.Xmeans
             
         
         # Standardise Y if requested by user, otherwise center Y.
-        if self.Ystand == True:            
+        if self.Ystand:
             self.Ymeans = np.average(self.arrY_input, axis=0)
             self.Ystd = np.std(self.arrY_input, axis=0, ddof=1)
             self.arrY = (self.arrY_input - self.Ymeans) / self.Ystd
@@ -173,10 +166,7 @@ class nipalsPCR:
         
         # Check whether cvType is provided. If NOT, then no cross validation
         # is carried out.
-        if 'cvType' not in kargs.keys():
-            self.cvType = None
-        else:
-            self.cvType = kargs['cvType']
+        self.cvType = cvType
         
         
         # Before PLS2 NIPALS algorithm starts initiate and lists in which
@@ -252,7 +242,7 @@ class nipalsPCR:
             self.X_residualsDict[j+1] = X_new
             self.calXhatDict_singPC[j+1] = Xhat_j
             
-            if self.Xstand == True:
+            if self.Xstand:
                 self.calXhatDict_singPC[j+1] = (Xhat_j * self.Xstd) + \
                         self.Xmeans
             
@@ -288,7 +278,7 @@ class nipalsPCR:
             part_arrP = self.arrP[:,0:ind]
             predXcal = np.dot(part_arrT, np.transpose(part_arrP))
             
-            if self.Xstand == True:
+            if self.Xstand:
                 Xhat = (predXcal * self.Xstd) + self.Xmeans
             else:
                 Xhat = predXcal + self.Xmeans
@@ -368,7 +358,7 @@ class nipalsPCR:
 
         # Compute total calibrated explained variance in X
         self.XcumCalExplVarList = []
-        if self.Xstand == False:
+        if not self.Xstand:
             for ind, MSEE_X in enumerate(self.MSEE_total_list_X):
                 perc = (MSEE_0_X - MSEE_X) / MSEE_0_X * 100
                 self.MSEE_total_dict_X[ind] = MSEE_X
@@ -418,7 +408,7 @@ class nipalsPCR:
             
             # Depending on whether Y was standardised or not compute Yhat
             # accordingly.            
-            if self.Ystand == True:
+            if self.Ystand:
                 Yhat_stand = np.dot(x_scores, np.transpose(y_loadings))
                 Yhat = (Yhat_stand * self.Ystd.reshape(1,-1)) + self.Ymeans.reshape(1,-1)
             else:
@@ -502,7 +492,7 @@ class nipalsPCR:
 
         # Compute total calibrated explained variance in Y
         self.YcumCalExplVarList = []
-        if self.Ystand == False:
+        if not self.Ystand:
             for ind, MSEE in enumerate(self.MSEE_total_list):
                 perc = (MSEE_0 - MSEE) / MSEE_0 * 100
                 self.MSEE_total_dict[ind] = MSEE
@@ -542,9 +532,7 @@ class nipalsPCR:
 #==============================================================================
 #         From here cross validation procedure starts
 #==============================================================================
-        if self.cvType == None:
-            pass
-        else:
+        if self.cvType is not None:
             numObj = np.shape(self.arrX)[0]
             
             if self.cvType[0] == "loo":
@@ -605,7 +593,7 @@ class nipalsPCR:
                 
                 # -------------------------------------------------------------                    
                 # Center or standardise X according to users choice 
-                if self.Xstand == True:
+                if self.Xstand:
                     X_train_mean = np.average(X_train, axis=0).reshape(1,-1)
                     X_train_std = np.std(X_train, axis=0, ddof=1).reshape(1,-1)
                     X_train_proc = (X_train - X_train_mean) / X_train_std
@@ -625,7 +613,7 @@ class nipalsPCR:
                 
                 # -------------------------------------------------------------                    
                 # Center or standardise Y according to users choice 
-                if self.Ystand == True:
+                if self.Ystand:
                     Y_train_mean = np.average(Y_train, axis=0)
                     Y_train_std = np.std(Y_train, axis=0, ddof=1)
                     Y_train_proc = (Y_train - Y_train_mean) / Y_train_std
@@ -716,7 +704,7 @@ class nipalsPCR:
                     
                     # Depending on preprocessing re-process in same manner
                     # in order to get values that compare to original values.
-                    if self.Xstand == True:
+                    if self.Xstand:
                         valPredX = (valPredX_proc * X_train_std) + \
                                 X_train_mean
                     else:
@@ -724,7 +712,7 @@ class nipalsPCR:
                     
                     self.valXpredDict[ind+1][test_index,] = valPredX
                     
-                    if self.Ystand == True:
+                    if self.Ystand:
                         valPredY =(valPredY_proc * Y_train_std) + \
                                 Y_train_mean
                     else:
@@ -833,7 +821,7 @@ class nipalsPCR:
 
             # Compute total validated explained variance in X
             self.XcumValExplVarList = []
-            if self.Xstand == False:
+            if not self.Xstand:
                 for ind, MSECV_X in enumerate(self.MSECV_total_list_X):
                     perc = (MSECV_0_X - MSECV_X) / MSECV_0_X * 100
                     self.MSECV_total_dict_X[ind] = MSECV_X
@@ -940,7 +928,7 @@ class nipalsPCR:
 
             # Compute total validated explained variance in Y
             self.YcumValExplVarList = []
-            if self.Ystand == False:
+            if not self.Ystand:
                 for ind, MSECV in enumerate(self.MSECV_total_list):
                     perc = (MSECV_0 - MSECV) / MSECV_0 * 100
                     self.MSECV_total_dict[ind] = MSECV
@@ -1250,7 +1238,7 @@ class nipalsPCR:
         assert numComp > -1, ValueError('numComp must be >= 0')
         
         # First pre-process new X data accordingly
-        if self.Xstand == True:
+        if self.Xstand:
         
             x_new = (Xnew - np.average(self.arrX_input, axis=0)) / \
                     np.std(self.arrX_input, ddof=1)
@@ -1526,7 +1514,7 @@ class nipalsPCR:
         assert numComp > -1, ValueError('numComp must be >= 0')
         
         # B = P*Q'
-        if self.Ystand == True:
+        if self.Ystand:
             return np.dot(self.arrP[:,0:numComp], np.transpose(self.arrQ[:,0:numComp])) \
                  * np.std(self.arrY_input, ddof=1, axis=0).reshape(1,-1)
         else:
@@ -1547,7 +1535,7 @@ class nipalsPCR:
             
         else:
             # First pre-process new X data accordingly
-            if self.Xstand == True:
+            if self.Xstand:
                 x_new = (Xnew - np.average(self.arrX_input, axis=0)) / \
                         np.std(self.arrX_input, ddof=1, axis=0)
             else:
@@ -1560,7 +1548,7 @@ class nipalsPCR:
             y_pred_proc = np.dot(projT, np.transpose(self.arrQ[:, 0:numComp]))
             
             # Compute predicted values back to original scale
-            if self.Ystand == True:
+            if self.Ystand:
                 Yhat = (y_pred_proc * np.std(self.arrY_input, ddof=1, axis=0).reshape(1,-1)) + \
                         np.average(self.arrY_input, axis=0)
             else:
