@@ -23,4 +23,11 @@ def datafolder():
 
 @pytest.fixture(scope="module")
 def ldat(datafolder):
+    '''Read liking data and return as numpy array'''
     return np.loadtxt(osp.join(datafolder, 'source_l_dat.tsv'), dtype=np.uint8, skiprows=1)
+
+
+@pytest.fixture(scope="module")
+def sdat(datafolder):
+    '''Read sensory data and return as numpy array'''
+    return np.loadtxt(osp.join(datafolder, 'source_s_dat.tsv'), dtype=np.float64, skiprows=1)
