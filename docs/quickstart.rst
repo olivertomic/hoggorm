@@ -38,14 +38,14 @@ Install Hoggorm easily from the command line from the `PyPI - the Python Packagi
 
 	pip install hoggorm
 
-Updating
-++++++++
+Upgrading
++++++++++
 
-To update Hoggorm from an previously installed oudated version execute the following from the command line:
+To upgrade Hoggorm from a previously installed older version execute the following from the command line:
 
 .. code-block:: bash
         
-        pip install --update hoggorm
+        pip install --upgrade hoggorm
 
 
 If you need more information on how to install Python packages using pip, please see the `pip documentation`_.
