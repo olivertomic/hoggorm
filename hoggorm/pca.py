@@ -893,12 +893,14 @@ class nipalsPCA:
         return self.RMSECV_total_list_X
 
 
-    def X_scores_predict(self, Xnew, numComp=1):
+    def X_scores_predict(self, Xnew, numComp=[]):
         """
         Returns array of X scores from new X data using the exsisting model.
         Rows represent objects and columns represent components.
         """
 
+        if len(numComp) == 0:
+            numComp = self.numPC
         assert numComp <= self.numPC, ValueError('Maximum numComp = ' + str(self.numPC))
         assert numComp > -1, ValueError('numComp must be >= 0')
 
