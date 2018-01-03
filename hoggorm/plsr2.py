@@ -173,7 +173,7 @@ class nipalsPLS2:
         self.x_loadingsList = []
         self.y_loadingsList = []
         self.y_loadingsList_alt = []
-        self.x_loadingsWeightsList = []
+        self.x_loadingWeightsList = []
         self.coeffList = []
         self.Y_residualsList = [self.arrY]
         self.X_residualsList = [self.arrX]
@@ -254,7 +254,7 @@ class nipalsPLS2:
             self.y_scoresList.append(u_new.reshape(-1))
             self.y_loadingsList.append(q.reshape(-1))
             self.y_loadingsList_alt.append(q_alt.reshape(-1))
-            self.x_loadingsWeightsList.append(w.reshape(-1))
+            self.x_loadingWeightsList.append(w.reshape(-1))
             self.coeffList.append(c.reshape(-1))
 
             # Collect residuals
@@ -268,7 +268,7 @@ class nipalsPLS2:
         self.arrU = np.array(np.transpose(self.y_scoresList))
         self.arrQ = np.array(np.transpose(self.y_loadingsList))
         self.arrQ_alt = np.array(np.transpose(self.y_loadingsList_alt))
-        self.arrW = np.array(np.transpose(self.x_loadingsWeightsList))
+        self.arrW = np.array(np.transpose(self.x_loadingWeightsList))
         self.arrC = np.eye(self.numPC) * np.array(np.transpose(self.coeffList))
 
 
@@ -601,7 +601,7 @@ class nipalsPLS2:
                 val_x_loadingsList = []
                 val_y_scoresList = []
                 val_y_loadingsList = []
-                val_x_loadingsWeightsList = []
+                val_x_loadingWeightsList = []
                 val_coeffList = []
 
 
@@ -703,7 +703,7 @@ class nipalsPLS2:
                     val_x_loadingsList.append(p.reshape(-1))
                     val_y_scoresList.append(u_new.reshape(-1))
                     val_y_loadingsList.append(q.reshape(-1))
-                    val_x_loadingsWeightsList.append(w.reshape(-1))
+                    val_x_loadingWeightsList.append(w.reshape(-1))
                     val_coeffList.append(c.reshape(-1))
 
                 # Construct T, P, U, Q and W from lists of vectors
@@ -711,7 +711,7 @@ class nipalsPLS2:
                 val_arrP = np.array(np.transpose(val_x_loadingsList))
                 val_arrU = np.array(np.transpose(val_y_scoresList))
                 val_arrQ = np.array(np.transpose(val_y_loadingsList))
-                val_arrW = np.array(np.transpose(val_x_loadingsWeightsList))
+                val_arrW = np.array(np.transpose(val_x_loadingWeightsList))
                 val_arrC = np.eye(self.numPC) * np.array(np.transpose(val_coeffList))
 
                 self.val_arrTlist.append(val_arrT)
@@ -1032,7 +1032,7 @@ class nipalsPLS2:
         return self.arrP
 
 
-    def X_loadingsWeights(self):
+    def X_loadingWeights(self):
         """
         Returns an array holding loadings weights of array X.
         """
@@ -1272,12 +1272,14 @@ class nipalsPLS2:
         return self.RMSECV_total_list_X
 
 
-    def X_scores_predict(self, Xnew, numComp=1):
+    def X_scores_predict(self, Xnew, numComp=[]):
         """
         Returns array of X scores from new X data using the exsisting model.
         Rows represent objects and columns represent components.
         """
 
+        if len(numComp) == 0:
+            numComp = self.numPC
         assert numComp <= self.numPC, ValueError('Maximum numComp = ' + str(self.numPC))
         assert numComp > -1, ValueError('numComp must be >= 0')
 
