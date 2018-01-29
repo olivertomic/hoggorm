@@ -40,8 +40,9 @@ Documentation
 -------------
 
 - Documentation at `Read the Docs`_
-- Jupyter notebooks with examples of how to use Hoggorm together with the plotting package `HoggormPlot`_.
+- Jupyter notebooks with `examples`_ of how to use Hoggorm together with the plotting package `HoggormPlot`_.
   
   
 .. _Read the Docs: http://hoggorm.readthedocs.io/en/latest
+.. _examples: https://github.com/khliland/hoggormExamples
 .. _HoggormPlot: https://github.com/olivertomic/hoggormPlot
