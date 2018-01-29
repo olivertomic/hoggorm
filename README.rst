@@ -9,7 +9,7 @@ Hoggorm is a Python package for explorative multivariate statistics in Python. I
   
   - PLSR1 for single variable responses
   - PLSR2 for multivariate responses
-* matrix corrlation coefficients RV and RV2.
+* matrix corrlation coefficients RV, RV2 and SMI.
 
 Unlike `scikit-learn`_, whis is an excellent python machine learning package focusing on classification and predicition, Hoggorm rather aims at understanding and interpretation of the variance in the data. Hoggorm also also contains tools for prediction.
 
@@ -40,14 +40,9 @@ Documentation
 -------------
 
 - Documentation at `Read the Docs`_
-- Jupyter notebooks with examples of how to use Hoggorm
+- Jupyter notebooks with `examples`_ of how to use Hoggorm together with the plotting package `HoggormPlot`_.
   
-  - for `PCA`_
-  - for PCR (coming soon)
-  - for PLSR1 (coming soon)
-  - for PLSR2 (coming soon)
-  - for matrix correlation ceoefficitents RV and RV2 (coming soon)
   
-
 .. _Read the Docs: http://hoggorm.readthedocs.io/en/latest
-.. _PCA: https://github.com/olivertomic/hoggorm/blob/master/docs/PCA%20with%20hoggorm.ipynb
+.. _examples: https://github.com/khliland/hoggormExamples
+.. _HoggormPlot: https://github.com/olivertomic/hoggormPlot
