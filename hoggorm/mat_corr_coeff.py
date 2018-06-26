@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 
 
 import numpy
@@ -11,9 +11,9 @@ def RVcoeff(dataList):
     of arrays. The number and order of objects (rows) for the two arrays must
     match. The number of variables in each array may vary.
 
-    REF: `H. Abdi, D. Valentin; 'The STATIS method'`_
+    Reference: `The STATIS method`_
 
-    .. _H. Abdi, D. Valentin; 'The STATIS method': https://www.utdallas.edu/~herve/Abdi-Statis2007-pretty.pdf
+    .. _The STATIS method: https://www.utdallas.edu/~herve/Abdi-Statis2007-pretty.pdf
 
     PARAMETERS
     ----------
@@ -101,9 +101,9 @@ def RV2coeff(dataList):
     is a modified version of the RV coefficient with values -1 <= RV2 <= 1.
     RV2 is independent of object and variable size.
 
-    REF: `A.K. Smilde, et al. Bioinformatics (2009) Vol 25, no 3, 401-405`_
+    Reference: `Matrix correlations for high-dimensional data - the modified RV-coefficient`_
 
-    .. _A.K. Smilde, et al. Bioinformatics (2009) Vol 25, no 3, 401-405: https://academic.oup.com/bioinformatics/article/25/3/401/244239
+    .. _Matrix correlations for high-dimensional data - the modified RV-coefficient: https://academic.oup.com/bioinformatics/article/25/3/401/244239
 
     PARAMETERS
     ----------
@@ -194,7 +194,9 @@ class SMI:
     data sets and contexts and which includes explorative plotting and permutation based testing
     of matrix subspace equality.
     
-    Reference: A similarity index for comparing coupled matrices - Ulf Geir Indahl, Tormod Næs, Kristian Hovde Liland
+    Reference: `A similarity index for comparing coupled matrices`_
+
+    .. _A similarity index for comparing coupled matrices: https://onlinelibrary.wiley.com/doi/abs/10.1002/cem.3049
 
     PARAMETERS
     ----------
@@ -220,16 +222,15 @@ class SMI:
     EXAMPLES
     --------
     >>> import numpy as np
-    >>> import SMI as S
-    >>> import statTools as st
+    >>> import hoggorm as ho
     
-    >>> X1 = st.centre(np.random.rand(100,300))
+    >>> X1 = ho.center(np.random.rand(100,300))
     >>> U, s, V = np.linalg.svd(X1, 0)
     >>> X2 = np.dot(np.dot(np.delete(U, 2,1), np.diag(np.delete(s,2))), np.delete(V,2,0))
     
-    >>> smiOP = S.SMI(X1,X2, ncomp1 = 10, ncomp2 = 10)
-    >>> smiPR = S.SMI(X1,X2, ncomp1 = 10, ncomp2 = 10, projection = "Procrustes")
-    >>> smiCustom = S.SMI(X1,X2, ncomp1 = 10, ncomp2 = 10, Scores1 = U)
+    >>> smiOP = ho.SMI(X1, X2, ncomp1 = 10, ncomp2 = 10)
+    >>> smiPR = ho.SMI(X1, X2, ncomp1 = 10, ncomp2 = 10, projection = "Procrustes")
+    >>> smiCustom = ho.SMI(X1, X2, ncomp1 = 10, ncomp2 = 10, Scores1 = U)
     
     >>> print(smiOP.smi)
     >>> print(smiOP.significance())

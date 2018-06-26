@@ -1,7 +1,7 @@
 Quickstart
 ==========
 
-Hoggorm is a Python package for explorative multivariate statistics in Python. It contains 
+hoggorm is a Python package for explorative multivariate statistics in Python. It contains 
 
 * PCA (principal component analysis)
 * PCR (principal component regression)
@@ -14,6 +14,11 @@ Hoggorm is a Python package for explorative multivariate statistics in Python. I
 Unlike `scikit-learn`_, whis is an excellent Python machine learning package focusing on classification and predicition, Hoggorm rather aims at understanding and interpretation of the variance in the data. Hoggorm also contains tools for prediction.
 
 .. _scikit-learn: http://scikit-learn.org/stable/
+
+.. note:: Results computed with the hoggorm package can be visualised using plotting functions implemented in the complementary `hoggormplot`_ package.
+
+.. _hoggormplot: http://hoggormplot.readthedocs.io/en/latest/index.html
+
 
 Requirements
 ------------
@@ -30,7 +35,7 @@ Installation and updates
 Installation
 ++++++++++++
 
-Install Hoggorm easily from the command line from the `PyPI - the Python Packaging Index`_. 
+Install hoggorm easily from the command line from the `PyPI - the Python Packaging Index`_. 
 
 .. _PyPI - the Python Packaging Index: https://pypi.python.org/pypi
 
@@ -41,7 +46,7 @@ Install Hoggorm easily from the command line from the `PyPI - the Python Packagi
 Upgrading
 +++++++++
 
-To upgrade Hoggorm from a previously installed older version execute the following from the command line:
+To upgrade hoggorm from a previously installed older version execute the following from the command line:
 
 .. code-block:: bash
         
@@ -69,6 +74,10 @@ Documentation
 .. _Read the Docs: http://hoggorm.readthedocs.io/en/latest
 .. _PCA: https://github.com/olivertomic/hoggorm/blob/master/docs/PCA%20with%20hoggorm.ipynb
 
+More examples in Jupyter notebooks are provided at `hoggormExamples GitHub repository`_.
+
+.. _hoggormExamples GitHub repository: https://github.com/khliland/hoggormExamples
+
 
 Example
 -------
@@ -87,7 +96,19 @@ Example
 	scores = model.X_scores()
 	loadings = model.X_loadings()
 	cumulativeCalibratedExplainedVariance_allVariables = model.X_cumCalExplVar_indVar()
-	cumulativeValidatedExplainedVariance_total = model.X_cumValExplVar()
+	cumulativeValidatedExplainedVariance_total = model.X_cumValExplVar()  
+
+
+hoggorm repository on GitHub
+----------------------------
+The source code is available at the `hoggorm GitHub repository`_.
+
+.. _hoggorm GitHub repository: https://github.com/olivertomic/hoggorm
+
+
+
+
+
 
 
 
