@@ -117,24 +117,63 @@ class nipalsPLS1:
         #         Check what is provided by user for PLS1
         # ===============================================================================
 
-        # Check whether number of PC's that are to be computed is provided.
-        # If NOT, then number of PC's is set to either number of objects or
-        # variables of X, whichever is smaller (maxPC). If number of
-        # PC's IS provided, then number is checked against maxPC and set to
-        # maxPC if provided number is larger.
-        if numComp is None:
-            self.numPC = min(np.shape(arrX))
-        else:
-            maxNumPC = min(np.shape(arrX))
-            if numComp > maxNumPC:
-                self.numPC = maxNumPC
-            else:
-                self.numPC = numComp
-
         # Define X and y within class such that the data can be accessed from
         # all attributes in class.
         self.arrX_input = arrX
         self.vecy_input = vecy
+        
+        
+        # Check whether cvType is provided. If NOT, then no cross validation
+        # is carried out.
+        self.cvType = cvType
+        
+        
+        # Depict the number of components that are possible to compute based
+        # on size of data set (#rows, #cols), type of cross validation (i.e.
+        # size of CV segments)
+        numObj = np.shape(self.arrX_input)[0]
+        
+        # Compute the sizes of training sets in CV
+        if self.cvType[0] == "loo":
+            print("loo")
+            cvComb = cv.LeaveOneOut(numObj)
+        elif self.cvType[0] == "KFold":
+            print("KFold")
+            cvComb = cv.KFold(numObj, k=self.cvType[1])
+        elif self.cvType[0] == "lolo":
+            print("lolo")
+            cvComb = cv.LeaveOneLabelOut(self.cvType[1])
+        else:
+            print('Requested form of cross validation is not available')
+            pass
+
+        
+        # First devide into combinations of training and test sets. Collect 
+        # sizes of training sets, since this also may limit the number of 
+        # components that can be computed.
+        segSizes = []
+        for train_index, test_index in cvComb:
+            x_train, x_test = cv.split(train_index, test_index, self.arrX_input)
+            y_train, y_test = cv.split(train_index, test_index, self.vecy_input)
+            
+            segSizes.append(numObj - sum(train_index))
+        
+        
+        # Compute the max number of components based on only object size
+        maxN = numObj - max(segSizes) - 1
+        
+        # Choose whatever is smaller, number of variables or maxN
+        maxNumPC = min(np.shape(arrX)[1], maxN)
+        
+        
+        # Now set the number of components that is possible to compute.
+        if numComp is None:
+            self.numPC = maxNumPC
+        else:
+            if numComp > maxNumPC:
+                self.numPC = maxNumPC
+            else:
+                self.numPC = numComp
 
 
         # Pre-process data according to user request.
@@ -162,11 +201,6 @@ class nipalsPLS1:
         else:
             vecyMean = np.average(self.vecy_input)
             self.vecy = self.vecy_input - vecyMean
-
-
-        # Check whether cvType is provided. If NOT, then no cross validation
-        # is carried out.
-        self.cvType = cvType
 
 
         # Before PLS1 NIPALS algorithm starts initiate dictionaries and lists
@@ -1119,15 +1153,16 @@ class nipalsPLS1:
         return self.RMSECV_total_list_X
 
 
-    def X_scores_predict(self, Xnew, numComp=[]):
+    def X_scores_predict(self, Xnew, numComp=None):
         """
         Returns array of X scores from new X data using the exsisting model.
         Rows represent objects and columns represent components.
         """
 
-        if len(numComp) == 0:
+        if numComp == None:
             numComp = self.numPC
-        assert numComp <= self.numPC, ValueError('Maximum numComp = '+str(self.numPC))
+            
+        assert numComp <= self.numPC, ValueError('Maximum numComp = ' + str(self.numPC))
         assert numComp > -1, ValueError('numComp must be >= 0')
 
         # First pre-process new X data accordingly
