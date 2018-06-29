@@ -86,7 +86,7 @@ class nipalsPCA:
     >>> model = ho.nipalsPCA(arrX=myData, numComp=3)
     >>> model = ho.nipalsPCA(arrX=myData, Xstand=True)
     >>> model = ho.nipalsPCA(arrX=myData, cvType=["loo"])
-    >>> model = ho.nipalsPCA(arrX=myData, cvType=["Kfold", 4])
+    >>> model = ho.nipalsPCA(arrX=myData, cvType=["KFold", 4])
     >>> model = ho.nipalsPCA(arrX=myData, cvType=["lolo", [1, 2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5, 6, 7]])
 
     Examples of how to extract results from the PCA model.

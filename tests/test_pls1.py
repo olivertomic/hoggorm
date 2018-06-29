@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Jun 29 13:45:30 2018
+
+@author: olive
+"""
+
 '''
 FIXME: PCA testing ideas:
  * Well known datasets (iris)
@@ -13,7 +20,7 @@ import numpy as np
 
 import pytest
 
-from hoggorm import nipalsPCA as PCA
+from hoggorm import nipalsPLS1 as PLS1
 
 
 # If the following equation is element-wise True, then allclose returns True.
@@ -51,53 +58,70 @@ ATTRS = [
     'X_RMSECV_indVar',
     'X_RMSECV',
     #'X_scores_predict',
+    'Y_means',
+    'Y_loadings',
+    'Y_corrLoadings',
+    'Y_residuals',
+    'Y_calExplVar',
+    'Y_cumCalExplVar',
+    'Y_predCal',
+    'Y_PRESSE',
+    'Y_MSEE',
+    'Y_RMSEE',
+    'Y_valExplVar',
+    'Y_cumValExplVar',
+    'Y_predVal',
+    'Y_PRESSCV',
+    'Y_MSECV',
+    'Y_RMSECV',
     'cvTrainAndTestData',
-    'corrLoadingsEllipses'
+    'corrLoadingsEllipses',
 ]
 
 
-def test_api_verify(pcacached, cfldat):
+def test_api_verify(pls1cached, cfldat):
     """
     Check if all methods in list ATTR are also available in nipalsPCA class.
     """
     # First check those in list ATTR above. These don't have input parameters.
     for fn in ATTRS:
-        res = getattr(pcacached, fn)()
+        res = getattr(pls1cached, fn)()
         print(fn, type(res), '\n')
         if isinstance(res, np.ndarray):
             print(res.shape, '\n')
     
     # Now check those with input paramters
-    res = pcacached.X_scores_predict(Xnew=cfldat)
+    res = pls1cached.X_scores_predict(Xnew=cfldat)
     print('X_scores_predict', type(res), '\n')
     print(res.shape)
 
 
-def test_constructor_api_variants(cfldat):
-    print("\n")
-    pca1 = PCA(cfldat)
-    print("pca1")
-    pca2 = PCA(cfldat, numComp=200, Xstand=False)
-    print("pca2")
-    pca3 = PCA(cfldat, Xstand=True, cvType=["loo"])
-    print("pca3")
-    pca4 = PCA(cfldat, numComp=2, cvType=["loo"])
-    print("pca4")
-    pca5 = PCA(cfldat, numComp=2, Xstand=False, cvType=["loo"])
-    print("pca5")
-    pca6 = PCA(cfldat, numComp=2, Xstand=False, cvType=["KFold", 3])
-    print("pca6")
-    pca7 = PCA(cfldat, numComp=2, Xstand=False, cvType=["lolo", [1, 2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5, 6, 7]])
-    print("pca7")
+def test_constructor_api_variants(cfldat, csecol2dat):
+    print(cfldat.shape, csecol2dat.shape)
+    pls1_1 = PLS1(arrX=cfldat, vecy=csecol2dat, numComp=3, Xstand=False, cvType=["loo"])
+    print('pls1_1', pls1_1)
+    pls1_2 = PLS1(cfldat, csecol2dat)
+    print('pls1_2', pls1_2)
+    pls1_3 = PLS1(cfldat, csecol2dat, numComp=300, cvType=["loo"])
+    print('pls1_3', pls1_3)
+    pls1_4 = PLS1(arrX=cfldat, vecy=csecol2dat, cvType=["loo"], numComp=5, Xstand=False)
+    print('pls1_4', pls1_4)
+    pls1_5 = PLS1(arrX=cfldat, vecy=csecol2dat, Xstand=True)
+    print('pls1_5', pls1_5)
+    pls1_6 = PLS1(arrX=cfldat, vecy=csecol2dat, numComp=2, Xstand=False, cvType=["KFold", 3])
+    print('pls1_6', pls1_6)
+    pls1_7 = PLS1(arrX=cfldat, vecy=csecol2dat, numComp=2, Xstand=False, cvType=["lolo", [1, 2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5, 6, 7]])
+    print('pls1_7', pls1_7)
+    assert True
 
 
-def test_compare_reference(pcaref, pcacached):
-    rname, refdat = pcaref
-    res = getattr(pcacached, rname)()
+def test_compare_reference(pls1ref, pls1cached):
+    rname, refdat = pls1ref
+    res = getattr(pls1cached, rname)()
     if refdat is None:
         dump_res(rname, res)
         assert False, "Missing reference data for {}, data is dumped".format(rname)
-    elif not np.allclose(res[:, :3], refdat[:, :3], rtol=rtol, atol=atol):
+    elif not np.allclose(res[:, :2], refdat[:, :2], rtol=rtol, atol=atol):
         dump_res(rname, res)
         assert False, "Difference in {}, data is dumped".format(rname)
     else:
@@ -106,9 +130,9 @@ def test_compare_reference(pcaref, pcacached):
 
 testMethods = ["X_scores", "X_loadings", "X_corrLoadings", "X_cumCalExplVar_indVar"]
 @pytest.fixture(params=testMethods)
-def pcaref(request, datafolder):
+def pls1ref(request, datafolder):
     rname = request.param
-    refn = "ref_PCA_{}.tsv".format(rname.lower())
+    refn = "ref_PLS1_{}.tsv".format(rname.lower())
     try:
         refdat = np.loadtxt(osp.join(datafolder, refn))
     except FileNotFoundError:
@@ -118,17 +142,11 @@ def pcaref(request, datafolder):
 
 
 @pytest.fixture(scope="module")
-def pcacached(cfldat):
-    return PCA(cfldat, cvType=["loo"])
-
-
-@pytest.fixture(scope="module")
-def cflnewdat(datafolder):
-    '''Read fluorescence spectra on cheese samples and return as numpy array'''
-    return np.loadtxt(osp.join(datafolder, 'data_cheese_fluo_newRand.tsv'), dtype=np.float64, skiprows=1)
+def pls1cached(cfldat, csecol2dat):
+    return PLS1(arrX=cfldat, vecy=csecol2dat, cvType=["loo"])
 
 
 def dump_res(rname, dat):
     dumpfolder = osp.realpath(osp.dirname(__file__))
-    dumpfn = "dump_PCA_{}.tsv".format(rname.lower())
+    dumpfn = "dump_PLS1_{}.tsv".format(rname.lower())
     np.savetxt(osp.join(dumpfolder, dumpfn), dat, fmt='%.9e', delimiter='\t')

@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Jun 29 13:22:58 2018
+
+@author: olive
+"""
+
 '''
 FIXME: PCA testing ideas:
  * Well known datasets (iris)
@@ -13,7 +20,7 @@ import numpy as np
 
 import pytest
 
-from hoggorm import nipalsPCR as PCR
+from hoggorm import nipalsPLS2 as PLS2
 
 
 # If the following equation is element-wise True, then allclose returns True.
@@ -80,45 +87,45 @@ ATTRS = [
 ]
 
 
-def test_api_verify(pcrcached, cfldat):
+def test_api_verify(pls2cached, cfldat):
     """
     Check if all methods in list ATTR are also available in nipalsPCA class.
     """
     # First check those in list ATTR above. These don't have input parameters.
     for fn in ATTRS:
-        res = getattr(pcrcached, fn)()
+        res = getattr(pls2cached, fn)()
         print(fn, type(res), '\n')
         if isinstance(res, np.ndarray):
             print(res.shape, '\n')
     
     # Now check those with input paramters
-    res = pcrcached.X_scores_predict(Xnew=cfldat)
+    res = pls2cached.X_scores_predict(Xnew=cfldat)
     print('X_scores_predict', type(res), '\n')
     print(res.shape)
 
 
 def test_constructor_api_variants(cfldat, csedat):
     print(cfldat.shape, csedat.shape)
-    pcr1 = PCR(arrX=cfldat, arrY=csedat, numComp=3, Xstand=False, Ystand=False, cvType=["loo"])
-    print('pcr1', pcr1)
-    pcr2 = PCR(cfldat, csedat)
-    print('pcr2', pcr2)
-    pcr3 = PCR(cfldat, csedat, numComp=300, cvType=["loo"])
-    print('pcr3', pcr3)
-    pcr4 = PCR(arrX=cfldat, arrY=csedat, cvType=["loo"], numComp=5, Xstand=False, Ystand=False)
-    print('pcr4', pcr4)
-    pcr5 = PCR(arrX=cfldat, arrY=csedat, Xstand=True, Ystand=True)
-    print('pcr5', pcr5)
-    pcr6 = PCR(arrX=cfldat, arrY=csedat, numComp=2, Xstand=False, cvType=["KFold", 3])
-    print('pcr6', pcr6)
-    pcr7 = PCR(arrX=cfldat, arrY=csedat, numComp=2, Xstand=False, cvType=["lolo", [1, 2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5, 6, 7]])
-    print('pcr7', pcr7)
+    pls2_1 = PLS2(arrX=cfldat, arrY=csedat, numComp=3, Xstand=False, Ystand=False, cvType=["loo"])
+    print('pls2_1', pls2_1)
+    pls2_2 = PLS2(cfldat, csedat)
+    print('pls2_2', pls2_2)
+    pls2_3 = PLS2(cfldat, csedat, numComp=300, cvType=["loo"])
+    print('pls2_3', pls2_3)
+    pls2_4 = PLS2(arrX=cfldat, arrY=csedat, cvType=["loo"], numComp=5, Xstand=False, Ystand=False)
+    print('pls2_4', pls2_4)
+    pls2_5 = PLS2(arrX=cfldat, arrY=csedat, Xstand=True, Ystand=True)
+    print('pls2_5', pls2_5)
+    pls2_6 = PLS2(arrX=cfldat, arrY=csedat, numComp=2, Xstand=False, cvType=["KFold", 3])
+    print('pls2_6', pls2_6)
+    pls2_7 = PLS2(arrX=cfldat, arrY=csedat, numComp=2, Xstand=False, cvType=["lolo", [1, 2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5, 6, 7]])
+    print('pls2_7', pls2_7)
     assert True
 
 
-def test_compare_reference(pcrref, pcrcached):
-    rname, refdat = pcrref
-    res = getattr(pcrcached, rname)()
+def test_compare_reference(pls2ref, pls2cached):
+    rname, refdat = pls2ref
+    res = getattr(pls2cached, rname)()
     if refdat is None:
         dump_res(rname, res)
         assert False, "Missing reference data for {}, data is dumped".format(rname)
@@ -132,9 +139,9 @@ def test_compare_reference(pcrref, pcrcached):
 testMethods = ["X_scores", "X_loadings", "X_corrLoadings", "X_cumCalExplVar_indVar",
                "Y_loadings", "Y_corrLoadings", "Y_cumCalExplVar_indVar"]
 @pytest.fixture(params=testMethods)
-def pcrref(request, datafolder):
+def pls2ref(request, datafolder):
     rname = request.param
-    refn = "ref_PCR_{}.tsv".format(rname.lower())
+    refn = "ref_PLS2_{}.tsv".format(rname.lower())
     try:
         refdat = np.loadtxt(osp.join(datafolder, refn))
     except FileNotFoundError:
@@ -144,11 +151,11 @@ def pcrref(request, datafolder):
 
 
 @pytest.fixture(scope="module")
-def pcrcached(cfldat, csedat):
-    return PCR(arrX=cfldat, arrY=csedat, cvType=["loo"])
+def pls2cached(cfldat, csedat):
+    return PLS2(arrX=cfldat, arrY=csedat, cvType=["loo"])
 
 
 def dump_res(rname, dat):
     dumpfolder = osp.realpath(osp.dirname(__file__))
-    dumpfn = "dump_PCR_{}.tsv".format(rname.lower())
+    dumpfn = "dump_PLS2_{}.tsv".format(rname.lower())
     np.savetxt(osp.join(dumpfolder, dumpfn), dat, fmt='%.9e', delimiter='\t')
