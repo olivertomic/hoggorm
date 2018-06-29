@@ -31,3 +31,28 @@ def ldat(datafolder):
 def sdat(datafolder):
     '''Read sensory data and return as numpy array'''
     return np.loadtxt(osp.join(datafolder, 'source_s_dat.tsv'), dtype=np.float64, skiprows=1)
+
+
+@pytest.fixture(scope="module")
+def cfldat(datafolder):
+    '''Read fluorescence spectra on cheese samples and return as numpy array'''
+    return np.loadtxt(osp.join(datafolder, 'data_cheese_fluo.tsv'), dtype=np.float64, skiprows=1)
+
+
+@pytest.fixture(scope="module")
+def cflnewdat(datafolder):
+    '''Read fluorescence spectra on cheese samples and return as numpy array'''
+    return np.loadtxt(osp.join(datafolder, 'data_cheese_fluo_newRand.tsv'), dtype=np.float64, skiprows=1)
+
+
+@pytest.fixture(scope="module")
+def csedat(datafolder):
+    '''Read sensory data on cheese samples and return as numpy array'''
+    return np.loadtxt(osp.join(datafolder, 'data_cheese_sensory.tsv'), dtype=np.float64, skiprows=1)
+
+
+@pytest.fixture(scope="module")
+def csecol2dat(datafolder):
+    '''Read sensory data (ATT02, i.e. one columns) on cheese samples and return as numpy array'''
+    mymat = np.loadtxt(osp.join(datafolder, 'data_cheese_sensory_col2.tsv'), dtype=np.float64, skiprows=1)
+    return mymat.reshape(-1, 1) 
