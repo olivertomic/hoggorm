@@ -45,4 +45,4 @@ Documentation
   
 .. _Read the Docs: http://hoggorm.readthedocs.io/en/latest
 .. _examples: https://github.com/khliland/hoggormExamples
-.. _hoggormlot: https://github.com/olivertomic/hoggormPlot
+.. _hoggormplot: https://github.com/olivertomic/hoggormPlot
