@@ -1,6 +1,10 @@
 hoggorm
 =======
 
+.. image:: //readthedocs.org/projects/hoggorm/badge/?version=latest
+:target: https://hoggorm.readthedocs.io/en/latest/?badge=latest
+:alt: Documentation Status
+
 hoggorm is a Python package for explorative multivariate statistics in Python. It contains 
 
 * PCA (principal component analysis)
