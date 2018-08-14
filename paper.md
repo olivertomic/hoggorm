@@ -31,3 +31,6 @@ date: 09 July 2018
 bibliography: paper.bib
 ---
 
+# Summary
+
+[@martens88], [@mardia79], [@wold82], [@martens88], [@robert76], [@smilde09], [@mayer11]
