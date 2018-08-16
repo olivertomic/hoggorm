@@ -37,3 +37,4 @@ hoggorm is a python library for explorative analysis of multivariate data that i
 # Acknowledgements
 Both users and developers have made valuable contributions to improve the usability the hoggorm library. This includes reporting of bugs, testing various features and other forms of feedback. A complete list of contributors is provided at https://github.com/olivertomic/hoggorm/graphs/contributors
 
+# References
