@@ -33,4 +33,9 @@ bibliography: paper.bib
 
 # Summary
 
-[@martens88], [@mardia79], [@wold82], [@martens88], [@robert76], [@smilde09], [@mayer11]
+# Summary
+hoggorm is a python library for explorative analysis of multivariate data that implements statistical methods typically used in the field of chemometrics [@martens88]. Although hoggorm shares some statistical methods with the Python library scikit-learn for machine learning, hoggorm follows the chemometrics paradigm for data analysis where great attention is paid to understanding and interpretation of the variance in the data. For this purpose, hoggorm provides access to typical interpretation tools, such as scores, loadings, correlation loadings, explained variances for calibrated and validated models (both for individual variables as well as all variables together). Note that models trained with hoggorm may also be applied for prediction purposes, both for continuous and categorical variables, where appropriate. Currently (version 0.12.0), statistical methods implemented in hoggorm are: (I) principal component analysis (PCA) for analysis of single data arrays or matrices [@mardia79]; (II) principal component regression (PCR) [@martens88] and (III) partial least squares regression (PLSR) [@wold82] for analysis of two data arrays. PLSR is provided in two versions; (a) PLS1 for multivariate independent data and a single response variable; (b) PLS2 for situations where the independent data and response data are both multivariate. Furthermore, hoggorm implements the matrix correlation coefficient methods RV [@robert76], RV2 (also known as modified RV) [@smilde09] as well as the similarity index for comparing coupled matrices index (SMI) [@indahl18].
+
+# Acknowledgements
+Both users and developers have made valuable contributions to improve the usability the hoggorm library. This includes reporting of bugs, testing various features and other forms of feedback. A complete list of contributors is provided at https://github.com/olivertomic/hoggorm/graphs/contributors
+
