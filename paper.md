@@ -19,11 +19,11 @@ authors:
  - name: Tormod Næs
    affiliation: 3
 affiliations:
-- name: Norwegian University of Life Sciences
+- name: Norwegian University of Life Sciences, Ås, Norway
   index: 1
-- name: TGXnet
+- name: TGXnet, Norway
   index: 2
-- name: Nofima
+- name: Nofima, Norway
   index: 3
 date: 16 August 2018
 bibliography: paper.bib
