@@ -152,7 +152,7 @@ X_scores = model.X_scores()
 # Get scores and store in pandas dataframe with row and column names
 X_scores_df = pd.DataFrame(model.X_scores())
 X_scores_df.index = X_objNames
-X_scores_df.columns = ['PC{0}'.format(x+1) for x in range(model.X_scores().shape[1])]
+X_scores_df.columns = ['Comp{0}'.format(x+1) for x in range(model.X_scores().shape[1])]
 X_scores_df
 
 
@@ -180,7 +180,7 @@ X_loadings = model.X_loadings()
 # Get X loadings and store in pandas dataframe with row and column names
 X_loadings_df = pd.DataFrame(model.X_loadings())
 X_loadings_df.index = X_varNames
-X_loadings_df.columns = ['PC{0}'.format(x+1) for x in range(model.X_loadings().shape[1])]
+X_loadings_df.columns = ['Comp{0}'.format(x+1) for x in range(model.X_loadings().shape[1])]
 X_loadings_df
 
 
@@ -207,7 +207,7 @@ Y_loadings = model.Y_loadings()
 # Get Y loadings and store in pandas dataframe with row and column names
 Y_loadings_df = pd.DataFrame(model.Y_loadings())
 Y_loadings_df.index = Y_varNames
-Y_loadings_df.columns = ['PC{0}'.format(x+1) for x in range(model.Y_loadings().shape[1])]
+Y_loadings_df.columns = ['Comp{0}'.format(x+1) for x in range(model.Y_loadings().shape[1])]
 Y_loadings_df
 
 
@@ -220,7 +220,7 @@ X_corrloadings = model.X_corrLoadings()
 # Get X correlation loadings and store in pandas dataframe with row and column names
 X_corrloadings_df = pd.DataFrame(model.X_corrLoadings())
 X_corrloadings_df.index = X_varNames
-X_corrloadings_df.columns = ['PC{0}'.format(x+1) for x in range(model.X_corrLoadings().shape[1])]
+X_corrloadings_df.columns = ['Comp{0}'.format(x+1) for x in range(model.X_corrLoadings().shape[1])]
 X_corrloadings_df
 
 
@@ -239,7 +239,7 @@ Y_corrloadings = model.X_corrLoadings()
 # Get Y loadings and store in pandas dataframe with row and column names
 Y_corrloadings_df = pd.DataFrame(model.Y_corrLoadings())
 Y_corrloadings_df.index = Y_varNames
-Y_corrloadings_df.columns = ['PC{0}'.format(x+1) for x in range(model.Y_corrLoadings().shape[1])]
+Y_corrloadings_df.columns = ['Comp{0}'.format(x+1) for x in range(model.Y_corrLoadings().shape[1])]
 Y_corrloadings_df
 
 
@@ -258,7 +258,7 @@ X_calExplVar = model.X_calExplVar()
 # Get calibrated explained variance in X and store in pandas dataframe with row and column names
 X_calExplVar_df = pd.DataFrame(model.X_calExplVar())
 X_calExplVar_df.columns = ['calibrated explained variance in X']
-X_calExplVar_df.index = ['PC{0}'.format(x+1) for x in range(model.X_loadings().shape[1])]
+X_calExplVar_df.index = ['Comp{0}'.format(x+1) for x in range(model.X_loadings().shape[1])]
 X_calExplVar_df
 
 
@@ -277,7 +277,7 @@ Y_calExplVar = model.Y_calExplVar()
 # Get calibrated explained variance in Y and store in pandas dataframe with row and column names
 Y_calExplVar_df = pd.DataFrame(model.Y_calExplVar())
 Y_calExplVar_df.columns = ['calibrated explained variance in Y']
-Y_calExplVar_df.index = ['PC{0}'.format(x+1) for x in range(model.Y_loadings().shape[1])]
+Y_calExplVar_df.index = ['Comp{0}'.format(x+1) for x in range(model.Y_loadings().shape[1])]
 Y_calExplVar_df
 
 
@@ -296,7 +296,7 @@ X_cumCalExplVar = model.X_cumCalExplVar()
 # Get cumulative calibrated explained variance in X and store in pandas dataframe with row and column names
 X_cumCalExplVar_df = pd.DataFrame(model.X_cumCalExplVar())
 X_cumCalExplVar_df.columns = ['cumulative calibrated explained variance in X']
-X_cumCalExplVar_df.index = ['PC{0}'.format(x) for x in range(model.X_loadings().shape[1] + 1)]
+X_cumCalExplVar_df.index = ['Comp{0}'.format(x) for x in range(model.X_loadings().shape[1] + 1)]
 X_cumCalExplVar_df
 
 
@@ -315,7 +315,7 @@ Y_cumCalExplVar = model.Y_cumCalExplVar()
 # Get cumulative calibrated explained variance in Y and store in pandas dataframe with row and column names
 Y_cumCalExplVar_df = pd.DataFrame(model.Y_cumCalExplVar())
 Y_cumCalExplVar_df.columns = ['cumulative calibrated explained variance in Y']
-Y_cumCalExplVar_df.index = ['PC{0}'.format(x) for x in range(model.Y_loadings().shape[1] + 1)]
+Y_cumCalExplVar_df.index = ['Comp{0}'.format(x) for x in range(model.Y_loadings().shape[1] + 1)]
 Y_cumCalExplVar_df
 
 
@@ -334,7 +334,7 @@ X_cumCalExplVar_ind = model.X_cumCalExplVar_indVar()
 # Get cumulative calibrated explained variance for each variable in X and store in pandas dataframe with row and column names
 X_cumCalExplVar_ind_df = pd.DataFrame(model.X_cumCalExplVar_indVar())
 X_cumCalExplVar_ind_df.columns = X_varNames
-X_cumCalExplVar_ind_df.index = ['PC{0}'.format(x) for x in range(model.X_loadings().shape[1] + 1)]
+X_cumCalExplVar_ind_df.index = ['Comp{0}'.format(x) for x in range(model.X_loadings().shape[1] + 1)]
 X_cumCalExplVar_ind_df
 
 
@@ -353,7 +353,7 @@ Y_cumCalExplVar_ind = model.Y_cumCalExplVar_indVar()
 # Get cumulative calibrated explained variance for each variable in Y and store in pandas dataframe with row and column names
 Y_cumCalExplVar_ind_df = pd.DataFrame(model.Y_cumCalExplVar_indVar())
 Y_cumCalExplVar_ind_df.columns = Y_varNames
-Y_cumCalExplVar_ind_df.index = ['PC{0}'.format(x) for x in range(model.Y_loadings().shape[1] + 1)]
+Y_cumCalExplVar_ind_df.index = ['Comp{0}'.format(x) for x in range(model.Y_loadings().shape[1] + 1)]
 Y_cumCalExplVar_ind_df
 
 
@@ -408,7 +408,7 @@ X_valExplVar = model.X_valExplVar()
 # Get calibrated explained variance in X and store in pandas dataframe with row and column names
 X_valExplVar_df = pd.DataFrame(model.X_valExplVar())
 X_valExplVar_df.columns = ['validated explained variance in X']
-X_valExplVar_df.index = ['PC{0}'.format(x+1) for x in range(model.X_loadings().shape[1])]
+X_valExplVar_df.index = ['Comp{0}'.format(x+1) for x in range(model.X_loadings().shape[1])]
 X_valExplVar_df
 
 
@@ -427,7 +427,7 @@ Y_valExplVar = model.Y_valExplVar()
 # Get calibrated explained variance in X and store in pandas dataframe with row and column names
 Y_valExplVar_df = pd.DataFrame(model.Y_valExplVar())
 Y_valExplVar_df.columns = ['validated explained variance in Y']
-Y_valExplVar_df.index = ['PC{0}'.format(x+1) for x in range(model.Y_loadings().shape[1])]
+Y_valExplVar_df.index = ['Comp{0}'.format(x+1) for x in range(model.Y_loadings().shape[1])]
 Y_valExplVar_df
 
 
@@ -446,7 +446,7 @@ X_cumValExplVar = model.X_cumValExplVar()
 # Get cumulative validated explained variance in X and store in pandas dataframe with row and column names
 X_cumValExplVar_df = pd.DataFrame(model.X_cumValExplVar())
 X_cumValExplVar_df.columns = ['cumulative validated explained variance in X']
-X_cumValExplVar_df.index = ['PC{0}'.format(x) for x in range(model.X_loadings().shape[1] + 1)]
+X_cumValExplVar_df.index = ['Comp{0}'.format(x) for x in range(model.X_loadings().shape[1] + 1)]
 X_cumValExplVar_df
 
 
@@ -465,7 +465,7 @@ Y_cumValExplVar = model.Y_cumValExplVar()
 # Get cumulative validated explained variance in Y and store in pandas dataframe with row and column names
 Y_cumValExplVar_df = pd.DataFrame(model.Y_cumValExplVar())
 Y_cumValExplVar_df.columns = ['cumulative validated explained variance in Y']
-Y_cumValExplVar_df.index = ['PC{0}'.format(x) for x in range(model.Y_loadings().shape[1] + 1)]
+Y_cumValExplVar_df.index = ['Comp{0}'.format(x) for x in range(model.Y_loadings().shape[1] + 1)]
 Y_cumValExplVar_df
 
 
@@ -484,7 +484,7 @@ Y_cumCalExplVar_ind = model.Y_cumCalExplVar_indVar()
 # Get cumulative validated explained variance for each variable in Y and store in pandas dataframe with row and column names
 Y_cumValExplVar_ind_df = pd.DataFrame(model.Y_cumValExplVar_indVar())
 Y_cumValExplVar_ind_df.columns = Y_varNames
-Y_cumValExplVar_ind_df.index = ['PC{0}'.format(x) for x in range(model.Y_loadings().shape[1] + 1)]
+Y_cumValExplVar_ind_df.index = ['Comp{0}'.format(x) for x in range(model.Y_loadings().shape[1] + 1)]
 Y_cumValExplVar_ind_df
 
 
@@ -545,7 +545,7 @@ pred_X_scores = model.X_scores_predict(new_X, numComp=2)
 
 # Same as above, but results stored in a pandas dataframe with row names and column names
 pred_X_scores_df = pd.DataFrame(model.X_scores_predict(new_X, numComp=2))
-pred_X_scores_df.columns = ['PC{0}'.format(x+1) for x in range(2)]
+pred_X_scores_df.columns = ['Comp{0}'.format(x+1) for x in range(2)]
 pred_X_scores_df.index = ['new object {0}'.format(x+1) for x in range(np.shape(new_X)[0])]
 pred_X_scores_df
 
