@@ -45,7 +45,7 @@ Y_df
 # 
 # The numpy arrays with values will be used as input for the ``nipalsPCR`` class for analysis. The Python lists holding the variable and row names will be used later in the plotting function from the **hoggormPlot** package when visualising the results of the analysis. Below is the code needed to access both data, variable names and object names.
 
-# In[4]:
+# In[5]:
 
 
 # Get the values from the data frame
@@ -67,18 +67,18 @@ Y_objNames = list(Y_df.index)
 
 # Now, let's run PCR on the data using the ``nipalsPCR`` class. The documentation provides a [description of the input parameters](https://hoggorm.readthedocs.io/en/latest/pcr.html). Using input paramter ``arrX`` and ``arrY`` we define which numpy array we would like to analyse. ``arrY`` is what typically is considered to be the response matrix, while the measurements are typically defined as ``arrX``. By setting input parameter ``Xstand=False`` and ``Ystand=False`` we make sure that the variables are only mean centered, not scaled to unit variance, if this is what you want. This is the default setting and actually doesn't need to expressed explicitly. Setting paramter ``cvType=["loo"]`` we make sure that we compute the PCR model using full cross validation. ``"loo"`` means "Leave One Out". By setting paramter ``numpComp=4`` we ask for four components to be computed.
 
-# In[5]:
+# In[6]:
 
 
-model = ho.nipalsPCR(arrX=X, Xstand=False, 
-                     arrY=Y, Ystand=False,
-                     cvType=["loo"], 
-                     numComp=4)
+model = ho.pcr.nipalsPCR(arrX=X, Xstand=False, 
+                      arrY=Y, Ystand=False,
+                      cvType=["loo"], 
+                      numComp=4)
 
 
 # That's it, the PCR model has been computed. Now we would like to inspect the results by visualising them. We can do this using plotting functions of the separate [**hoggormPlot** package](https://hoggormplot.readthedocs.io/en/latest/). If we wish to plot the results for component 1 and component 2, we can do this by setting the input argument ``comp=[1, 2]``. The input argument ``plots=[1, 2, 3, 4, 6]`` lets the user define which plots are to be plotted. If this list for example contains value ``1``, the function will generate the scores plot for the model. If the list contains value ``2``, then the loadings plot will be plotted. Value ``3`` stands for correlation loadings plot and value ``4`` stands for bi-plot and ``6`` stands for explained variance plot. The hoggormPlot documentation provides a [description of input paramters](https://hoggormplot.readthedocs.io/en/latest/mainPlot.html).
 
-# In[6]:
+# In[7]:
 
 
 hop.plot(model, comp=[1, 2], 
@@ -90,40 +90,47 @@ hop.plot(model, comp=[1, 2],
 
 # Plots can also be called separately.
 
-# In[7]:
+# In[8]:
 
 
 # Plot cumulative explained variance (both calibrated and validated) using a specific function for that.
 hop.explainedVariance(model)
 
 
-# In[8]:
+# In[9]:
 
 
 # Plot cumulative validated explained variance for each variable in Y
 hop.explainedVariance(model, individual = True)
 
 
-# In[9]:
+# In[10]:
 
 
 # Plot cumulative validated explained variance in X.
 hop.explainedVariance(model, which='X')
 
 
-# In[10]:
+# In[11]:
 
 
 hop.scores(model)
 
 
-# In[11]:
+# In[12]:
 
 
 hop.correlationLoadings(model)
 
 
-# In[12]:
+# In[15]:
+
+
+# Plot X loadings in line plot
+hop.loadings(model, weights=False, line=True)
+
+
+# In[16]:
 
 
 # Plot regression coefficients
@@ -136,7 +143,7 @@ hop.coefficients(model, comp=3)
 
 # Now that we have visualised the PCR results, we may also want to access the numerical results. Below are some examples. For a complete list of accessible results, please see this part of the documentation.  
 
-# In[13]:
+# In[17]:
 
 
 # Get X scores and store in numpy array
@@ -149,13 +156,13 @@ X_scores_df.columns = ['PC{0}'.format(x+1) for x in range(model.X_scores().shape
 X_scores_df
 
 
-# In[14]:
+# In[19]:
 
 
-help(ho.nipalsPLS2.X_scores)
+help(ho.pcr.nipalsPCR.X_scores)
 
 
-# In[15]:
+# In[20]:
 
 
 # Dimension of the X_scores
@@ -164,7 +171,7 @@ np.shape(model.X_scores())
 
 # We see that the numpy array holds the scores for all countries and OECD (35 in total) for four components as required when computing the PCA model.
 
-# In[16]:
+# In[21]:
 
 
 # Get X loadings and store in numpy array
@@ -177,13 +184,13 @@ X_loadings_df.columns = ['PC{0}'.format(x+1) for x in range(model.X_loadings().s
 X_loadings_df
 
 
-# In[17]:
+# In[22]:
 
 
-help(ho.nipalsPLS2.X_loadings)
+help(ho.pcr.nipalsPCR.X_loadings)
 
 
-# In[18]:
+# In[23]:
 
 
 np.shape(model.X_loadings())
@@ -191,7 +198,7 @@ np.shape(model.X_loadings())
 
 # Here we see that the array holds the loadings for the 10 variables in the data across four components.
 
-# In[19]:
+# In[24]:
 
 
 # Get Y loadings and store in numpy array
@@ -204,7 +211,7 @@ Y_loadings_df.columns = ['PC{0}'.format(x+1) for x in range(model.Y_loadings().s
 Y_loadings_df
 
 
-# In[20]:
+# In[25]:
 
 
 # Get X correlation loadings and store in numpy array
@@ -217,13 +224,13 @@ X_corrloadings_df.columns = ['PC{0}'.format(x+1) for x in range(model.X_corrLoad
 X_corrloadings_df
 
 
-# In[21]:
+# In[26]:
 
 
-help(ho.nipalsPLS2.X_corrLoadings)
+help(ho.pcr.nipalsPCR.X_corrLoadings)
 
 
-# In[22]:
+# In[27]:
 
 
 # Get Y loadings and store in numpy array
@@ -236,13 +243,13 @@ Y_corrloadings_df.columns = ['PC{0}'.format(x+1) for x in range(model.Y_corrLoad
 Y_corrloadings_df
 
 
-# In[23]:
+# In[28]:
 
 
-help(ho.nipalsPLS2.Y_corrLoadings)
+help(ho.pcr.nipalsPCR.Y_corrLoadings)
 
 
-# In[24]:
+# In[29]:
 
 
 # Get calibrated explained variance of each component in X
@@ -255,13 +262,13 @@ X_calExplVar_df.index = ['PC{0}'.format(x+1) for x in range(model.X_loadings().s
 X_calExplVar_df
 
 
-# In[25]:
+# In[30]:
 
 
-help(ho.nipalsPLS2.X_calExplVar)
+help(ho.pcr.nipalsPCR.X_calExplVar)
 
 
-# In[26]:
+# In[31]:
 
 
 # Get calibrated explained variance of each component in Y
@@ -274,13 +281,13 @@ Y_calExplVar_df.index = ['PC{0}'.format(x+1) for x in range(model.Y_loadings().s
 Y_calExplVar_df
 
 
-# In[27]:
+# In[32]:
 
 
-help(ho.nipalsPLS2.Y_calExplVar)
+help(ho.pcr.nipalsPCR.Y_calExplVar)
 
 
-# In[28]:
+# In[33]:
 
 
 # Get cumulative calibrated explained variance in X
@@ -293,13 +300,13 @@ X_cumCalExplVar_df.index = ['PC{0}'.format(x) for x in range(model.X_loadings().
 X_cumCalExplVar_df
 
 
-# In[29]:
+# In[34]:
 
 
-help(ho.nipalsPLS2.X_cumCalExplVar)
+help(ho.pcr.nipalsPCR.X_cumCalExplVar)
 
 
-# In[30]:
+# In[35]:
 
 
 # Get cumulative calibrated explained variance in Y
@@ -312,13 +319,13 @@ Y_cumCalExplVar_df.index = ['PC{0}'.format(x) for x in range(model.Y_loadings().
 Y_cumCalExplVar_df
 
 
-# In[31]:
+# In[36]:
 
 
-help(ho.nipalsPLS2.Y_cumCalExplVar)
+help(ho.pcr.nipalsPCR.Y_cumCalExplVar)
 
 
-# In[32]:
+# In[37]:
 
 
 # Get cumulative calibrated explained variance for each variable in X
@@ -331,13 +338,13 @@ X_cumCalExplVar_ind_df.index = ['PC{0}'.format(x) for x in range(model.X_loading
 X_cumCalExplVar_ind_df
 
 
-# In[33]:
+# In[38]:
 
 
-help(ho.nipalsPLS2.X_cumCalExplVar_indVar)
+help(ho.pcr.nipalsPCR.X_cumCalExplVar_indVar)
 
 
-# In[34]:
+# In[39]:
 
 
 # Get cumulative calibrated explained variance for each variable in Y
@@ -350,13 +357,13 @@ Y_cumCalExplVar_ind_df.index = ['PC{0}'.format(x) for x in range(model.Y_loading
 Y_cumCalExplVar_ind_df
 
 
-# In[35]:
+# In[40]:
 
 
-help(ho.nipalsPLS2.Y_cumCalExplVar_indVar)
+help(ho.pcr.nipalsPCR.Y_cumCalExplVar_indVar)
 
 
-# In[36]:
+# In[41]:
 
 
 # Get calibrated predicted Y for a given number of components
@@ -371,7 +378,7 @@ Y_from_1_component_df.columns = Y_varNames
 Y_from_1_component_df
 
 
-# In[37]:
+# In[42]:
 
 
 # Get calibrated predicted Y for a given number of components
@@ -386,13 +393,13 @@ Y_from_4_component_df.columns = Y_varNames
 Y_from_4_component_df
 
 
-# In[38]:
+# In[43]:
 
 
-help(ho.nipalsPLS2.X_predCal)
+help(ho.pcr.nipalsPCR.X_predCal)
 
 
-# In[39]:
+# In[44]:
 
 
 # Get validated explained variance of each component X
@@ -405,13 +412,13 @@ X_valExplVar_df.index = ['PC{0}'.format(x+1) for x in range(model.X_loadings().s
 X_valExplVar_df
 
 
-# In[40]:
+# In[45]:
 
 
-help(ho.nipalsPLS2.X_valExplVar)
+help(ho.pcr.nipalsPCR.X_valExplVar)
 
 
-# In[41]:
+# In[46]:
 
 
 # Get validated explained variance of each component Y
@@ -424,13 +431,13 @@ Y_valExplVar_df.index = ['PC{0}'.format(x+1) for x in range(model.Y_loadings().s
 Y_valExplVar_df
 
 
-# In[42]:
+# In[47]:
 
 
-help(ho.nipalsPLS2.Y_valExplVar)
+help(ho.pcr.nipalsPCR.Y_valExplVar)
 
 
-# In[43]:
+# In[48]:
 
 
 # Get cumulative validated explained variance in X
@@ -443,13 +450,13 @@ X_cumValExplVar_df.index = ['PC{0}'.format(x) for x in range(model.X_loadings().
 X_cumValExplVar_df
 
 
-# In[44]:
+# In[49]:
 
 
-help(ho.nipalsPLS2.X_cumValExplVar)
+help(ho.pcr.nipalsPCR.X_cumValExplVar)
 
 
-# In[45]:
+# In[50]:
 
 
 # Get cumulative validated explained variance in Y
@@ -462,13 +469,13 @@ Y_cumValExplVar_df.index = ['PC{0}'.format(x) for x in range(model.Y_loadings().
 Y_cumValExplVar_df
 
 
-# In[46]:
+# In[51]:
 
 
-help(ho.nipalsPLS2.Y_cumValExplVar)
+help(ho.pcr.nipalsPCR.Y_cumValExplVar)
 
 
-# In[47]:
+# In[52]:
 
 
 # Get cumulative validated explained variance for each variable in Y
@@ -481,13 +488,13 @@ Y_cumValExplVar_ind_df.index = ['PC{0}'.format(x) for x in range(model.Y_loading
 Y_cumValExplVar_ind_df
 
 
-# In[48]:
+# In[53]:
 
 
-help(ho.nipalsPLS2.X_cumValExplVar_indVar)
+help(ho.pcr.nipalsPCR.X_cumValExplVar_indVar)
 
 
-# In[49]:
+# In[54]:
 
 
 # Get validated predicted Y for a given number of components
@@ -502,7 +509,7 @@ Y_from_1_component_val_df.columns = Y_varNames
 Y_from_1_component_val_df
 
 
-# In[50]:
+# In[51]:
 
 
 # Get validated predicted Y for a given number of components
@@ -517,13 +524,13 @@ Y_from_3_component_val_df.columns = Y_varNames
 Y_from_3_component_val_df
 
 
-# In[51]:
+# In[55]:
 
 
-help(ho.nipalsPLS2.Y_predVal)
+help(ho.pcr.nipalsPCR.Y_predVal)
 
 
-# In[52]:
+# In[56]:
 
 
 # Get predicted scores for new measurements (objects) of X
@@ -543,13 +550,13 @@ pred_X_scores_df.index = ['new object {0}'.format(x+1) for x in range(np.shape(n
 pred_X_scores_df
 
 
-# In[53]:
+# In[57]:
 
 
-help(ho.nipalsPLS2.X_scores_predict)
+help(ho.pcr.nipalsPCR.X_scores_predict)
 
 
-# In[54]:
+# In[58]:
 
 
 # Predict Y from new X data
