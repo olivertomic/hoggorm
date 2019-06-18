@@ -130,13 +130,13 @@ class nipalsPLS2:
         
         # Compute the sizes of training sets in CV
         if self.cvType[0] == "loo":
-            print("loo")
+            print("Selected cross validation type: loo")
             cvComb = cv.LeaveOneOut(numObj)
         elif self.cvType[0] == "KFold":
-            print("KFold")
+            print("Selected cross validation type: KFold")
             cvComb = cv.KFold(numObj, k=self.cvType[1])
         elif self.cvType[0] == "lolo":
-            print("lolo")
+            print("Selected cross validation type: lolo")
             cvComb = cv.LeaveOneLabelOut(self.cvType[1])
         else:
             print('Requested form of cross validation is not available')
@@ -571,13 +571,13 @@ class nipalsPLS2:
             numObj = np.shape(self.arrY)[0]
 
             if self.cvType[0] == "loo":
-                print("loo")
+                print("Selected cross validation type: loo")
                 cvComb = cv.LeaveOneOut(numObj)
             elif self.cvType[0] == "KFold":
-                print("KFold")
+                print("Selected cross validation type: KFold")
                 cvComb = cv.KFold(numObj, k=self.cvType[1])
             elif self.cvType[0] == "lolo":
-                print("lolo")
+                print("Selected cross validation type: lolo")
                 cvComb = cv.LeaveOneLabelOut(self.cvType[1])
             else:
                 print('Requested form of cross validation is not available')
