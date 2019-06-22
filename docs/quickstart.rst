@@ -76,7 +76,7 @@ Documentation
   - for `PLSR2`_ for multivariate response (multiple response variables)
     	- `PLSR2 on sensory and fluorescence spectroscopy data`_ measured on cheese
   - for matrix correlation ceoefficitents `RV and RV2`_ 
-		- `RV and RV2 coefficient on sensory and fluorescence spectroscopy data`_
+		- `RV and RV2 coefficient on sensory and fluorescence spectroscopy data`_ measured on cheese
   
 
 .. _Read the Docs: http://hoggorm.readthedocs.io/en/latest
