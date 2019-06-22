@@ -65,16 +65,16 @@ Documentation
 - Jupyter notebooks with examples of how to use hoggorm
   
   - for `PCA`_
-    - `PCA on cancer data`_ on men in OECD countries
-	- `PCA on NIR spectroscopy data`_ measured on gasoline	
-	- `PCA on sensory data`_ measured on cheese
+		- `PCA on cancer data`_ on men in OECD countries
+		- `PCA on NIR spectroscopy data`_ measured on gasoline	
+		- `PCA on sensory data`_ measured on cheese
   - for `PCR`_
-    - PCR on NIR spectroscopy and octane data measured on gasoline (coming soon)
-	- `PCR on sensory and fluorescence spectroscopy data`_ measured on cheese
+		- PCR on NIR spectroscopy and octane data measured on gasoline (coming soon)
+		- `PCR on sensory and fluorescence spectroscopy data`_ measured on cheese
   - for `PLSR1`_ for univariate response (one response variable)
-    - `PLSR1 on NIR spectroscopy and octane data`_ measured on gasoline
+    	- `PLSR1 on NIR spectroscopy and octane data`_ measured on gasoline
   - for `PLSR2`_ for multivariate response (multiple response variables)
-    - `PLSR2 on sensory and fluorescence spectroscopy`_ measured on cheese
+    	- `PLSR2 on sensory and fluorescence spectroscopy`_ measured on cheese
   - for matrix correlation ceoefficitents `RV and RV2`_
   
 
