@@ -25,7 +25,7 @@ affiliations:
   index: 2
 - name: Nofima, Norway
   index: 3
-date: 16 August 2018
+date: 22 June 2019
 bibliography: paper.bib
 ---
 
