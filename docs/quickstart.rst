@@ -74,8 +74,9 @@ Documentation
   - for `PLSR1`_ for univariate response (one response variable)
     	- `PLSR1 on NIR spectroscopy and octane data`_ measured on gasoline
   - for `PLSR2`_ for multivariate response (multiple response variables)
-    	- `PLSR2 on sensory and fluorescence spectroscopy`_ measured on cheese
+    	- `PLSR2 on sensory and fluorescence spectroscopy data`_ measured on cheese
   - for matrix correlation ceoefficitents `RV and RV2`_ 
+		- `RV and RV2 coefficient on sensory and fluorescence spectroscopy data`_
   
 
 .. _Read the Docs: http://hoggorm.readthedocs.io/en/latest
@@ -89,8 +90,8 @@ Documentation
 .. _PCA on sensory data: https://github.com/olivertomic/hoggorm/blob/master/examples/PCA/PCA_on_descriptive_sensory_analysis_data.ipynb
 .. _PCR on sensory and fluorescence spectroscopy data: https://github.com/olivertomic/hoggorm/blob/master/examples/PCR/PCR_on_sensory_and_fluorescence_data.ipynb
 .. _PLSR1 on NIR spectroscopy and octane data: https://github.com/olivertomic/hoggorm/blob/master/examples/PLSR/PLSR_on_NIR_and_octane_data.ipynb
-.. _PLSR2 on sensory and fluorescence spectroscopy: https://github.com/olivertomic/hoggorm/blob/master/examples/PLSR/PLSR_on_sensory_and_fluorescence_data.ipynb
-.. _RV and RV2: https://github.com/olivertomic/hoggorm/blob/master/examples/RV_%26_RV2/RV_and_RV2_on_sensory_and_fluorescence_data.ipynb
+.. _PLSR2 on sensory and fluorescence spectroscopy data: https://github.com/olivertomic/hoggorm/blob/master/examples/PLSR/PLSR_on_sensory_and_fluorescence_data.ipynb
+.. _RV and RV2 coefficient on sensory and fluorescence spectroscopy data: https://github.com/olivertomic/hoggorm/blob/master/examples/RV_%26_RV2/RV_and_RV2_on_sensory_and_fluorescence_data.ipynb
 
 More examples in Jupyter notebooks are provided at `hoggormExamples GitHub repository`_.
 
