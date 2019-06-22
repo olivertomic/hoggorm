@@ -75,13 +75,14 @@ Documentation
     	- `PLSR1 on NIR spectroscopy and octane data`_ measured on gasoline
   - for `PLSR2`_ for multivariate response (multiple response variables)
     	- `PLSR2 on sensory and fluorescence spectroscopy`_ measured on cheese
-  - for matrix correlation ceoefficitents `RV and RV2`_
+  - for matrix correlation ceoefficitents `RV and RV2`_ 
   
 
 .. _Read the Docs: http://hoggorm.readthedocs.io/en/latest
 .. _PCA: https://github.com/olivertomic/hoggorm/tree/master/examples/PCA
 .. _PCR: https://github.com/olivertomic/hoggorm/tree/master/examples/PCR
-.. _PLSR: https://github.com/olivertomic/hoggorm/tree/master/examples/PLSR
+.. _PLSR1: https://github.com/olivertomic/hoggorm/tree/master/examples/PLSR
+.. _PLSR2: https://github.com/olivertomic/hoggorm/tree/master/examples/PLSR
 .. _RV and RV2: https://github.com/olivertomic/hoggorm/tree/master/examples/RV_%26_RV2
 .. _PCA on cancer data: https://github.com/olivertomic/hoggorm/blob/master/examples/PCA/PCA_on_cancer_data.ipynb
 .. _PCA on NIR spectroscopy data: https://github.com/olivertomic/hoggorm/blob/master/examples/PCA/PCA_on_spectroscopy_data.ipynb
