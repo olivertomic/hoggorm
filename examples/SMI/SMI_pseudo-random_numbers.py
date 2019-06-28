@@ -91,5 +91,11 @@ smiCustom = ho.SMI(X1, X2, ncomp1=10, ncomp2=10, Scores1=U)
 
 # _Reference:_   
 # Ulf Geir Indahl, Kristian Hovde Liland, Tormod Næs,  
-# A similarity index for comparing coupled matrices  
+# [A similarity index for comparing coupled matrices](https://www.onlinelibrary.wiley.com/doi/10.1002/cem.3049),
 # Journal of Chemometrics 32(e3049), (2018).
+
+# In[ ]:
+
+
+
+
