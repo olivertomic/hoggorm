@@ -12,3 +12,4 @@ dist/
 
 # Sphinx documentation
 docs/_build/
+.vscode/settings.json
