@@ -224,17 +224,17 @@ class SMI:
     >>> import numpy as np
     >>> import hoggorm as ho
     
-    >>> X1 = ho.center(np.random.rand(100,300))
+    >>> X1 = ho.center(np.random.rand(100, 300))
     >>> U, s, V = np.linalg.svd(X1, 0)
-    >>> X2 = np.dot(np.dot(np.delete(U, 2,1), np.diag(np.delete(s,2))), np.delete(V,2,0))
+    >>> X2 = np.dot(np.dot(np.delete(U, 2, 1), np.diag(np.delete(s, 2))), np.delete(V, 2, 0))
     
-    >>> smiOP = ho.SMI(X1, X2, ncomp1 = 10, ncomp2 = 10)
-    >>> smiPR = ho.SMI(X1, X2, ncomp1 = 10, ncomp2 = 10, projection = "Procrustes")
-    >>> smiCustom = ho.SMI(X1, X2, ncomp1 = 10, ncomp2 = 10, Scores1 = U)
+    >>> smiOP = ho.SMI(X1, X2, ncomp1=10, ncomp2=10)
+    >>> smiPR = ho.SMI(X1, X2, ncomp1=10, ncomp2=10, projection="Procrustes")
+    >>> smiCustom = ho.SMI(X1, X2, ncomp1=10, ncomp2=10, Scores1=U)
     
     >>> print(smiOP.smi)
     >>> print(smiOP.significance())
-    >>> print(smiPR.significance(B = 100))
+    >>> print(smiPR.significance(B=100))
     """
     
     def __init__(self, X1, X2, **kargs):
