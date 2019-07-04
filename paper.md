@@ -23,7 +23,7 @@ affiliations:
   index: 1
 - name: TGXnet, Norway
   index: 2
-- name: Nofima, Norway
+- name: Nofima, Ås, Norway
   index: 3
 date: 16 August 2018
 bibliography: paper.bib
