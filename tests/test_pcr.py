@@ -1,18 +1,9 @@
 '''
-FIXME: PCA testing ideas:
- * Well known datasets (iris)
- * Combinations of input parameters
- * Edge case datasets
- * Big matrix for performance testing / profiling
- * Illegale data and error handling (zero variance)
- * Integer and float type matrix
+Test whether PCR results are as expected.
 '''
 import os.path as osp
-
 import numpy as np
-
 import pytest
-
 from hoggorm import nipalsPCR as PCR
 
 
@@ -50,7 +41,7 @@ ATTRS = [
     'X_MSECV',
     'X_RMSECV_indVar',
     'X_RMSECV',
-    #'X_scores_predict',
+    'X_scores_predict',
     'Y_means',
     'Y_loadings',
     'Y_corrLoadings',
@@ -80,30 +71,97 @@ ATTRS = [
 ]
 
 
+@pytest.fixture(scope="module")
+def pcrcached(cfldat, csedat):
+    """
+    Run PCR from current hoggorm installation and compare results against reference results.
+    """
+    return PCR(arrX=cfldat, arrY=csedat, cvType=["loo"])
+
+
+testMethods = ["X_scores", "X_loadings", "X_corrLoadings", "X_cumCalExplVar_indVar", "X_cumCalExplVar",
+               "Y_loadings", "Y_corrLoadings", "Y_cumCalExplVar_indVar", "Y_cumCalExplVar"]       
+@pytest.fixture(params=testMethods)
+def pcrref(request, datafolder):
+    """
+    Load reference numerical results from file.
+    """
+    rname = request.param
+    refn = "ref_PCR_{}.tsv".format(rname.lower())
+    try:
+        refdat = np.loadtxt(osp.join(datafolder, refn))
+    except FileNotFoundError:
+        refdat = None
+
+    return (rname, refdat)
+
+
+def test_compare_reference(pcrref, pcrcached):
+    """
+    Check whether numerical outputs are the same (or close enough).
+    """
+    rname, refdat = pcrref
+    res = getattr(pcrcached, rname)()
+
+    # print('res:')
+    # print(res[:10, :3], '\n\n')
+    # print('ref:')
+    # print(refdat[:10, :3], '\n\n')
+    # 1 / 0
+
+    if refdat is None:
+        dump_res(rname, res)
+        assert False, "Missing reference data for {}, data is dumped".format(rname)
+    elif rname == 'X_cumCalExplVar' or rname == 'Y_cumCalExplVar':
+        if not np.allclose(np.array(res[:3]), refdat[:3], rtol=rtol, atol=atol):
+            dump_res(rname, res)
+            assert False, "Difference in {}, data is dumped".format(rname)
+    elif not np.allclose(res[:, :3], refdat[:, :3], rtol=rtol, atol=atol):
+        dump_res(rname, res)
+        assert False, "Difference in {}, data is dumped".format(rname)
+    else:
+        assert True
+
+
+def dump_res(rname, dat):
+    """
+    Dumps information to file if reference data is missing or difference is larger than tolerance.
+    """
+    dumpfolder = osp.realpath(osp.dirname(__file__))
+    dumpfn = "dump_PCR_{}.tsv".format(rname.lower())
+    np.savetxt(osp.join(dumpfolder, dumpfn), dat, fmt='%.9e', delimiter='\t')
+
+
 def test_api_verify(pcrcached, cfldat):
     """
-    Check if all methods in list ATTR are also available in nipalsPCA class.
+    Check whether all methods in list ATTR are also available in nipalsPCR class.
     """
-    # First check those in list ATTR above. These don't have input parameters.
+    # Loop through all methods in ATTR
     for fn in ATTRS:
-        res = getattr(pcrcached, fn)()
-        print(fn, type(res), '\n')
-        if isinstance(res, np.ndarray):
-            print(res.shape, '\n')
-    
-    # Now check those with input paramters
-    res = pcrcached.X_scores_predict(Xnew=cfldat)
-    print('X_scores_predict', type(res), '\n')
-    print(res.shape)
+        if fn == 'X_scores_predict':
+            res = pcrcached.X_scores_predict(Xnew=cfldat)
+            print('fn:', 'X_scores_predict')
+            print('type(res):', type(res))
+            print('shape:', res.shape,  '\n\n')
+        else:    
+            res = getattr(pcrcached, fn)()
+            print('fn:', fn)
+            print('type(res):', type(res))
+            if isinstance(res, np.ndarray):
+                print('shape:', res.shape, '\n\n')
+            else:
+                print('\n')
 
 
 def test_constructor_api_variants(cfldat, csedat):
-    print(cfldat.shape, csedat.shape)
+    """
+    Check whether various combinations of keyword arguments work.
+    """
     pcr1 = PCR(arrX=cfldat, arrY=csedat, numComp=3, Xstand=False, Ystand=False, cvType=["loo"])
     print('pcr1', pcr1)
     pcr2 = PCR(cfldat, csedat)
     print('pcr2', pcr2)
-    pcr3 = PCR(cfldat, csedat, numComp=300, cvType=["loo"])
+    pcr3 = PCR(cfldat, csedat, numComp=200, cvType=["loo"])
     print('pcr3', pcr3)
     pcr4 = PCR(arrX=cfldat, arrY=csedat, cvType=["loo"], numComp=5, Xstand=False, Ystand=False)
     print('pcr4', pcr4)
@@ -115,40 +173,3 @@ def test_constructor_api_variants(cfldat, csedat):
     print('pcr7', pcr7)
     assert True
 
-
-def test_compare_reference(pcrref, pcrcached):
-    rname, refdat = pcrref
-    res = getattr(pcrcached, rname)()
-    if refdat is None:
-        dump_res(rname, res)
-        assert False, "Missing reference data for {}, data is dumped".format(rname)
-    elif not np.allclose(res[:, :2], refdat[:, :2], rtol=rtol, atol=atol):
-        dump_res(rname, res)
-        assert False, "Difference in {}, data is dumped".format(rname)
-    else:
-        assert True
-
-
-testMethods = ["X_scores", "X_loadings", "X_corrLoadings", "X_cumCalExplVar_indVar",
-               "Y_loadings", "Y_corrLoadings", "Y_cumCalExplVar_indVar"]
-@pytest.fixture(params=testMethods)
-def pcrref(request, datafolder):
-    rname = request.param
-    refn = "ref_PCR_{}.tsv".format(rname.lower())
-    try:
-        refdat = np.loadtxt(osp.join(datafolder, refn))
-    except FileNotFoundError:
-        refdat = None
-
-    return (rname, refdat)
-
-
-@pytest.fixture(scope="module")
-def pcrcached(cfldat, csedat):
-    return PCR(arrX=cfldat, arrY=csedat, cvType=["loo"])
-
-
-def dump_res(rname, dat):
-    dumpfolder = osp.realpath(osp.dirname(__file__))
-    dumpfn = "dump_PCR_{}.tsv".format(rname.lower())
-    np.savetxt(osp.join(dumpfolder, dumpfn), dat, fmt='%.9e', delimiter='\t')

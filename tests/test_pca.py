@@ -1,18 +1,9 @@
 '''
-FIXME: PCA testing ideas:
- * Well known datasets (iris)
- * Combinations of input parameters
- * Edge case datasets
- * Big matrix for performance testing / profiling
- * Illegale data and error handling (zero variance)
- * Integer and float type matrix
+Test whether PCA results are as expected.
 '''
 import os.path as osp
-
 import numpy as np
-
 import pytest
-
 from hoggorm import nipalsPCA as PCA
 
 
@@ -50,30 +41,91 @@ ATTRS = [
     'X_MSECV',
     'X_RMSECV_indVar',
     'X_RMSECV',
-    #'X_scores_predict',
+    'X_scores_predict',
     'cvTrainAndTestData',
     'corrLoadingsEllipses'
 ]
 
 
+@pytest.fixture(scope="module")
+def pcacached(cfldat):
+    """
+    Run PCA from current hoggorm installation and compare results against reference results.
+    """
+    return PCA(cfldat, cvType=["loo"])
+
+
+testMethods = ["X_scores", "X_loadings", "X_corrLoadings", "X_cumCalExplVar_indVar", "X_cumCalExplVar"]
+@pytest.fixture(params=testMethods)
+def pcaref(request, datafolder):
+    """
+    Load reference numerical results from file.
+    """
+    rname = request.param
+    refn = "ref_PCA_{}.tsv".format(rname.lower())
+    try:
+        refdat = np.loadtxt(osp.join(datafolder, refn))
+    except FileNotFoundError:
+        refdat = None
+
+    return (rname, refdat)
+
+
+def test_compare_reference(pcaref, pcacached):
+    """
+    Check whether numerical outputs are the same (or close enough).
+    """
+    rname, refdat = pcaref
+    res = getattr(pcacached, rname)()
+
+    if refdat is None:
+        dump_res(rname, res)
+        assert False, "Missing reference data for {}, data is dumped".format(rname)
+    elif rname == 'X_cumCalExplVar':
+        if not np.allclose(np.array(res[:3]), refdat[:3], rtol=rtol, atol=atol):
+            dump_res(rname, res)
+            assert False, "Difference in {}, data is dumped".format(rname)
+    elif not np.allclose(res[:, :3], refdat[:, :3], rtol=rtol, atol=atol):
+        dump_res(rname, res)
+        assert False, "Difference in {}, data is dumped".format(rname)
+    else:
+        assert True
+
+
+def dump_res(rname, dat):
+    """
+    Dumps information to file if reference data is missing or difference is larger than tolerance.
+    """
+    dumpfolder = osp.realpath(osp.dirname(__file__))
+    dumpfn = "dump_PCA_{}.tsv".format(rname.lower())
+    np.savetxt(osp.join(dumpfolder, dumpfn), dat, fmt='%.9e', delimiter='\t')
+
+    
 def test_api_verify(pcacached, cfldat):
     """
-    Check if all methods in list ATTR are also available in nipalsPCA class.
+    Check whether all methods in list ATTR are also available in nipalsPCA class.
     """
-    # First check those in list ATTR above. These don't have input parameters.
+    # Loop through all methods in ATTR
     for fn in ATTRS:
-        res = getattr(pcacached, fn)()
-        print(fn, type(res), '\n')
-        if isinstance(res, np.ndarray):
-            print(res.shape, '\n')
+        if fn == 'X_scores_predict':
+            res = pcacached.X_scores_predict(Xnew=cfldat)
+            print('fn:', 'X_scores_predict')
+            print('type(res):', type(res))
+            print('shape:', res.shape,  '\n\n')
+        else:    
+            res = getattr(pcacached, fn)()
+            print('fn:', fn)
+            print('type(res):', type(res))
+            if isinstance(res, np.ndarray):
+                print('shape:', res.shape, '\n\n')
+            else:
+                print('\n')
     
-    # Now check those with input paramters
-    res = pcacached.X_scores_predict(Xnew=cfldat)
-    print('X_scores_predict', type(res), '\n')
-    print(res.shape)
-
 
 def test_constructor_api_variants(cfldat):
+    """
+    Check whether various combinations of keyword arguments work.
+    """
     print("\n")
     pca1 = PCA(cfldat)
     print("pca1")
@@ -89,46 +141,3 @@ def test_constructor_api_variants(cfldat):
     print("pca6")
     pca7 = PCA(cfldat, numComp=2, Xstand=False, cvType=["lolo", [1, 2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5, 6, 7]])
     print("pca7")
-
-
-def test_compare_reference(pcaref, pcacached):
-    rname, refdat = pcaref
-    res = getattr(pcacached, rname)()
-    if refdat is None:
-        dump_res(rname, res)
-        assert False, "Missing reference data for {}, data is dumped".format(rname)
-    elif not np.allclose(res[:, :3], refdat[:, :3], rtol=rtol, atol=atol):
-        dump_res(rname, res)
-        assert False, "Difference in {}, data is dumped".format(rname)
-    else:
-        assert True
-
-
-testMethods = ["X_scores", "X_loadings", "X_corrLoadings", "X_cumCalExplVar_indVar"]
-@pytest.fixture(params=testMethods)
-def pcaref(request, datafolder):
-    rname = request.param
-    refn = "ref_PCA_{}.tsv".format(rname.lower())
-    try:
-        refdat = np.loadtxt(osp.join(datafolder, refn))
-    except FileNotFoundError:
-        refdat = None
-
-    return (rname, refdat)
-
-
-@pytest.fixture(scope="module")
-def pcacached(cfldat):
-    return PCA(cfldat, cvType=["loo"])
-
-
-@pytest.fixture(scope="module")
-def cflnewdat(datafolder):
-    '''Read fluorescence spectra on cheese samples and return as numpy array'''
-    return np.loadtxt(osp.join(datafolder, 'data_cheese_fluo_newRand.tsv'), dtype=np.float64, skiprows=1)
-
-
-def dump_res(rname, dat):
-    dumpfolder = osp.realpath(osp.dirname(__file__))
-    dumpfn = "dump_PCA_{}.tsv".format(rname.lower())
-    np.savetxt(osp.join(dumpfolder, dumpfn), dat, fmt='%.9e', delimiter='\t')

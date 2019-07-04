@@ -10,9 +10,7 @@ or
 python setup.py develop
 '''
 import os.path as osp
-
 import numpy as np
-
 import pytest
 
 
