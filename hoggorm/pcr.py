@@ -126,42 +126,44 @@ class nipalsPCR:
         self.cvType = cvType
         
         
-        # Depict the number of components that are possible to compute based
-        # on size of data set (#rows, #cols), type of cross validation (i.e.
-        # size of CV segments)
-        numObj = np.shape(self.arrX_input)[0]
-        
-        # Compute the sizes of training sets in CV
-        if self.cvType[0] == "loo":
-            print("Selected cross validation type: loo")
-            cvComb = cv.LeaveOneOut(numObj)
-        elif self.cvType[0] == "KFold":
-            print("Selected cross validation type: KFold")
-            cvComb = cv.KFold(numObj, k=self.cvType[1])
-        elif self.cvType[0] == "lolo":
-            print("Selected cross validation type: lolo")
-            cvComb = cv.LeaveOneLabelOut(self.cvType[1])
+        # Define maximum number of components to compute depending on whether 
+        # cross validation was selected or not.
+        if isinstance(self.cvType, type(None)):
+            maxNumPC = min(np.shape(self.arrX_input))
         else:
-            print('Requested form of cross validation is not available')
-            pass
-
-        
-        # First devide into combinations of training and test sets. Collect 
-        # sizes of training sets, since this also may limit the number of 
-        # components that can be computed.
-        segSizes = []
-        for train_index, test_index in cvComb:
-            x_train, x_test = cv.split(train_index, test_index, self.arrX_input)
-            y_train, y_test = cv.split(train_index, test_index, self.arrY_input)
+            # Depict the number of components that are possible to compute based
+            # on size of data set (#rows, #cols), type of cross validation (i.e.
+            # size of CV segments)
+            numObj = np.shape(self.arrX_input)[0]
             
-            segSizes.append(numObj - sum(train_index))
-        
-        
-        # Compute the max number of components based on only object size
-        maxN = numObj - max(segSizes) - 1
-        
-        # Choose whatever is smaller, number of variables or maxN
-        maxNumPC = min(np.shape(arrX)[1], maxN)
+            # Compute the sizes of training sets in CV
+            if self.cvType[0] == "loo":
+                cvComb = cv.LeaveOneOut(numObj)
+            elif self.cvType[0] == "KFold":
+                cvComb = cv.KFold(numObj, k=self.cvType[1])
+            elif self.cvType[0] == "lolo":
+                cvComb = cv.LeaveOneLabelOut(self.cvType[1])
+            else:
+                print('Requested form of cross validation is not available')
+                pass
+
+            
+            # First devide into combinations of training and test sets. Collect 
+            # sizes of training sets, since this also may limit the number of 
+            # components that can be computed.
+            segSizes = []
+            for train_index, test_index in cvComb:
+                x_train, x_test = cv.split(train_index, test_index, self.arrX_input)
+                y_train, y_test = cv.split(train_index, test_index, self.arrY_input)
+                
+                segSizes.append(numObj - sum(train_index))
+            
+            
+            # Compute the max number of components based on only object size
+            maxN = numObj - max(segSizes) - 1
+            
+            # Choose whatever is smaller, number of variables or maxN
+            maxNumPC = min(np.shape(arrX)[1], maxN)
         
         
         # Now set the number of components that is possible to compute.
@@ -564,13 +566,13 @@ class nipalsPCR:
             numObj = np.shape(self.arrX)[0]
 
             if self.cvType[0] == "loo":
-                print("Selected cross validation type: loo")
+                print("loo")
                 cvComb = cv.LeaveOneOut(numObj)
             elif self.cvType[0] == "KFold":
-                print("Selected cross validation type: KFold")
+                print("KFold")
                 cvComb = cv.KFold(numObj, k=self.cvType[1])
             elif self.cvType[0] == "lolo":
-                print("Selected cross validation type: lolo")
+                print("lolo")
                 cvComb = cv.LeaveOneLabelOut(self.cvType[1])
             else:
                 print('Requested form of cross validation is not available')
