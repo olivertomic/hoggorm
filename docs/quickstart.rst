@@ -29,8 +29,8 @@ Make sure that Python 3.5 or higher is installed. A convenient way to install Py
 - numpy
 
 
-Installation and updates
-------------------------
+Installation and upgrades
+-------------------------
 
 Installation
 ++++++++++++
@@ -125,9 +125,18 @@ The source code is available at the `hoggorm GitHub repository`_.
 .. _hoggorm GitHub repository: https://github.com/olivertomic/hoggorm
 
 
+Testing
+-------
+The correctness of the results provided PCA, PCR and PLSR may be checked using the provided in the `tests`_ folder.
+
+.. _tests: https://github.com/olivertomic/hoggorm/tree/master/tests
 
 
+After cloning the repository to your disk, at the command line navigate to the test folder. The code below shows an example of how to run the test for PCA.
 
+.. code-block:: bash
+        
+        python test_pca.py 
 
 
 
