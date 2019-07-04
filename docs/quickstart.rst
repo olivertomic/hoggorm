@@ -127,7 +127,7 @@ The source code is available at the `hoggorm GitHub repository`_.
 
 Testing
 -------
-The correctness of the results provided PCA, PCR and PLSR may be checked using the provided in the `tests`_ folder.
+The correctness of the results provided PCA, PCR and PLSR may be checked using the tests provided in the `tests`_ folder.
 
 .. _tests: https://github.com/olivertomic/hoggorm/tree/master/tests
 
@@ -138,6 +138,6 @@ After cloning the repository to your disk, at the command line navigate to the t
         
         python test_pca.py 
 
-
+After testing is finished, pytest should report that none of tests failed.
 
 
