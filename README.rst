@@ -1,5 +1,3 @@
-.. image:: https://readthedocs.org/projects/hoggorm/badge/?version=latest
-
 hoggorm
 =======
 
@@ -23,7 +21,7 @@ Make sure that Python 3.5 or higher is installed. A convenient way to install Py
 
 .. _Anaconda distribution: https://www.anaconda.com/download/
 
-- numpy
+- numpy >= 1.11.3
 
 
 Installation
@@ -42,9 +40,9 @@ Documentation
 -------------
 
 - Documentation at `Read the Docs`_
-- Jupyter notebooks with `examples`_ of how to use Hoggorm together with the plotting package `hoggormplot`_.
+- Jupyter notebooks with `examples`_ of how to use Hoggorm together with the complementary plotting package `hoggormplot`_.
   
   
 .. _Read the Docs: http://hoggorm.readthedocs.io/en/latest
-.. _examples: https://github.com/khliland/hoggormExamples
+.. _examples: https://github.com/olivertomic/hoggorm/tree/master/examples
 .. _hoggormplot: https://github.com/olivertomic/hoggormPlot
