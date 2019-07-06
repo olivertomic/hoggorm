@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python
 # coding: utf-8
 
 # # Principal component analysis (PCA) on descriptive sensory analysis data
@@ -40,7 +40,7 @@ data_df
 np.shape(data_df)
 
 
-# There are observations for 34 countries as well as all OECD countries together, which results in 35 rows. Furthermore, there are 10 columns where each column represents one type of cancer in men.
+# There are observations for 34 countries as well as all OECD countries together, which results in 14 rows. Furthermore, there are 17 columns where each column represents one type of cancer in men.
 
 # The ``nipalsPCA`` class in hoggorm accepts only **numpy** arrays with numerical values and not pandas data frames. Therefore, the pandas data frame holding the imported data needs to be "taken apart" into three parts: 
 # * a numpy array holding the numeric values

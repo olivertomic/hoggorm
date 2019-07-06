@@ -11,7 +11,7 @@
 
 # First import **hoggorm** for analysis of the data and **hoggormPlot** for plotting of the analysis results. We'll also import **pandas** such that we can read the data into a data frame. **numpy** is needed for checking dimensions of the data.
 
-# In[2]:
+# In[1]:
 
 
 import hoggorm as ho
@@ -22,7 +22,7 @@ import numpy as np
 
 # Next, load the data that we are going to analyse using **hoggorm**. After the data has been loaded into the pandas data frame, we'll display it in the notebook.
 
-# In[3]:
+# In[2]:
 
 
 # Load fluorescence data
@@ -30,7 +30,7 @@ X_df = pd.read_csv('cheese_fluorescence.txt', index_col=0, sep='\t')
 X_df
 
 
-# In[4]:
+# In[3]:
 
 
 # Load sensory data
@@ -45,7 +45,7 @@ Y_df
 # 
 # The numpy arrays with values will be used as input for the ``nipalsPLS2`` class for analysis. The Python lists holding the variable and row names will be used later in the plotting function from the **hoggormPlot** package when visualising the results of the analysis. Below is the code needed to access both data, variable names and object names.
 
-# In[5]:
+# In[4]:
 
 
 # Get the values from the data frame
@@ -67,7 +67,7 @@ Y_objNames = list(Y_df.index)
 
 # Now, let's run PLSR on the data using the ``nipalsPLS2`` class. The documentation provides a [description of the input parameters](https://hoggorm.readthedocs.io/en/latest/plsr.html). Using input paramter ``arrX`` and ``arrY`` we define which numpy array we would like to analyse. ``arrY`` is what typically is considered to be the response matrix, while the measurements are typically defined as ``arrX``. By setting input parameter ``Xstand=False`` and ``Ystand=False`` we make sure that the variables are only mean centered, not scaled to unit variance, if this is what you want. This is the default setting and actually doesn't need to expressed explicitly. Setting paramter ``cvType=["loo"]`` we make sure that we compute the PLS2 model using full cross validation. ``"loo"`` means "Leave One Out". By setting paramter ``numpComp=4`` we ask for four components to be computed.
 
-# In[6]:
+# In[5]:
 
 
 model = ho.nipalsPLS2(arrX=X, Xstand=False, 
@@ -78,7 +78,7 @@ model = ho.nipalsPLS2(arrX=X, Xstand=False,
 
 # That's it, the PLS2 model has been computed. Now we would like to inspect the results by visualising them. We can do this using plotting functions of the separate [**hoggormPlot** package](https://hoggormplot.readthedocs.io/en/latest/). If we wish to plot the results for component 1 and component 2, we can do this by setting the input argument ``comp=[1, 2]``. The input argument ``plots=[1, 2, 3, 4, 6]`` lets the user define which plots are to be plotted. If this list for example contains value ``1``, the function will generate the scores plot for the model. If the list contains value ``2``, then the loadings plot will be plotted. Value ``3`` stands for correlation loadings plot and value ``4`` stands for bi-plot and ``6`` stands for explained variance plot. The hoggormPlot documentation provides a [description of input paramters](https://hoggormplot.readthedocs.io/en/latest/mainPlot.html).
 
-# In[7]:
+# In[6]:
 
 
 hop.plot(model, comp=[1, 2], 
@@ -90,51 +90,51 @@ hop.plot(model, comp=[1, 2],
 
 # Plots can also be called separately.
 
-# In[8]:
+# In[7]:
 
 
 # Plot cumulative explained variance (both calibrated and validated) using a specific function for that.
 hop.explainedVariance(model)
 
 
-# In[9]:
+# In[8]:
 
 
 # Plot cumulative validated explained variance for each variable in Y
 hop.explainedVariance(model, individual = True)
 
 
-# In[10]:
+# In[9]:
 
 
 # Plot cumulative validated explained variance in X.
-hop.explainedVariance(model, which='X')
+hop.explainedVariance(model, which=['X'])
 
 
-# In[11]:
+# In[10]:
 
 
 hop.scores(model)
 
 
-# In[12]:
+# In[11]:
 
 
 hop.correlationLoadings(model)
 
 
-# In[13]:
+# In[12]:
 
 
 # Plot X loadings in line plot
 hop.loadings(model, weights=True, line=True)
 
 
-# In[14]:
+# In[13]:
 
 
 # Plot regression coefficients
-hop.coefficients(model, comp=3)
+hop.coefficients(model, comp=[3])
 
 
 # ---
@@ -143,7 +143,7 @@ hop.coefficients(model, comp=3)
 
 # Now that we have visualised the PLSR results, we may also want to access the numerical results. Below are some examples. For a complete list of accessible results, please see this part of the documentation.  
 
-# In[63]:
+# In[14]:
 
 
 # Get X scores and store in numpy array
@@ -156,13 +156,13 @@ X_scores_df.columns = ['comp {0}'.format(x+1) for x in range(model.X_scores().sh
 X_scores_df
 
 
-# In[16]:
+# In[15]:
 
 
 help(ho.nipalsPLS2.X_scores)
 
 
-# In[17]:
+# In[16]:
 
 
 # Dimension of the X_scores
@@ -171,7 +171,7 @@ np.shape(model.X_scores())
 
 # We see that the numpy array holds the scores for all countries and OECD (35 in total) for four components as required when computing the PCA model.
 
-# In[62]:
+# In[17]:
 
 
 # Get X loadings and store in numpy array
@@ -184,13 +184,13 @@ X_loadings_df.columns = ['comp {0}'.format(x+1) for x in range(model.X_loadings(
 X_loadings_df
 
 
-# In[19]:
+# In[18]:
 
 
 help(ho.nipalsPLS2.X_loadings)
 
 
-# In[20]:
+# In[19]:
 
 
 np.shape(model.X_loadings())
@@ -198,7 +198,7 @@ np.shape(model.X_loadings())
 
 # Here we see that the array holds the loadings for the 10 variables in the data across four components.
 
-# In[61]:
+# In[20]:
 
 
 # Get Y loadings and store in numpy array
@@ -211,7 +211,7 @@ Y_loadings_df.columns = ['comp {0}'.format(x+1) for x in range(model.Y_loadings(
 Y_loadings_df
 
 
-# In[60]:
+# In[21]:
 
 
 # Get X correlation loadings and store in numpy array
@@ -224,13 +224,13 @@ X_corrloadings_df.columns = ['comp {0}'.format(x+1) for x in range(model.X_corrL
 X_corrloadings_df
 
 
-# In[23]:
+# In[22]:
 
 
 help(ho.nipalsPLS2.X_corrLoadings)
 
 
-# In[59]:
+# In[23]:
 
 
 # Get Y loadings and store in numpy array
@@ -243,13 +243,13 @@ Y_corrloadings_df.columns = ['comp {0}'.format(x+1) for x in range(model.Y_corrL
 Y_corrloadings_df
 
 
-# In[25]:
+# In[24]:
 
 
 help(ho.nipalsPLS2.Y_corrLoadings)
 
 
-# In[58]:
+# In[25]:
 
 
 # Get calibrated explained variance of each component in X
@@ -262,13 +262,13 @@ X_calExplVar_df.index = ['comp {0}'.format(x+1) for x in range(model.X_loadings(
 X_calExplVar_df
 
 
-# In[27]:
+# In[26]:
 
 
 help(ho.nipalsPLS2.X_calExplVar)
 
 
-# In[57]:
+# In[27]:
 
 
 # Get calibrated explained variance of each component in Y
@@ -281,13 +281,13 @@ Y_calExplVar_df.index = ['comp {0}'.format(x+1) for x in range(model.Y_loadings(
 Y_calExplVar_df
 
 
-# In[29]:
+# In[28]:
 
 
 help(ho.nipalsPLS2.Y_calExplVar)
 
 
-# In[56]:
+# In[29]:
 
 
 # Get cumulative calibrated explained variance in X
@@ -300,13 +300,13 @@ X_cumCalExplVar_df.index = ['comp {0}'.format(x) for x in range(model.X_loadings
 X_cumCalExplVar_df
 
 
-# In[31]:
+# In[30]:
 
 
 help(ho.nipalsPLS2.X_cumCalExplVar)
 
 
-# In[55]:
+# In[31]:
 
 
 # Get cumulative calibrated explained variance in Y
@@ -319,13 +319,13 @@ Y_cumCalExplVar_df.index = ['comp {0}'.format(x) for x in range(model.Y_loadings
 Y_cumCalExplVar_df
 
 
-# In[33]:
+# In[32]:
 
 
 help(ho.nipalsPLS2.Y_cumCalExplVar)
 
 
-# In[54]:
+# In[33]:
 
 
 # Get cumulative calibrated explained variance for each variable in X
@@ -338,13 +338,13 @@ X_cumCalExplVar_ind_df.index = ['comp {0}'.format(x) for x in range(model.X_load
 X_cumCalExplVar_ind_df
 
 
-# In[35]:
+# In[34]:
 
 
 help(ho.nipalsPLS2.X_cumCalExplVar_indVar)
 
 
-# In[53]:
+# In[35]:
 
 
 # Get cumulative calibrated explained variance for each variable in Y
@@ -357,13 +357,13 @@ Y_cumCalExplVar_ind_df.index = ['comp {0}'.format(x) for x in range(model.Y_load
 Y_cumCalExplVar_ind_df
 
 
-# In[37]:
+# In[36]:
 
 
 help(ho.nipalsPLS2.Y_cumCalExplVar_indVar)
 
 
-# In[38]:
+# In[37]:
 
 
 # Get calibrated predicted Y for a given number of components
@@ -378,7 +378,7 @@ Y_from_1_component_df.columns = Y_varNames
 Y_from_1_component_df
 
 
-# In[39]:
+# In[38]:
 
 
 # Get calibrated predicted Y for a given number of components
@@ -393,13 +393,13 @@ Y_from_4_component_df.columns = Y_varNames
 Y_from_4_component_df
 
 
-# In[40]:
+# In[39]:
 
 
 help(ho.nipalsPLS2.X_predCal)
 
 
-# In[52]:
+# In[40]:
 
 
 # Get validated explained variance of each component X
@@ -412,13 +412,13 @@ X_valExplVar_df.index = ['comp {0}'.format(x+1) for x in range(model.X_loadings(
 X_valExplVar_df
 
 
-# In[42]:
+# In[41]:
 
 
 help(ho.nipalsPLS2.X_valExplVar)
 
 
-# In[51]:
+# In[42]:
 
 
 # Get validated explained variance of each component Y
@@ -431,13 +431,13 @@ Y_valExplVar_df.index = ['comp {0}'.format(x+1) for x in range(model.Y_loadings(
 Y_valExplVar_df
 
 
-# In[44]:
+# In[43]:
 
 
 help(ho.nipalsPLS2.Y_valExplVar)
 
 
-# In[50]:
+# In[44]:
 
 
 # Get cumulative validated explained variance in X
@@ -450,13 +450,13 @@ X_cumValExplVar_df.index = ['comp {0}'.format(x) for x in range(model.X_loadings
 X_cumValExplVar_df
 
 
-# In[46]:
+# In[45]:
 
 
 help(ho.nipalsPLS2.X_cumValExplVar)
 
 
-# In[49]:
+# In[46]:
 
 
 # Get cumulative validated explained variance in Y
@@ -469,7 +469,7 @@ Y_cumValExplVar_df.index = ['comp {0}'.format(x) for x in range(model.Y_loadings
 Y_cumValExplVar_df
 
 
-# In[ ]:
+# In[47]:
 
 
 help(ho.nipalsPLS2.Y_cumValExplVar)
@@ -488,13 +488,13 @@ Y_cumValExplVar_ind_df.index = ['comp {0}'.format(x) for x in range(model.Y_load
 Y_cumValExplVar_ind_df
 
 
-# In[64]:
+# In[49]:
 
 
 help(ho.nipalsPLS2.X_cumValExplVar_indVar)
 
 
-# In[65]:
+# In[50]:
 
 
 # Get validated predicted Y for a given number of components
@@ -509,7 +509,7 @@ Y_from_1_component_val_df.columns = Y_varNames
 Y_from_1_component_val_df
 
 
-# In[66]:
+# In[51]:
 
 
 # Get validated predicted Y for a given number of components
@@ -524,13 +524,13 @@ Y_from_3_component_val_df.columns = Y_varNames
 Y_from_3_component_val_df
 
 
-# In[ ]:
+# In[52]:
 
 
 help(ho.nipalsPLS2.Y_predVal)
 
 
-# In[67]:
+# In[53]:
 
 
 # Get predicted scores for new measurements (objects) of X
@@ -550,13 +550,13 @@ pred_X_scores_df.index = ['new object {0}'.format(x+1) for x in range(np.shape(n
 pred_X_scores_df
 
 
-# In[68]:
+# In[54]:
 
 
 help(ho.nipalsPLS2.X_scores_predict)
 
 
-# In[69]:
+# In[55]:
 
 
 # Predict Y from new X data
