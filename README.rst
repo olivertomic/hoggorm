@@ -1,3 +1,5 @@
+.. image:: https://readthedocs.org/projects/hoggorm/badge/?version=latest
+
 hoggorm
 =======
 
