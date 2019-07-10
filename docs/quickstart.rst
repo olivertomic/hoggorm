@@ -109,10 +109,10 @@ Example
 	# Consumer liking data of 5 consumers stored in a numpy array
 	>>> print(my_data)
 	[[2 4 2 7 6]
-     [4 7 4 3 6]
-     [3 3 2 5 2]
-     [5 9 6 4 4]
-     [1 2 1 3 4]]
+	 [4 7 4 3 6]
+	 [3 3 2 5 2]
+	 [5 9 6 4 4]
+	 [1 2 1 3 4]]
 	
 	# Compute PCA model with
 	# - 3 components
