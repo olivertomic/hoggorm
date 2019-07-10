@@ -103,20 +103,54 @@ Example
 
 .. code-block:: bash
 
-	import hoggorm as ho
+	# Import hoggorm
+	>>> import hoggorm as ho
+
+	# Consumer liking data of 5 consumers stored in a numpy array
+	>>> print(my_data)
+	[[2 4 2 7 6]
+     [4 7 4 3 6]
+     [3 3 2 5 2]
+     [5 9 6 4 4]
+     [1 2 1 3 4]]
 	
 	# Compute PCA model with
-	# - 5 components
-	# - standardised/scaled variables
-	# - KFold cross validation with 4 folds
-	model = ho.nipalsPCA(arrX=myData, numComp=5, Xstand=True, cvType=["Kfold", 4])
+	# - 3 components
+	# - standardised/scaled variables (features or columns)
+	# - Leave-one-out (LOO) cross validation
+	>>> model = ho.nipalsPCA(arrX=my_data, numComp=3, Xstand=True, cvType=["loo"])
 	
 	# Extract results from PCA model
-	scores = model.X_scores()
-	loadings = model.X_loadings()
-	cumulativeCalibratedExplainedVariance_allVariables = model.X_cumCalExplVar_indVar()
-	cumulativeValidatedExplainedVariance_total = model.X_cumValExplVar()  
-
+	# Get PCA scores
+	>>> scores = model.X_scores()
+	>>> print(scores)
+	[[-0.97535198 -1.71827581  0.43672952]
+ 	 [ 1.28340424 -0.24453505 -0.98250731]
+ 	 [-0.9127492   0.97132275  1.04708189]
+ 	 [ 2.34954599  0.30633998  0.43178679]
+ 	 [-1.74484905  0.68514813 -0.93309089]]
+	
+	# Get PCA loadings
+	>>> loadings = model.X_loadings()
+	>>> print(loadings)
+	[[ 0.55080115  0.10025801  0.25045298]
+     [ 0.57184198 -0.11712858  0.00316316]
+     [ 0.57141459  0.00568809  0.10503941]
+     [-0.1682551  -0.61149788  0.77153937]
+     [ 0.12161589 -0.77605877 -0.57528864]]
+	
+	# Get cumulative explained variance for each variable
+	>>> cumCalExplVar_allVariables = model.X_cumCalExplVar_indVar()
+	>>> print(cumCalExplVar_allVariables)
+	[[ 0.          0.          0.          0.          0.        ]
+     [90.98654597 98.07234952 97.92497156  8.48956314  4.43690992]
+     [92.12195756 99.62227118 97.92862256 50.73769558 72.47502242]
+     [97.31181824 99.62309922 98.84150821 99.98958248 99.85786661]]
+	
+	# Get cumulative explained variance for all variables
+	>>> cumCalExplVar_total = model.X_cumValExplVar()
+	>>> print(cumCalExplVar_total)
+	[0.0, 35.43333631454735, 32.12929746015379, 71.32495809880507]
 
 hoggorm repository on GitHub
 ----------------------------
