@@ -1,5 +1,4 @@
 .. image:: https://readthedocs.org/projects/hoggorm/badge/?version=latest
-
 .. image:: http://joss.theoj.org/papers/10.21105/joss.00980/status.svg
    :target: https://doi.org/10.21105/joss.00980
 
