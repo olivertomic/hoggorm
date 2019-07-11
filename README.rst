@@ -1,5 +1,17 @@
 .. image:: https://readthedocs.org/projects/hoggorm/badge/?version=latest
 
+Markdown:
+[![DOI](http://joss.theoj.org/papers/10.21105/joss.00980/status.svg)](https://doi.org/10.21105/joss.00980)
+
+HTML:
+<a style="border-width:0" href="https://doi.org/10.21105/joss.00980">
+  <img src="http://joss.theoj.org/papers/10.21105/joss.00980/status.svg" alt="DOI badge" >
+</a>
+
+reStructuredText:
+.. image:: http://joss.theoj.org/papers/10.21105/joss.00980/status.svg
+   :target: https://doi.org/10.21105/joss.00980
+
 hoggorm
 =======
 
