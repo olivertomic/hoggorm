@@ -56,9 +56,7 @@ If you use hoggorm in a report or scientific publication, we would appreciate ci
 .. image:: http://joss.theoj.org/papers/10.21105/joss.00980/status.svg
    :target: https://doi.org/10.21105/joss.00980
 
-`Tomic et al., (2019). hoggorm: a python library for explorative multivariate statistics`_. Journal of Open Source Software, 4(39), 980, https://doi.org/10.21105/joss.00980 
-
-.. _Tomic et al., (2019). hoggorm: a python library for explorative multivariate statistics: http://joss.theoj.org/papers/10.21105/joss.00980 
+Tomic et al., (2019). hoggorm: a python library for explorative multivariate statistics. Journal of Open Source Software, 4(39), 980, https://doi.org/10.21105/joss.00980 
 
 Bibtex entry:
 
