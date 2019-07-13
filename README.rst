@@ -1,7 +1,3 @@
-.. image:: https://readthedocs.org/projects/hoggorm/badge/?version=latest
-.. image:: http://joss.theoj.org/papers/10.21105/joss.00980/status.svg
-   :target: https://doi.org/10.21105/joss.00980
-
 hoggorm
 =======
 
@@ -67,7 +63,7 @@ Bibtex entry:
 
 .. code-block:: bash
 
-	@article{hoggorm,
+    @article{hoggorm,
       title={hoggorm: a python library for explorative multivariate statistics},
       author={Tomic, Oliver and Graff, Thomas and Liland, Kristian Hovde and N{\ae}s, Tormod},
       journal={The Journal of Open Source Software},
