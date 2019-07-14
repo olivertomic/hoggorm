@@ -77,8 +77,8 @@ Documentation
     	- `PLSR2 on sensory and fluorescence spectroscopy data`_ measured on cheese
   - for matrix correlation ceoefficitents `RV and RV2`_ 
 		- `RV and RV2 coefficient on sensory and fluorescence spectroscopy data`_ measured on cheese
-  - for the SMI (similarity of matrix index)
-		- `SMI on sensory data and fluorescense data`_
+  - for the `SMI`_ (similarity of matrix index)
+		- `SMI on sensory data and fluorescense data`_ measured on cheese
 		- `SMI on pseudo-random numbers`_
   
 
@@ -95,7 +95,9 @@ Documentation
 .. _PLSR1 on NIR spectroscopy and octane data: https://github.com/olivertomic/hoggorm/blob/master/examples/PLSR/PLSR_on_NIR_and_octane_data.ipynb
 .. _PLSR2 on sensory and fluorescence spectroscopy data: https://github.com/olivertomic/hoggorm/blob/master/examples/PLSR/PLSR_on_sensory_and_fluorescence_data.ipynb
 .. _RV and RV2 coefficient on sensory and fluorescence spectroscopy data: https://github.com/olivertomic/hoggorm/blob/master/examples/RV_%26_RV2/RV_and_RV2_on_sensory_and_fluorescence_data.ipynb
-
+.. _SMI: https://github.com/olivertomic/hoggorm/tree/master/examples/SMI
+.. _SMI on sensory data and fluorescense data: https://github.com/olivertomic/hoggorm/blob/master/examples/SMI/SMI_on_sensory_and_fluorescence.ipynb
+.. _SMI on pseudo-random numbers: https://github.com/olivertomic/hoggorm/blob/master/examples/SMI/SMI_pseudo-random_numbers.ipynb
 
 More examples in Jupyter notebooks are provided at `hoggormExamples GitHub repository`_.
 
