@@ -69,7 +69,6 @@ Documentation
 		- `PCA on NIR spectroscopy data`_ measured on gasoline	
 		- `PCA on sensory data`_ measured on cheese
   - for `PCR`_
-		- PCR on NIR spectroscopy and octane data measured on gasoline (coming soon)
 		- `PCR on sensory and fluorescence spectroscopy data`_ measured on cheese
   - for `PLSR1`_ for univariate response (one response variable)
     	- `PLSR1 on NIR spectroscopy and octane data`_ measured on gasoline
@@ -91,7 +90,7 @@ Documentation
 .. _PCA on cancer data: https://github.com/olivertomic/hoggorm/blob/master/examples/PCA/PCA_on_cancer_data.ipynb
 .. _PCA on NIR spectroscopy data: https://github.com/olivertomic/hoggorm/blob/master/examples/PCA/PCA_on_spectroscopy_data.ipynb
 .. _PCA on sensory data: https://github.com/olivertomic/hoggorm/blob/master/examples/PCA/PCA_on_descriptive_sensory_analysis_data.ipynb
-.. _PCR on sensory and fluorescence spectroscopy data: https://github.com/olivertomic/hoggorm/blob/master/examples/PCR/PCR_on_sensory_and_fluorescence_data.ipynb
+.. _PCR on sensory and fluorescence spectroscopy data: https://github.com/olivertomic/hoggorm/blob/master/examples/PCR/PCR_on_sensory_and_fluorescence_data.ipynb 
 .. _PLSR1 on NIR spectroscopy and octane data: https://github.com/olivertomic/hoggorm/blob/master/examples/PLSR/PLSR_on_NIR_and_octane_data.ipynb
 .. _PLSR2 on sensory and fluorescence spectroscopy data: https://github.com/olivertomic/hoggorm/blob/master/examples/PLSR/PLSR_on_sensory_and_fluorescence_data.ipynb
 .. _RV and RV2 coefficient on sensory and fluorescence spectroscopy data: https://github.com/olivertomic/hoggorm/blob/master/examples/RV_%26_RV2/RV_and_RV2_on_sensory_and_fluorescence_data.ipynb

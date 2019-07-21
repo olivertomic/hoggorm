@@ -28,7 +28,6 @@ Below are links to some Jupyter notebooks that illustrate how to use hoggorm and
 		- `PCA on NIR spectroscopy data`_ measured on gasoline	
 		- `PCA on sensory data`_ measured on cheese
   - for `PCR`_
-		- PCR on NIR spectroscopy and octane data measured on gasoline (coming soon)
 		- `PCR on sensory and fluorescence spectroscopy data`_ measured on cheese
   - for `PLSR1`_ for univariate response (one response variable)
     	- `PLSR1 on NIR spectroscopy and octane data`_ measured on gasoline
