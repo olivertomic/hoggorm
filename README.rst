@@ -1,7 +1,9 @@
 hoggorm
 =======
 
-[![Downloads](https://pepy.tech/badge/hoggorm)](https://pepy.tech/project/hoggorm)
+.. image:: https://pepy.tech/badge/hoggorm
+    :target: https://pepy.tech/project/hoggorm
+    :alt: PyPI Downloads
 
 hoggorm is a Python package for explorative multivariate statistics in Python. It contains the following methods: 
 
