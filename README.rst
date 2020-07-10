@@ -1,6 +1,9 @@
 hoggorm
 =======
 
+.. image:: https://img.shields.io/pypi/l/hoggorm.svg
+    :target: https://github.com/yngvem/hoggorm/blob/master/LICENSE
+
 .. image:: https://pepy.tech/badge/hoggorm
     :target: https://pepy.tech/project/hoggorm
     :alt: PyPI Downloads
