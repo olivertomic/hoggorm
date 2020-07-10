@@ -8,9 +8,16 @@ hoggorm
 .. image:: https://pepy.tech/badge/hoggorm/month
     :target: https://pepy.tech/project/hoggorm/month
     :alt: PyPI Downloads
+    
+.. image:: https://pepy.tech/badge/hoggorm/week
+    :target: https://pepy.tech/project/hoggorm/week
+    :alt: PyPI Downloads
 
 .. image:: https://readthedocs.org/projects/hoggorm/badge/?version=latest
     :target: https://hoggorm.readthedocs.io/en/latest/?badge=latest
+
+.. image:: http://joss.theoj.org/papers/10.21105/joss.00980/status.svg
+   :target: https://doi.org/10.21105/joss.00980
 
 hoggorm is a Python package for explorative multivariate statistics in Python. It contains the following methods: 
 
