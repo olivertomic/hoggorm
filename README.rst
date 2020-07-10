@@ -5,6 +5,10 @@ hoggorm
     :target: https://pepy.tech/project/hoggorm
     :alt: PyPI Downloads
 
+.. image:: https://pepy.tech/badge/hoggorm/month
+    :target: https://pepy.tech/project/hoggorm/month
+    :alt: PyPI Downloads
+
 .. image:: https://readthedocs.org/projects/hoggorm/badge/?version=latest
     :target: https://hoggorm.readthedocs.io/en/latest/?badge=latest
 
