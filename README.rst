@@ -5,6 +5,9 @@ hoggorm
     :target: https://pepy.tech/project/hoggorm
     :alt: PyPI Downloads
 
+.. image:: https://readthedocs.org/projects/hoggorm/badge/?version=latest
+    :target: https://hoggorm.readthedocs.io/en/latest/?badge=latest
+
 hoggorm is a Python package for explorative multivariate statistics in Python. It contains the following methods: 
 
 * PCA (principal component analysis)
