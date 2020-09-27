@@ -84,7 +84,7 @@ Make sure that Python 3.5 or higher is installed. A convenient way to install Py
 
 .. _Anaconda distribution: https://www.anaconda.com/download/
 
-- numpy >= 1.11.3
+- numpy >= 1.9
 
 Installation
 ------------
