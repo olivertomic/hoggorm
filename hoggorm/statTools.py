@@ -116,7 +116,7 @@ def standardise(arr, mode=0):
     >>> standData = ho.standardise(data, mode=0)
 
     >>> # Standardise array row-wise
-    >>> standData = ho.standarise(data, mode=1)
+    >>> standData = ho.standardise(data, mode=1)
     """
     # First make a copy of input array
     X = arr.copy()
