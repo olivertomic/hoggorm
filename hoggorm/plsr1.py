@@ -33,7 +33,7 @@ class nipalsPLS1:
         False : columns of ``arrX`` are mean centred (default)
             ``Xstand = False``
 
-        True : columns of ``arrX`` are mean centred and devided by their own standard deviation
+        True : columns of ``arrX`` are mean centred and divided by their own standard deviation
             ``Xstand = True``
 
     Ystand : boolean, optional
@@ -42,7 +42,7 @@ class nipalsPLS1:
         False : ``vecy`` is to be mean centred (default)
             ``Ystand = False``
 
-        True : ``vecy`` is to be mean centred and devided by its own standard deviation
+        True : ``vecy`` is to be mean centred and divided by its own standard deviation
             ``Ystand = True``
 
     cvType : list, optional
@@ -63,7 +63,7 @@ class nipalsPLS1:
 
             labelsList: list
 
-            Sequence of lables. Must be same lenght as number of rows in ``arrX`` and ``arrY``. Leaves out objects with same lable.
+            Sequence of labels. Must be same length as number of rows in ``arrX`` and ``arrY``. Leaves out objects with same label.
 
 
     RETURNS
@@ -76,7 +76,7 @@ class nipalsPLS1:
     EXAMPLES
     --------
 
-    First import the hoggormpackage
+    First import the hoggorm package
 
     >>> import hoggorm as ho
 
@@ -150,7 +150,7 @@ class nipalsPLS1:
                 pass
 
             
-            # First devide into combinations of training and test sets. Collect 
+            # First divide into combinations of training and test sets. Collect 
             # sizes of training sets, since this also may limit the number of 
             # components that can be computed.
             segSizes = []
@@ -521,7 +521,7 @@ class nipalsPLS1:
 
 
             # Collect predicted y (i.e. yhat) for each CV segment in a
-            # dictionary according to numer of PC
+            # dictionary according to number of PC
             self.valYpredDict = {}
             for ind in range(1, self.numPC+1):
                 self.valYpredDict[ind] = np.zeros(np.shape(self.vecy_input))
@@ -551,7 +551,7 @@ class nipalsPLS1:
             all_xtm = np.zeros(np.shape(self.arrX_input))
 
 
-            # First devide into combinations of training and test sets
+            # First divide into combinations of training and test sets
             for train_index, test_index in cvComb:
                 x_train, x_test = cv.split(train_index, test_index, self.arrX_input)
                 y_train, y_test = cv.split(train_index, test_index, self.vecy_input)
@@ -1073,7 +1073,7 @@ class nipalsPLS1:
         Returns an array holding the cumulative validated explained variance
         for each variable in X after each component. First row represents
         zero components, second row represents component 1, third row for
-        compnent 2, etc. Columns represent variables.
+        component 2, etc. Columns represent variables.
         """
         return self.cumValExplVarXarr_indVar
 
@@ -1118,7 +1118,7 @@ class nipalsPLS1:
 
     def X_MSECV_indVar(self):
         """
-        Returns an arrary holding MSECV for each variable in X acquired through
+        Returns an array holding MSECV for each variable in X acquired through
         cross validation. First row is MSECV for zero components, second row
         for component 1, etc.
         """

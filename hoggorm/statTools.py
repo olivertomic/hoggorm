@@ -74,12 +74,12 @@ def center(arr, axis=0):
     X = numpy.array(arr, float)
 
     # Check whether column or row centring is required.
-    # Centreing column-wise
+    # Centering column-wise
     if axis == 0:
         variableMean = numpy.average(X, 0)
         centX = X - variableMean
 
-    # Centreing row-wise.
+    # Centering row-wise.
     if axis == 1:
         transX = numpy.transpose(X)
         objectMean = numpy.average(transX, 0)
@@ -116,7 +116,7 @@ def standardise(arr, mode=0):
     >>> standData = ho.standardise(data, mode=0)
 
     >>> # Standardise array row-wise
-    >>> standData = ho.standarise(data, mode=1)
+    >>> standData = ho.standardise(data, mode=1)
     """
     # First make a copy of input array
     X = arr.copy()

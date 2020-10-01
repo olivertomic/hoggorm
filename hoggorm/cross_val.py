@@ -1,6 +1,6 @@
 """
 
-The code in this module is based on the cross_val.py module from scikt-learn 0.4. It is adapted to work with hoggorm.
+The code in this module is based on the cross_val.py module from scikit-learn 0.4. It is adapted to work with hoggorm.
 
 
 Authors:
