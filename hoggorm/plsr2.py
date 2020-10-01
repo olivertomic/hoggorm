@@ -38,7 +38,7 @@ class nipalsPLS2:
         False : columns of ``arrY`` are mean centred (default)
             ``Ystand = False``
 
-        True : columns of ``arrY`` are mean centred and devided by their own standard deviation
+        True : columns of ``arrY`` are mean centred and divided by their own standard deviation
             ``Ystand = True``
 
     cvType : list, optional
@@ -71,7 +71,7 @@ class nipalsPLS2:
     EXAMPLES
     --------
 
-    First import the hoggormpackage
+    First import the hoggorm package
 
     >>> import hoggorm as ho
 
@@ -145,7 +145,7 @@ class nipalsPLS2:
                 pass
 
             
-            # First devide into combinations of training and test sets. Collect 
+            # First divide into combinations of training and test sets. Collect 
             # sizes of training sets, since this also may limit the number of 
             # components that can be computed.
             segSizes = []
@@ -1654,7 +1654,7 @@ class nipalsPLS2:
         # Create range for ellipses
         t = np.arange(0.0, 2*np.pi, 0.01)
 
-        # Compuing the outer circle (100 % expl. variance)
+        # Computing the outer circle (100 % expl. variance)
         xcords100perc = np.cos(t)
         ycords100perc = np.sin(t)
 

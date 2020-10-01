@@ -964,7 +964,7 @@ class nipalsPCA:
 
     def corrLoadingsEllipses(self):
         """
-        Returns a dictionary hodling coordinates of ellipses that represent
+        Returns a dictionary holding coordinates of ellipses that represent
         50% and 100% expl. variance in correlation loadings plot. The
         coordinates are stored in arrays.
         """
