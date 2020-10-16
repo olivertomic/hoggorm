@@ -11,7 +11,7 @@ hoggorm
 .. image:: https://pepy.tech/badge/hoggorm/month
     :target: https://pepy.tech/project/hoggorm/month
     :alt: PyPI Downloads
-    
+
 .. image:: https://pepy.tech/badge/hoggorm/week
     :target: https://pepy.tech/project/hoggorm/week
     :alt: PyPI Downloads
@@ -21,8 +21,8 @@ hoggorm
 
 .. image:: http://joss.theoj.org/papers/10.21105/joss.00980/status.svg
    :target: https://doi.org/10.21105/joss.00980
- 
-  
+
+
 hoggorm is a Python package for explorative multivariate statistics in Python. It contains the following methods:
 
 * PCA (principal component analysis)
@@ -46,7 +46,7 @@ Below are links to some Jupyter notebooks that illustrate how to use hoggorm and
 - Jupyter notebooks with examples of how to use hoggorm
   
   - for `PCA`_
-		- `PCA on cancer data`_ on men in OECD countries `ColabCancer`_
+		- `PCA on cancer data`_ on men in OECD countries |ColabCancer|
 		- `PCA on NIR spectroscopy data`_ measured on gasoline
 		- `PCA on sensory data`_ measured on cheese
   - for `PCR`_
@@ -78,9 +78,11 @@ Below are links to some Jupyter notebooks that illustrate how to use hoggorm and
 .. _SMI on sensory data and fluorescence data: https://github.com/olivertomic/hoggorm/blob/master/examples/SMI/SMI_on_sensory_and_fluorescence.ipynb
 .. _SMI on pseudo-random numbers: https://github.com/olivertomic/hoggorm/blob/master/examples/SMI/SMI_pseudo-random_numbers.ipynb
 
-.. _ColabCancer: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/olivertomic/hoggorm/blob/master/examples/PCA/PCA_on_cancer_data.ipynb)
+.. |ColabCancer| image::
+    :target: https://colab.research.google.com/github/olivertomic/hoggorm/blob/master/examples/PCA/PCA_on_cancer_data.ipynb
+    :alt: Open in Colab
 
-.. |ColabSensory| image:: https://colab.research.google.com/assets/colab-badge.svg
+.. |ColabSensory| image::
    :target: https://colab.research.google.com/github/olivertomic/hoggorm/blob/master/examples/RV_%26_RV2/RV_and_RV2_on_sensory_and_fluorescence_data.ipynb
     :alt: Open In Colab
 
