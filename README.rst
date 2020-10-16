@@ -41,6 +41,15 @@ The complementary package `hoggormplot`_ can be used for visualisation of result
 
 Examples
 --------
+
+.. |ColabCancer| image:: https://colab.research.google.com/assets/colab-badge.svg
+    :target: https://colab.research.google.com/github/olivertomic/hoggorm/blob/master/examples/PCA/PCA_on_cancer_data.ipynb
+    :alt: Open in Colab
+
+.. |ColabSensory| image:: https://colab.research.google.com/assets/colab-badge.svg
+    :target: https://colab.research.google.com/github/olivertomic/hoggorm/blob/master/examples/RV_%26_RV2/RV_and_RV2_on_sensory_and_fluorescence_data.ipynb
+    :alt: Open In Colab
+
 Below are links to some Jupyter notebooks that illustrate how to use hoggorm and hoggormplot with the methods mentioned above. All examples are also found in the `examples`_ folder.
 
 - Jupyter notebooks with examples of how to use hoggorm
@@ -78,13 +87,7 @@ Below are links to some Jupyter notebooks that illustrate how to use hoggorm and
 .. _SMI on sensory data and fluorescence data: https://github.com/olivertomic/hoggorm/blob/master/examples/SMI/SMI_on_sensory_and_fluorescence.ipynb
 .. _SMI on pseudo-random numbers: https://github.com/olivertomic/hoggorm/blob/master/examples/SMI/SMI_pseudo-random_numbers.ipynb
 
-.. |ColabCancer| image::
-    :target: https://colab.research.google.com/github/olivertomic/hoggorm/blob/master/examples/PCA/PCA_on_cancer_data.ipynb
-    :alt: Open in Colab
 
-.. |ColabSensory| image::
-   :target: https://colab.research.google.com/github/olivertomic/hoggorm/blob/master/examples/RV_%26_RV2/RV_and_RV2_on_sensory_and_fluorescence_data.ipynb
-    :alt: Open In Colab
 
 
 Requirements
