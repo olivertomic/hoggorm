@@ -59,7 +59,7 @@ Below are links to some Jupyter notebooks that illustrate how to use hoggorm and
 - Jupyter notebooks with examples of how to use hoggorm
   
   - for `PCA`_
-		- `PCA on cancer data`_ on men in OECD countries |ColabCancer||BinderCancer|
+		- `PCA on cancer data`_ on men in OECD countries |ColabCancer| |BinderCancer|
 		- `PCA on NIR spectroscopy data`_ measured on gasoline
 		- `PCA on sensory data`_ measured on cheese
   - for `PCR`_
