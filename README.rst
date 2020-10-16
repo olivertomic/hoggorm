@@ -46,6 +46,10 @@ Examples
     :target: https://colab.research.google.com/github/olivertomic/hoggorm/blob/master/examples/PCA/PCA_on_cancer_data.ipynb
     :alt: Open in Colab
 
+.. |BinderCancer| image:: https://mybinder.org/badge_logo.svg
+    :target: https://mybinder.org/v2/gh/olivertomic/hoggorm/blob/master/examples/PCA/PCA_on_cancer_data.ipynb
+    :alt: Open in Binder
+
 .. |ColabSensory| image:: https://colab.research.google.com/assets/colab-badge.svg
     :target: https://colab.research.google.com/github/olivertomic/hoggorm/blob/master/examples/RV_%26_RV2/RV_and_RV2_on_sensory_and_fluorescence_data.ipynb
     :alt: Open In Colab
@@ -55,7 +59,7 @@ Below are links to some Jupyter notebooks that illustrate how to use hoggorm and
 - Jupyter notebooks with examples of how to use hoggorm
   
   - for `PCA`_
-		- `PCA on cancer data`_ on men in OECD countries |ColabCancer|
+		- `PCA on cancer data`_ on men in OECD countries |ColabCancer||BinderCancer|
 		- `PCA on NIR spectroscopy data`_ measured on gasoline
 		- `PCA on sensory data`_ measured on cheese
   - for `PCR`_
