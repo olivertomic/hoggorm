@@ -23,7 +23,7 @@ hoggorm
    :target: https://doi.org/10.21105/joss.00980
  
   
-hoggorm is a Python package for explorative multivariate statistics in Python. It contains the following methods: 
+hoggorm is a Python package for explorative multivariate statistics in Python. It contains the following methods:
 
 * PCA (principal component analysis)
 * PCR (principal component regression)
@@ -36,7 +36,7 @@ hoggorm is a Python package for explorative multivariate statistics in Python. I
 Unlike `scikit-learn`_, which is an excellent python machine learning package focusing on classification, regression, clustering and predicition, hoggorm rather aims at understanding and interpretation of the variance in the data. hoggorm also contains tools for prediction.
 The complementary package `hoggormplot`_ can be used for visualisation of results of models trained with hoggorm. 
 
-.. _scikit-learn: http://scikit-learn.org/stable/
+.. _scikit-learn: https://scikit-learn.org/stable/
 .. _hoggormplot: https://github.com/olivertomic/hoggormPlot
 
 Examples
@@ -56,7 +56,7 @@ Below are links to some Jupyter notebooks that illustrate how to use hoggorm and
   - for `PLSR2`_ for multivariate response (multiple response variables)
     	- `PLSR2 on sensory and fluorescence spectroscopy data`_ measured on cheese
   - for matrix correlation coefficients `RV and RV2`_
-		- `RV and RV2 coefficient on sensory and fluorescence spectroscopy data`_ measured on cheese  `ColabSensory`_
+		- `RV and RV2 coefficient on sensory and fluorescence spectroscopy data`_ measured on cheese |ColabSensory|
   - for the `SMI`_ (similarity of matrix index)
 		- `SMI on sensory data and fluorescence data`_
 		- `SMI on pseudo-random numbers`_
@@ -80,7 +80,9 @@ Below are links to some Jupyter notebooks that illustrate how to use hoggorm and
 
 .. _ColabCancer: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/olivertomic/hoggorm/blob/master/examples/PCA/PCA_on_cancer_data.ipynb)
 
-.. _ColabSensory: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/olivertomic/hoggorm/blob/master/examples/RV_%26_RV2/RV_and_RV2_on_sensory_and_fluorescence_data.ipynb)
+.. |ColabSensory| image:: https://colab.research.google.com/assets/colab-badge.svg
+   :target: https://colab.research.google.com/github/olivertomic/hoggorm/blob/master/examples/RV_%26_RV2/RV_and_RV2_on_sensory_and_fluorescence_data.ipynb
+    :alt: Open In Colab
 
 
 Requirements
