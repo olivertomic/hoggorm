@@ -47,7 +47,11 @@ Examples
     :alt: Open in Colab
 
 .. |BinderCancer| image:: https://mybinder.org/badge_logo.svg
-    :target: https://mybinder.org/v2/gh/olivertomic/hoggorm/blob/master/examples/PCA/PCA_on_cancer_data.ipynb
+    :target: https://mybinder.org/v2/gh/olivertomic/hoggorm/master?filepath=examples/PCA/PCA_on_cancer_data.ipynb
+    :alt: Open in Binder
+
+.. |BinderSensory| image:: https://mybinder.org/badge_logo.svg
+    :target: https://mybinder.org/v2/gh/olivertomic/hoggorm/master?filepath=examples%2FPCR%2FPCR_on_sensory_and_fluorescence_data.ipynb
     :alt: Open in Binder
 
 .. |ColabSensory| image:: https://colab.research.google.com/assets/colab-badge.svg
@@ -69,7 +73,7 @@ Below are links to some Jupyter notebooks that illustrate how to use hoggorm and
   - for `PLSR2`_ for multivariate response (multiple response variables)
     	- `PLSR2 on sensory and fluorescence spectroscopy data`_ measured on cheese
   - for matrix correlation coefficients `RV and RV2`_
-		- `RV and RV2 coefficient on sensory and fluorescence spectroscopy data`_ measured on cheese |ColabSensory|
+		- `RV and RV2 coefficient on sensory and fluorescence spectroscopy data`_ measured on cheese |ColabSensory| |BinderSensory|
   - for the `SMI`_ (similarity of matrix index)
 		- `SMI on sensory data and fluorescence data`_
 		- `SMI on pseudo-random numbers`_
@@ -152,7 +156,7 @@ Citing hoggorm
 
 If you use hoggorm in a report or scientific publication, we would appreciate citations to the following paper:
 
-.. image:: http://joss.theoj.org/papers/10.21105/joss.00980/status.svg
+.. image:: https://joss.theoj.org/papers/10.21105/joss.00980/status.svg
    :target: https://doi.org/10.21105/joss.00980
 
 Tomic et al., (2019). hoggorm: a python library for explorative multivariate statistics. Journal of Open Source Software, 4(39), 980, https://doi.org/10.21105/joss.00980 
