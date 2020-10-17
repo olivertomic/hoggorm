@@ -11,7 +11,7 @@ hoggorm
 .. image:: https://pepy.tech/badge/hoggorm/month
     :target: https://pepy.tech/project/hoggorm/month
     :alt: PyPI Downloads
-    
+
 .. image:: https://pepy.tech/badge/hoggorm/week
     :target: https://pepy.tech/project/hoggorm/week
     :alt: PyPI Downloads
@@ -21,9 +21,9 @@ hoggorm
 
 .. image:: http://joss.theoj.org/papers/10.21105/joss.00980/status.svg
    :target: https://doi.org/10.21105/joss.00980
- 
-  
-hoggorm is a Python package for explorative multivariate statistics in Python. It contains the following methods: 
+
+
+hoggorm is a Python package for explorative multivariate statistics in Python. It contains the following methods:
 
 * PCA (principal component analysis)
 * PCR (principal component regression)
@@ -36,18 +36,35 @@ hoggorm is a Python package for explorative multivariate statistics in Python. I
 Unlike `scikit-learn`_, which is an excellent python machine learning package focusing on classification, regression, clustering and predicition, hoggorm rather aims at understanding and interpretation of the variance in the data. hoggorm also contains tools for prediction.
 The complementary package `hoggormplot`_ can be used for visualisation of results of models trained with hoggorm. 
 
-.. _scikit-learn: http://scikit-learn.org/stable/
+.. _scikit-learn: https://scikit-learn.org/stable/
 .. _hoggormplot: https://github.com/olivertomic/hoggormPlot
 
 Examples
 --------
+
+.. |ColabCancer| image:: https://colab.research.google.com/assets/colab-badge.svg
+    :target: https://colab.research.google.com/github/olivertomic/hoggorm/blob/master/examples/PCA/PCA_on_cancer_data.ipynb
+    :alt: Open in Colab
+
+.. |BinderCancer| image:: https://mybinder.org/badge_logo.svg
+    :target: https://mybinder.org/v2/gh/olivertomic/hoggorm/master?filepath=examples/PCA/PCA_on_cancer_data.ipynb
+    :alt: Open in Binder
+
+.. |BinderSensory| image:: https://mybinder.org/badge_logo.svg
+    :target: https://mybinder.org/v2/gh/olivertomic/hoggorm/master?filepath=examples%2FPCR%2FPCR_on_sensory_and_fluorescence_data.ipynb
+    :alt: Open in Binder
+
+.. |ColabSensory| image:: https://colab.research.google.com/assets/colab-badge.svg
+    :target: https://colab.research.google.com/github/olivertomic/hoggorm/blob/master/examples/RV_%26_RV2/RV_and_RV2_on_sensory_and_fluorescence_data.ipynb
+    :alt: Open In Colab
+
 Below are links to some Jupyter notebooks that illustrate how to use hoggorm and hoggormplot with the methods mentioned above. All examples are also found in the `examples`_ folder.
 
 - Jupyter notebooks with examples of how to use hoggorm
   
   - for `PCA`_
-		- `PCA on cancer data`_ on men in OECD countries
-		- `PCA on NIR spectroscopy data`_ measured on gasoline	
+		- `PCA on cancer data`_ on men in OECD countries |ColabCancer| |BinderCancer|
+		- `PCA on NIR spectroscopy data`_ measured on gasoline
 		- `PCA on sensory data`_ measured on cheese
   - for `PCR`_
 		- `PCR on sensory and fluorescence spectroscopy data`_ measured on cheese
@@ -55,10 +72,10 @@ Below are links to some Jupyter notebooks that illustrate how to use hoggorm and
     	- `PLSR1 on NIR spectroscopy and octane data`_ measured on gasoline
   - for `PLSR2`_ for multivariate response (multiple response variables)
     	- `PLSR2 on sensory and fluorescence spectroscopy data`_ measured on cheese
-  - for matrix correlation ceoefficitents `RV and RV2`_ 
-		- `RV and RV2 coefficient on sensory and fluorescence spectroscopy data`_ measured on cheese
+  - for matrix correlation coefficients `RV and RV2`_
+		- `RV and RV2 coefficient on sensory and fluorescence spectroscopy data`_ measured on cheese |ColabSensory| |BinderSensory|
   - for the `SMI`_ (similarity of matrix index)
-		- `SMI on sensory data and fluorescense data`_
+		- `SMI on sensory data and fluorescence data`_
 		- `SMI on pseudo-random numbers`_
   
 .. _examples: https://github.com/olivertomic/hoggorm/tree/master/examples
@@ -75,8 +92,11 @@ Below are links to some Jupyter notebooks that illustrate how to use hoggorm and
 .. _PLSR2 on sensory and fluorescence spectroscopy data: https://github.com/olivertomic/hoggorm/blob/master/examples/PLSR/PLSR_on_sensory_and_fluorescence_data.ipynb
 .. _RV and RV2 coefficient on sensory and fluorescence spectroscopy data: https://github.com/olivertomic/hoggorm/blob/master/examples/RV_%26_RV2/RV_and_RV2_on_sensory_and_fluorescence_data.ipynb
 .. _SMI: https://github.com/olivertomic/hoggorm/tree/master/examples/SMI
-.. _SMI on sensory data and fluorescense data: https://github.com/olivertomic/hoggorm/blob/master/examples/SMI/SMI_on_sensory_and_fluorescence.ipynb
+.. _SMI on sensory data and fluorescence data: https://github.com/olivertomic/hoggorm/blob/master/examples/SMI/SMI_on_sensory_and_fluorescence.ipynb
 .. _SMI on pseudo-random numbers: https://github.com/olivertomic/hoggorm/blob/master/examples/SMI/SMI_pseudo-random_numbers.ipynb
+
+
+
 
 Requirements
 ------------
@@ -89,13 +109,33 @@ Make sure that Python 3.5 or higher is installed. A convenient way to install Py
 Installation
 ------------
 
-Install hoggorm easily from the command line from the `PyPI - the Python Packaging Index`_. 
+Using pip
+*********
+
+Install hoggorm easily from the command line from the `PyPI - the Python Packaging Index`_.
 
 .. _PyPI - the Python Packaging Index: https://pypi.python.org/pypi
 
 .. code-block:: bash
 
 	pip install hoggorm
+
+Using conda
+***********
+
+.. image:: https://img.shields.io/conda/dn/conda-forge/hoggorm.svg
+    :target: https://anaconda.org/conda-forge/hoggorm
+    :alt: Conda Downloads
+
+.. image:: https://img.shields.io/conda/vn/conda-forge/hoggorm.svg
+    :target: https://anaconda.org/conda-forge/hoggorm
+    :alt: Conda Version
+ 
+You can install using the conda package manager by running
+
+.. code-block:: bash
+
+    conda install -c conda-forge hoggorm
 
 
 Documentation
@@ -116,7 +156,7 @@ Citing hoggorm
 
 If you use hoggorm in a report or scientific publication, we would appreciate citations to the following paper:
 
-.. image:: http://joss.theoj.org/papers/10.21105/joss.00980/status.svg
+.. image:: https://joss.theoj.org/papers/10.21105/joss.00980/status.svg
    :target: https://doi.org/10.21105/joss.00980
 
 Tomic et al., (2019). hoggorm: a python library for explorative multivariate statistics. Journal of Open Source Software, 4(39), 980, https://doi.org/10.21105/joss.00980 

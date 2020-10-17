@@ -1,5 +1,5 @@
 
-Utililty classes and functions
+Utility classes and functions
 ==============================
 
 There are number of functions and classes that might be useful for working with data outside the hoggorm package. They are provided here
