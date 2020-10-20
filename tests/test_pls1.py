@@ -81,7 +81,7 @@ def pls1ref(request, datafolder):
     Load reference numerical results from file.
     """
     rname = request.param
-    refn = "ref_PLS1_{}.tsv".format(rname.lower())
+    refn = "ref_PLS1_{}.tsv".format(rname[0].lower()+rname[1:])
     try:
         refdat = np.loadtxt(osp.join(datafolder, refn))
     except FileNotFoundError:
