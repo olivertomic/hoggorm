@@ -16,7 +16,7 @@ requirements = [ ]
 
 setup_requirements = ['pytest-runner', ]
 
-test_requirements = ['pytest>=3', ]
+test_requirements = ['pytest>=3', 'numpy']
 
 setup(
     author="Oliver Tomic",
