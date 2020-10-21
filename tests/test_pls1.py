@@ -7,13 +7,11 @@ import numpy as np
 import pytest
 from hoggorm import nipalsPLS1 as PLS1
 
-
 # If the following equation is element-wise True, then allclose returns True.
 # absolute(a - b) <= (atol + rtol * absolute(b))
 # default: rtol=1e-05, atol=1e-08
 rtol = 1e-05
 atol = 1e-08
-
 
 ATTRS = [
     'modelSettings',
@@ -72,8 +70,12 @@ def pls1cached(cfldat, csecol2dat):
     return PLS1(arrX=cfldat, vecy=csecol2dat, cvType=["loo"])
 
 
-testMethods = ["X_scores", "X_loadings", "X_corrLoadings", "X_cumCalExplVar_indVar", "X_cumCalExplVar",
-               "Y_loadings", "Y_corrLoadings", "Y_cumCalExplVar"] 
+testMethods = [
+    "X_scores", "X_loadings", "X_corrLoadings", "X_cumCalExplVar_indVar",
+    "X_cumCalExplVar", "Y_loadings", "Y_corrLoadings", "Y_cumCalExplVar"
+]
+
+
 # testMethods = ["Y_corrLoadings"]
 @pytest.fixture(params=testMethods)
 def pls1ref(request, datafolder):
@@ -81,7 +83,7 @@ def pls1ref(request, datafolder):
     Load reference numerical results from file.
     """
     rname = request.param
-    refn = "ref_PLS1_{}.tsv".format(rname[0].lower()+rname[1:])
+    refn = "ref_PLS1_{}.tsv".format(rname[0].lower() + rname[1:])
     try:
         refdat = np.loadtxt(osp.join(datafolder, refn))
     except FileNotFoundError:
@@ -99,13 +101,16 @@ def test_compare_reference(pls1ref, pls1cached):
 
     if refdat is None:
         dump_res(rname, res)
-        assert False, "Missing reference data for {}, data is dumped".format(rname)
+        assert False, "Missing reference data for {}, data is dumped".format(
+            rname)
     elif rname == 'Y_corrLoadings' or rname == 'Y_loadings':
-        if not np.allclose(res[:3], refdat.reshape(1, -1)[:3], rtol=rtol, atol=atol):
+        if not np.allclose(
+                res[:3], refdat.reshape(1, -1)[:3], rtol=rtol, atol=atol):
             dump_res(rname, res)
-            assert False, "Difference in {}, data is dumped".format(rname)    
+            assert False, "Difference in {}, data is dumped".format(rname)
     elif rname == 'X_cumCalExplVar' or rname == 'Y_cumCalExplVar':
-        if not np.allclose(np.array(res[:3]), refdat[:3], rtol=rtol, atol=atol):
+        if not np.allclose(np.array(res[:3]), refdat[:3], rtol=rtol,
+                           atol=atol):
             dump_res(rname, res)
             assert False, "Difference in {}, data is dumped".format(rname)
     elif not np.allclose(res[:, :3], refdat[:, :3], rtol=rtol, atol=atol):
@@ -134,8 +139,8 @@ def test_api_verify(pls1cached, cfldat):
             res = pls1cached.X_scores_predict(Xnew=cfldat)
             print('fn:', 'X_scores_predict')
             print('type(res):', type(res))
-            print('shape:', res.shape,  '\n\n')
-        else:    
+            print('shape:', res.shape, '\n\n')
+        else:
             res = getattr(pls1cached, fn)()
             print('fn:', fn)
             print('type(res):', type(res))
@@ -150,18 +155,34 @@ def test_constructor_api_variants(cfldat, csecol2dat):
     Check whether various combinations of keyword arguments work.
     """
     print(cfldat.shape, csecol2dat.shape)
-    pls1_1 = PLS1(arrX=cfldat, vecy=csecol2dat, numComp=3, Xstand=False, cvType=["loo"])
+    pls1_1 = PLS1(arrX=cfldat,
+                  vecy=csecol2dat,
+                  numComp=3,
+                  Xstand=False,
+                  cvType=["loo"])
     print('pls1_1', pls1_1)
     pls1_2 = PLS1(cfldat, csecol2dat)
     print('pls1_2', pls1_2)
     pls1_3 = PLS1(cfldat, csecol2dat, numComp=300, cvType=["loo"])
     print('pls1_3', pls1_3)
-    pls1_4 = PLS1(arrX=cfldat, vecy=csecol2dat, cvType=["loo"], numComp=5, Xstand=False)
+    pls1_4 = PLS1(arrX=cfldat,
+                  vecy=csecol2dat,
+                  cvType=["loo"],
+                  numComp=5,
+                  Xstand=False)
     print('pls1_4', pls1_4)
     pls1_5 = PLS1(arrX=cfldat, vecy=csecol2dat, Xstand=True)
     print('pls1_5', pls1_5)
-    pls1_6 = PLS1(arrX=cfldat, vecy=csecol2dat, numComp=2, Xstand=False, cvType=["KFold", 3])
+    pls1_6 = PLS1(arrX=cfldat,
+                  vecy=csecol2dat,
+                  numComp=2,
+                  Xstand=False,
+                  cvType=["KFold", 3])
     print('pls1_6', pls1_6)
-    pls1_7 = PLS1(arrX=cfldat, vecy=csecol2dat, numComp=2, Xstand=False, cvType=["lolo", [1, 2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5, 6, 7]])
+    pls1_7 = PLS1(arrX=cfldat,
+                  vecy=csecol2dat,
+                  numComp=2,
+                  Xstand=False,
+                  cvType=["lolo", [1, 2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5, 6, 7]])
     print('pls1_7', pls1_7)
     assert True
