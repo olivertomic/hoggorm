@@ -16,4 +16,4 @@ script:
   - python setup.py test
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then cd docs && make clean && make html && cd ..; fi
 after_success:
-  - codecov
+  - bash <(curl -s https://codecov.io/bash)
