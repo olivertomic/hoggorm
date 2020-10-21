@@ -43,10 +43,6 @@ setup(
         'Topic :: Scientific/Engineering :: Mathematics'
     ],
     description="Package for explorative multivariate statistics.",
-    entry_points={
-        'console_scripts': [
-            'hoggorm=hoggorm.cli:main',
-        ],
     },
     install_requires=requirements,
     license="BSD license",
