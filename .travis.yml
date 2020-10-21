@@ -1,10 +1,15 @@
-language: shell
+language: python
 
 os:
   - linux
 
 env:
   - PYTHON_VERSION=3.7
+  
+python:  
+  - 3.5
+  - 3.6
+  - 3.7
 
 install:
   - source script/conda.sh
