@@ -16,6 +16,7 @@ install:
   - pip install sphinx sphinx_rtd_theme
 script:
     #- flake8 .
+  - python setup.py test
     #- python -m unittest discover
     #- if [ "${TRAVIS_OS_NAME}" = "linux" ]; then cd docs && make clean && make html && cd ..; fi
 after_success:
