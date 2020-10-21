@@ -9,8 +9,8 @@ __version__ = '0.13.3'
 with open('README.rst') as readme_file:
     readme = readme_file.read()
 
-with open('HISTORY.rst') as history_file:
-    history = history_file.read()
+#with open('HISTORY.rst') as history_file:
+#    history = history_file.read()
 
 requirements = [ ]
 
@@ -23,10 +23,8 @@ setup(
     author_email='oliver.tomic@nmbu.no',
     python_requires='>=3.5',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
         'Development Status :: 4 - Beta'
         'Natural Language :: English'
-        'Programming Language :: Python :: 2.7'
         'Programming Language :: Python :: 3'
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
@@ -45,7 +43,7 @@ setup(
     description="Package for explorative multivariate statistics.",
     install_requires=requirements,
     license="BSD license",
-    long_description=readme + '\n\n' + history,
+    #long_description=readme + '\n\n' + history,
     include_package_data=True,
     keywords=['hoggorm',
               'statistic',
