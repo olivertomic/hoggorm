@@ -43,7 +43,6 @@ setup(
         'Topic :: Scientific/Engineering :: Mathematics'
     ],
     description="Package for explorative multivariate statistics.",
-    },
     install_requires=requirements,
     license="BSD license",
     long_description=readme + '\n\n' + history,
@@ -51,7 +50,7 @@ setup(
     keywords=['hoggorm',
               'statistic',
             'education',
-	'science']
+	'science'],
     name='hoggorm',
     packages=find_packages(include=['hoggorm', 'hoggorm.*']),
     setup_requires=setup_requirements,
