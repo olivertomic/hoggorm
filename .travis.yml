@@ -2,7 +2,6 @@ language: shell
 
 os:
   - linux
-  - windows
 
 env:
   - PYTHON_VERSION=3.7
@@ -11,6 +10,7 @@ install:
   - source script/conda.sh
   - conda create --yes -n test python="${PYTHON_VERSION}"
   - source activate test
+  - pip install numpy
   - pip install coverage
   - pip install flake8 codecov
   - pip install sphinx sphinx_rtd_theme
