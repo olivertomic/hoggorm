@@ -56,7 +56,7 @@ setup(
     packages=find_packages(include=['hoggorm', 'hoggorm.*']),
     setup_requires=setup_requirements,
     test_suite='tests',
-    tests_require=['pytest', 'pytest-cov'],
+    tests_require=['pytest', 'pytest-cov','numpy'],
     url='https://github.com/olivertomic/hoggorm',
     version=__version__,
     zip_safe=False,
