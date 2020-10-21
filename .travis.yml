@@ -15,8 +15,8 @@ install:
   - pip install flake8 codecov
   - pip install sphinx sphinx_rtd_theme
 script:
-  - flake8 .
-  - python -m unittest discover
-  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then cd docs && make clean && make html && cd ..; fi
+    #- flake8 .
+    #- python -m unittest discover
+    #- if [ "${TRAVIS_OS_NAME}" = "linux" ]; then cd docs && make clean && make html && cd ..; fi
 after_success:
   - bash <(curl -s https://codecov.io/bash)
