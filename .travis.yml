@@ -20,7 +20,7 @@ install:
   - pip install -U tox-travis
 
 script:
-    #- flake8 .
+  - flake8 .
   - tox
     #- python -m unittest discover
     #- if [ "${TRAVIS_OS_NAME}" = "linux" ]; then cd docs && make clean && make html && cd ..; fi
