@@ -22,7 +22,15 @@ hoggorm
 .. image:: http://joss.theoj.org/papers/10.21105/joss.00980/status.svg
    :target: https://doi.org/10.21105/joss.00980
 
+.. image:: https://codecov.io/gh/andife/hoggorm/branch/hogCI/graph/badge.svg?token=IWQHXZQY4F
+   :target: https://codecov.io/gh/andife/hoggorm  
 
+.. image:: https://travis-ci.com/andife/hoggorm.svg?branch=hogCI
+   :target: https://travis-ci.com/andife/hoggorm
+   
+.. image:: https://bestpractices.coreinfrastructure.org/projects/4359/badge
+   :target: https://bestpractices.coreinfrastructure.org/projects/4359
+   
 hoggorm is a Python package for explorative multivariate statistics in Python. It contains the following methods:
 
 * PCA (principal component analysis)
