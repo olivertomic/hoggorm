@@ -32,5 +32,4 @@ script:
     #- if [ "${TRAVIS_OS_NAME}" = "linux" ]; then cd docs && make clean && make html && cd ..; fi
 after_success:
   - bash <(curl -s https://codecov.io/bash) 
-  - coverage xml
   - python-codacy-coverage -r coverage.xml
