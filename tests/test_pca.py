@@ -62,7 +62,8 @@ def pcaref(request, datafolder):
     Load reference numerical results from file.
     """
     rname = request.param
-    refn = "ref_PCA_{}.tsv".format(rname.lower())
+    refn = "ref_PCA_{}.tsv".format(rname[0].lower()+rname[1:])
+    print(refn)
     try:
         refdat = np.loadtxt(osp.join(datafolder, refn))
     except FileNotFoundError:

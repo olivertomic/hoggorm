@@ -87,7 +87,7 @@ def pcrref(request, datafolder):
     Load reference numerical results from file.
     """
     rname = request.param
-    refn = "ref_PCR_{}.tsv".format(rname.lower())
+    refn = "ref_PCR_{}.tsv".format(rname[0].lower()+rname[1:])
     try:
         refdat = np.loadtxt(osp.join(datafolder, refn))
     except FileNotFoundError:

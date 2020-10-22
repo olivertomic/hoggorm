@@ -99,7 +99,7 @@ def pls2ref(request, datafolder):
     Load reference numerical results from file.
     """
     rname = request.param
-    refn = "ref_PLS2_{}.tsv".format(rname.lower())
+    refn = "ref_PLS2_{}.tsv".format(rname[0].lower()+rname[1:])
     try:
         refdat = np.loadtxt(osp.join(datafolder, refn))
     except FileNotFoundError:
@@ -132,7 +132,7 @@ def dump_res(rname, dat):
     Dumps information to file if reference data is missing or difference is larger than tolerance.
     """
     dumpfolder = osp.realpath(osp.dirname(__file__))
-    dumpfn = "dump_PLS2_{}.tsv".format(rname.lower())
+    dumpfn = "dump_PLS2_{}.tsv".format(rname[0].lower()+rname[1:])
     np.savetxt(osp.join(dumpfolder, dumpfn), dat, fmt='%.9e', delimiter='\t')
 
 
