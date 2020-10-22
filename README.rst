@@ -1,6 +1,10 @@
 hoggorm
 =======
 
+.. image:: https://api.codacy.com/project/badge/Grade/b161e47219a04f6483dd47932237ea54
+   :alt: Codacy Badge
+   :target: https://app.codacy.com/gh/andife/hoggorm?utm_source=github.com&utm_medium=referral&utm_content=andife/hoggorm&utm_campaign=Badge_Grade_Settings
+
 .. image:: https://img.shields.io/pypi/l/hoggorm.svg
     :target: https://github.com/olivertomic/hoggorm/blob/master/LICENSE
 
