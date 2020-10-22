@@ -157,7 +157,7 @@ Documentation
 - Jupyter notebooks with `examples`_ of how to use Hoggorm together with the complementary plotting package `hoggormplot`_.
   
   
-.. _Read the Docs: http://hoggorm.readthedocs.io/en/latest
+.. _Read the Docs: https://hoggorm.readthedocs.io/en/latest/
 .. _examples: https://github.com/olivertomic/hoggorm/tree/master/examples
 .. _hoggormplot: https://github.com/olivertomic/hoggormPlot
 
