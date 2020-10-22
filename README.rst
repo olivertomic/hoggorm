@@ -4,18 +4,6 @@ hoggorm
 .. image:: https://img.shields.io/pypi/l/hoggorm.svg
     :target: https://github.com/olivertomic/hoggorm/blob/master/LICENSE
 
-.. image:: https://pepy.tech/badge/hoggorm
-    :target: https://pepy.tech/project/hoggorm
-    :alt: PyPI Downloads
-
-.. image:: https://pepy.tech/badge/hoggorm/month
-    :target: https://pepy.tech/project/hoggorm/month
-    :alt: PyPI Downloads
-
-.. image:: https://pepy.tech/badge/hoggorm/week
-    :target: https://pepy.tech/project/hoggorm/week
-    :alt: PyPI Downloads
-
 .. image:: https://readthedocs.org/projects/hoggorm/badge/?version=latest
     :target: https://hoggorm.readthedocs.io/en/latest/?badge=latest
 
@@ -23,10 +11,13 @@ hoggorm
    :target: https://doi.org/10.21105/joss.00980
 
 .. image:: https://codecov.io/gh/andife/hoggorm/branch/hogCI/graph/badge.svg?token=IWQHXZQY4F
-   :target: https://codecov.io/gh/andife/hoggorm  
+   :target: https://codecov.io/gh/andife/hoggorm/branch/hogCI
 
 .. image:: https://travis-ci.com/andife/hoggorm.svg?branch=hogCI
    :target: https://travis-ci.com/andife/hoggorm
+
+.. image:: https://app.codacy.com/project/badge/Grade/16c4487ca1b945a28af18f44f04be0d5    
+    :target: https://www.codacy.com/gh/andife/hoggorm/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=andife/hoggorm&amp;utm_campaign=Badge_Grade
    
 .. image:: https://bestpractices.coreinfrastructure.org/projects/4359/badge
    :target: https://bestpractices.coreinfrastructure.org/projects/4359
@@ -119,6 +110,18 @@ Installation
 
 Using pip
 *********
+
+.. image:: https://pepy.tech/badge/hoggorm
+    :target: https://pepy.tech/project/hoggorm
+    :alt: PyPI Downloads
+
+.. image:: https://pepy.tech/badge/hoggorm/month
+    :target: https://pepy.tech/project/hoggorm/month
+    :alt: PyPI Downloads
+
+.. image:: https://pepy.tech/badge/hoggorm/week
+    :target: https://pepy.tech/project/hoggorm/week
+    :alt: PyPI Downloads
 
 Install hoggorm easily from the command line from the `PyPI - the Python Packaging Index`_.
 
