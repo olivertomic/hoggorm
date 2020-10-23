@@ -57,6 +57,14 @@ Examples
     :target: https://colab.research.google.com/github/olivertomic/hoggorm/blob/master/examples/RV_%26_RV2/RV_and_RV2_on_sensory_and_fluorescence_data.ipynb
     :alt: Open In Colab
 
+.. |ColabPCRCheese| image:: https://colab.research.google.com/assets/colab-badge.svg
+    :target: https://github.com/olivertomic/hoggorm/blob/master/examples/PCR/PCR_on_sensory_and_fluorescence_data.ipynb
+    :alt: Open In Colab
+
+.. |ColabPLSR2Cheese| image:: https://colab.research.google.com/assets/colab-badge.svg
+    :target: https://github.com/olivertomic/hoggorm/blob/master/examples/PLSR/PLSR_on_sensory_and_fluorescence_data.ipynb
+    :alt: Open In Colab
+
 Below are links to some Jupyter notebooks that illustrate how to use hoggorm and hoggormplot with the methods mentioned above. All examples are also found in the `examples`_ folder.
 
 - Jupyter notebooks with examples of how to use hoggorm
@@ -66,11 +74,11 @@ Below are links to some Jupyter notebooks that illustrate how to use hoggorm and
 		- `PCA on NIR spectroscopy data`_ measured on gasoline
 		- `PCA on sensory data`_ measured on cheese
   - for `PCR`_
-		- `PCR on sensory and fluorescence spectroscopy data`_ measured on cheese
+		- `PCR on sensory and fluorescence spectroscopy data`_ measured on cheese |ColabPCRCheese|
   - for `PLSR1`_ for univariate response (one response variable)
     	- `PLSR1 on NIR spectroscopy and octane data`_ measured on gasoline
   - for `PLSR2`_ for multivariate response (multiple response variables)
-    	- `PLSR2 on sensory and fluorescence spectroscopy data`_ measured on cheese
+    	- `PLSR2 on sensory and fluorescence spectroscopy data`_ measured on cheese |ColabPLSR2Cheese|
   - for matrix correlation coefficients `RV and RV2`_
 		- `RV and RV2 coefficient on sensory and fluorescence spectroscopy data`_ measured on cheese |ColabSensory| |BinderSensory|
   - for the `SMI`_ (similarity of matrix index)
