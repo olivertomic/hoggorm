@@ -13,8 +13,8 @@ hoggorm
 .. image:: https://codecov.io/gh/andife/hoggorm/branch/hogCI/graph/badge.svg?token=IWQHXZQY4F
    :target: https://codecov.io/gh/andife/hoggorm/branch/hogCI
 
-.. image:: https://github.com/mansenfranzen/hoggorm/workflows/ci-build/badge.svg?branch=ci_github_actions&event=push
-   :target: https://github.com/mansenfranzen/hoggorm/actions?query=workflow%3Aci-build
+.. image:: https://github.com/andife/hoggorm/workflows/ci-build/badge.svg?branch=ci_github_actions&event=push
+   :target: https://github.com/andife/hoggorm/actions?query=workflow%3Aci-build
 
 .. image:: https://travis-ci.com/andife/hoggorm.svg?branch=hogCI
    :target: https://travis-ci.com/andife/hoggorm
@@ -61,11 +61,11 @@ Examples
     :alt: Open In Colab
 
 .. |ColabPCRCheese| image:: https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://github.com/olivertomic/hoggorm/blob/master/examples/PCR/PCR_on_sensory_and_fluorescence_data.ipynb
+    :target: https://colab.research.google.com/github/olivertomic/hoggorm/blob/master/examples/PCR/PCR_on_sensory_and_fluorescence_data.ipynb
     :alt: Open In Colab
 
 .. |ColabPLSR2Cheese| image:: https://colab.research.google.com/assets/colab-badge.svg
-    :target: https://github.com/olivertomic/hoggorm/blob/master/examples/PLSR/PLSR_on_sensory_and_fluorescence_data.ipynb
+    :target: https://colab.research.google.com/github/olivertomic/hoggorm/blob/master/examples/PLSR/PLSR_on_sensory_and_fluorescence_data.ipynb
     :alt: Open In Colab
 
 Below are links to some Jupyter notebooks that illustrate how to use hoggorm and hoggormplot with the methods mentioned above. All examples are also found in the `examples`_ folder.
