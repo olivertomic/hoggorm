@@ -1,7 +1,7 @@
 '''
 Test whether PCR results are as expected.
 '''
-import os.path as osp
+
 import numpy as np
 import pytest
 from hoggorm import nipalsPCR as PCR
@@ -92,14 +92,14 @@ def pcrref(request, datafolder):
     rname = request.param
     refn = "ref_PCR_{}.tsv".format(rname[0].lower() + rname[1:])
     try:
-        refdat = np.loadtxt(osp.join(datafolder, refn))
+        refdat = np.loadtxt(datafolder.joinpath(refn))
     except FileNotFoundError:
         refdat = None
 
     return (rname, refdat)
 
 
-def test_compare_reference(pcrref, pcrcached):
+def test_compare_reference(pcrref, pcrcached, dump_res):
     """
     Check whether numerical outputs are the same (or close enough).
     """
@@ -126,15 +126,6 @@ def test_compare_reference(pcrref, pcrcached):
         assert False, "Difference in {}, data is dumped".format(rname)
     else:
         assert True
-
-
-def dump_res(rname, dat):
-    """
-    Dumps information to file if reference data is missing or difference is larger than tolerance.
-    """
-    dumpfolder = osp.realpath(osp.dirname(__file__))
-    dumpfn = "dump_PCR_{}.tsv".format(rname.lower())
-    np.savetxt(osp.join(dumpfolder, dumpfn), dat, fmt='%.9e', delimiter='\t')
 
 
 def test_api_verify(pcrcached, cfldat):

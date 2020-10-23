@@ -1,7 +1,0 @@
-{
-  "tests/test_pca.py::test_compare_reference": true,
-  "tests/test_pca.py::test_compare_reference[X_cumCalExplVar]": true,
-  "tests/test_pls1.py::test_compare_reference[Y_corrLoadings]": true,
-  "tests/test_pls1.py::test_compare_reference[Y_cumCalExplVar]": true,
-  "tests/test_pls1.py::test_compare_reference[Y_loadings]": true
-}

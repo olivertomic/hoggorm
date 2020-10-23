@@ -1,2 +1,0 @@
-# TODO: Check if it is the correct place
-numpy >= 1.11.3
