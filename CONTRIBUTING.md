@@ -1,11 +1,13 @@
 # Contributing to hoggorm
 
-If you are interested in contributing to hoggorm, your contributions will fall into two categories:
+If you are interested in contributing to hoggorm, your contributions will fall into three categories:
 
 1. You want to implement a new feature:
 ....
 2. You want to fix a bug:
     - Feel free to send a Pull Request any time you encounter a bug. Please provide a clear and concise description of what the bug was. If you are unsure about if this is a bug at all or how to fix, post about it in an issue.
+
+3. Improvement of documentation:
 
 Once you finish implementing a feature or bug-fix, please send a Pull Request to https://github.com/olivertomic/hoggorm
 
@@ -13,7 +15,7 @@ Once you finish implementing a feature or bug-fix, please send a Pull Request to
 
 To develop hoggorm on your machine, here are some tips:
 
-1. Create an enviroment for hoggorm
+1. Create an environment for hoggorm
 
 ```
 conda create -n fork5 python=3.6
