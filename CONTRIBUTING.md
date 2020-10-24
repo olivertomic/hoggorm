@@ -15,17 +15,17 @@ Once you finish implementing a feature or bug-fix, please send a Pull Request to
 
 To develop hoggorm on your machine, here are some tips:
 
-1. Create an environment for hoggorm
+1. Create and activate an environment for hoggorm
 
 ```
-conda create -n fork5 python=3.6
+conda create -n envdevhoggorm python=3.6
+conda activate envdevhoggorm
 ```
 
 2. Clone a copy of hoggorm from source:
 
 ```
-cd tmp5
-git clone https://github.com/andife/hoggorm.git -b hogCI
+git clone https://github.com/olivertomic/hoggorm.git 
 ```
 
 4. Install hoggorm in `dev` and `test` mode:
