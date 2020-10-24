@@ -50,6 +50,9 @@ Run the entire test suite with
 ```
 python setup.py test
 ```
+## Additional Comments
+ * American English is used
+ * We use Semantic Versioning (https://semver.org/)
 
 
 ## Continuous Integration
