@@ -17,7 +17,7 @@ hoggorm
 .. image:: https://codecov.io/gh/andife/hoggorm/branch/hogCI/graph/badge.svg?token=IWQHXZQY4F
    :target: https://codecov.io/gh/andife/hoggorm/branch/hogCI
 
-.. image:: https://github.com/andife/hoggorm/workflows/ci-build/badge.svg?branch=ci_github_actions&event=push
+.. image:: https://github.com/andife/hoggorm/workflows/ci-build/badge.svg?branch=hogCI
    :target: https://github.com/andife/hoggorm/actions?query=workflow%3Aci-build
 
 .. image:: https://travis-ci.com/andife/hoggorm.svg?branch=hogCI
