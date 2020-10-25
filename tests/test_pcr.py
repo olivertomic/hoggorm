@@ -1,18 +1,16 @@
 '''
 Test whether PCR results are as expected.
 '''
-import os.path as osp
+
 import numpy as np
 import pytest
 from hoggorm import nipalsPCR as PCR
-
 
 # If the following equation is element-wise True, then allclose returns True.
 # absolute(a - b) <= (atol + rtol * absolute(b))
 # default: rtol=1e-05, atol=1e-08
 rtol = 1e-05
 atol = 1e-08
-
 
 ATTRS = [
     'modelSettings',
@@ -79,24 +77,29 @@ def pcrcached(cfldat, csedat):
     return PCR(arrX=cfldat, arrY=csedat, cvType=["loo"])
 
 
-testMethods = ["X_scores", "X_loadings", "X_corrLoadings", "X_cumCalExplVar_indVar", "X_cumCalExplVar",
-               "Y_loadings", "Y_corrLoadings", "Y_cumCalExplVar_indVar", "Y_cumCalExplVar"]       
+testMethods = [
+    "X_scores", "X_loadings", "X_corrLoadings", "X_cumCalExplVar_indVar",
+    "X_cumCalExplVar", "Y_loadings", "Y_corrLoadings",
+    "Y_cumCalExplVar_indVar", "Y_cumCalExplVar"
+]
+
+
 @pytest.fixture(params=testMethods)
 def pcrref(request, datafolder):
     """
     Load reference numerical results from file.
     """
     rname = request.param
-    refn = "ref_PCR_{}.tsv".format(rname[0].lower()+rname[1:])
+    refn = "ref_PCR_{}.tsv".format(rname[0].lower() + rname[1:])
     try:
-        refdat = np.loadtxt(osp.join(datafolder, refn))
+        refdat = np.loadtxt(datafolder.joinpath(refn))
     except FileNotFoundError:
         refdat = None
 
     return (rname, refdat)
 
 
-def test_compare_reference(pcrref, pcrcached):
+def test_compare_reference(pcrref, pcrcached, dump_res):
     """
     Check whether numerical outputs are the same (or close enough).
     """
@@ -111,9 +114,11 @@ def test_compare_reference(pcrref, pcrcached):
 
     if refdat is None:
         dump_res(rname, res)
-        assert False, "Missing reference data for {}, data is dumped".format(rname)
+        assert False, "Missing reference data for {}, data is dumped".format(
+            rname)
     elif rname == 'X_cumCalExplVar' or rname == 'Y_cumCalExplVar':
-        if not np.allclose(np.array(res[:3]), refdat[:3], rtol=rtol, atol=atol):
+        if not np.allclose(np.array(res[:3]), refdat[:3], rtol=rtol,
+                           atol=atol):
             dump_res(rname, res)
             assert False, "Difference in {}, data is dumped".format(rname)
     elif not np.allclose(res[:, :3], refdat[:, :3], rtol=rtol, atol=atol):
@@ -121,15 +126,6 @@ def test_compare_reference(pcrref, pcrcached):
         assert False, "Difference in {}, data is dumped".format(rname)
     else:
         assert True
-
-
-def dump_res(rname, dat):
-    """
-    Dumps information to file if reference data is missing or difference is larger than tolerance.
-    """
-    dumpfolder = osp.realpath(osp.dirname(__file__))
-    dumpfn = "dump_PCR_{}.tsv".format(rname.lower())
-    np.savetxt(osp.join(dumpfolder, dumpfn), dat, fmt='%.9e', delimiter='\t')
 
 
 def test_api_verify(pcrcached, cfldat):
@@ -142,8 +138,8 @@ def test_api_verify(pcrcached, cfldat):
             res = pcrcached.X_scores_predict(Xnew=cfldat)
             print('fn:', 'X_scores_predict')
             print('type(res):', type(res))
-            print('shape:', res.shape,  '\n\n')
-        else:    
+            print('shape:', res.shape, '\n\n')
+        else:
             res = getattr(pcrcached, fn)()
             print('fn:', fn)
             print('type(res):', type(res))
@@ -157,19 +153,36 @@ def test_constructor_api_variants(cfldat, csedat):
     """
     Check whether various combinations of keyword arguments work.
     """
-    pcr1 = PCR(arrX=cfldat, arrY=csedat, numComp=3, Xstand=False, Ystand=False, cvType=["loo"])
+    pcr1 = PCR(arrX=cfldat,
+               arrY=csedat,
+               numComp=3,
+               Xstand=False,
+               Ystand=False,
+               cvType=["loo"])
     print('pcr1', pcr1)
     pcr2 = PCR(cfldat, csedat)
     print('pcr2', pcr2)
     pcr3 = PCR(cfldat, csedat, numComp=200, cvType=["loo"])
     print('pcr3', pcr3)
-    pcr4 = PCR(arrX=cfldat, arrY=csedat, cvType=["loo"], numComp=5, Xstand=False, Ystand=False)
+    pcr4 = PCR(arrX=cfldat,
+               arrY=csedat,
+               cvType=["loo"],
+               numComp=5,
+               Xstand=False,
+               Ystand=False)
     print('pcr4', pcr4)
     pcr5 = PCR(arrX=cfldat, arrY=csedat, Xstand=True, Ystand=True)
     print('pcr5', pcr5)
-    pcr6 = PCR(arrX=cfldat, arrY=csedat, numComp=2, Xstand=False, cvType=["KFold", 3])
+    pcr6 = PCR(arrX=cfldat,
+               arrY=csedat,
+               numComp=2,
+               Xstand=False,
+               cvType=["KFold", 3])
     print('pcr6', pcr6)
-    pcr7 = PCR(arrX=cfldat, arrY=csedat, numComp=2, Xstand=False, cvType=["lolo", [1, 2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5, 6, 7]])
+    pcr7 = PCR(arrX=cfldat,
+               arrY=csedat,
+               numComp=2,
+               Xstand=False,
+               cvType=["lolo", [1, 2, 3, 4, 5, 6, 7, 1, 2, 3, 4, 5, 6, 7]])
     print('pcr7', pcr7)
     assert True
-

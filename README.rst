@@ -1,20 +1,12 @@
 hoggorm
 =======
 
+.. image:: https://api.codacy.com/project/badge/Grade/b161e47219a04f6483dd47932237ea54
+   :alt: Codacy Badge
+   :target: https://app.codacy.com/gh/andife/hoggorm?utm_source=github.com&utm_medium=referral&utm_content=andife/hoggorm&utm_campaign=Badge_Grade_Settings
+
 .. image:: https://img.shields.io/pypi/l/hoggorm.svg
     :target: https://github.com/olivertomic/hoggorm/blob/master/LICENSE
-
-.. image:: https://pepy.tech/badge/hoggorm
-    :target: https://pepy.tech/project/hoggorm
-    :alt: PyPI Downloads
-
-.. image:: https://pepy.tech/badge/hoggorm/month
-    :target: https://pepy.tech/project/hoggorm/month
-    :alt: PyPI Downloads
-
-.. image:: https://pepy.tech/badge/hoggorm/week
-    :target: https://pepy.tech/project/hoggorm/week
-    :alt: PyPI Downloads
 
 .. image:: https://readthedocs.org/projects/hoggorm/badge/?version=latest
     :target: https://hoggorm.readthedocs.io/en/latest/?badge=latest
@@ -22,7 +14,21 @@ hoggorm
 .. image:: http://joss.theoj.org/papers/10.21105/joss.00980/status.svg
    :target: https://doi.org/10.21105/joss.00980
 
+.. image:: https://codecov.io/gh/andife/hoggorm/branch/hogCI/graph/badge.svg?token=IWQHXZQY4F
+   :target: https://codecov.io/gh/andife/hoggorm/branch/hogCI
 
+.. image:: https://github.com/andife/hoggorm/workflows/ci-build/badge.svg?branch=hogCI
+   :target: https://github.com/andife/hoggorm/actions?query=workflow%3Aci-build
+
+.. image:: https://travis-ci.com/andife/hoggorm.svg?branch=hogCI
+   :target: https://travis-ci.com/andife/hoggorm
+
+.. image:: https://app.codacy.com/project/badge/Grade/16c4487ca1b945a28af18f44f04be0d5    
+    :target: https://www.codacy.com/gh/andife/hoggorm/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=andife/hoggorm&amp;utm_campaign=Badge_Grade
+   
+.. image:: https://bestpractices.coreinfrastructure.org/projects/4359/badge
+   :target: https://bestpractices.coreinfrastructure.org/projects/4359
+   
 hoggorm is a Python package for explorative multivariate statistics in Python. It contains the following methods:
 
 * PCA (principal component analysis)
@@ -34,7 +40,7 @@ hoggorm is a Python package for explorative multivariate statistics in Python. I
 * matrix correlation coefficients RV, RV2 and SMI.
 
 Unlike `scikit-learn`_, which is an excellent python machine learning package focusing on classification, regression, clustering and predicition, hoggorm rather aims at understanding and interpretation of the variance in the data. hoggorm also contains tools for prediction.
-The complementary package `hoggormplot`_ can be used for visualisation of results of models trained with hoggorm. 
+The complementary package `hoggormplot`_ can be used for visualization of results of models trained with hoggorm. 
 
 .. _scikit-learn: https://scikit-learn.org/stable/
 .. _hoggormplot: https://github.com/olivertomic/hoggormPlot
@@ -58,6 +64,14 @@ Examples
     :target: https://colab.research.google.com/github/olivertomic/hoggorm/blob/master/examples/RV_%26_RV2/RV_and_RV2_on_sensory_and_fluorescence_data.ipynb
     :alt: Open In Colab
 
+.. |ColabPCRCheese| image:: https://colab.research.google.com/assets/colab-badge.svg
+    :target: https://colab.research.google.com/github/olivertomic/hoggorm/blob/master/examples/PCR/PCR_on_sensory_and_fluorescence_data.ipynb
+    :alt: Open In Colab
+
+.. |ColabPLSR2Cheese| image:: https://colab.research.google.com/assets/colab-badge.svg
+    :target: https://colab.research.google.com/github/olivertomic/hoggorm/blob/master/examples/PLSR/PLSR_on_sensory_and_fluorescence_data.ipynb
+    :alt: Open In Colab
+
 Below are links to some Jupyter notebooks that illustrate how to use hoggorm and hoggormplot with the methods mentioned above. All examples are also found in the `examples`_ folder.
 
 - Jupyter notebooks with examples of how to use hoggorm
@@ -67,11 +81,11 @@ Below are links to some Jupyter notebooks that illustrate how to use hoggorm and
 		- `PCA on NIR spectroscopy data`_ measured on gasoline
 		- `PCA on sensory data`_ measured on cheese
   - for `PCR`_
-		- `PCR on sensory and fluorescence spectroscopy data`_ measured on cheese
+		- `PCR on sensory and fluorescence spectroscopy data`_ measured on cheese |ColabPCRCheese|
   - for `PLSR1`_ for univariate response (one response variable)
     	- `PLSR1 on NIR spectroscopy and octane data`_ measured on gasoline
   - for `PLSR2`_ for multivariate response (multiple response variables)
-    	- `PLSR2 on sensory and fluorescence spectroscopy data`_ measured on cheese
+    	- `PLSR2 on sensory and fluorescence spectroscopy data`_ measured on cheese |ColabPLSR2Cheese|
   - for matrix correlation coefficients `RV and RV2`_
 		- `RV and RV2 coefficient on sensory and fluorescence spectroscopy data`_ measured on cheese |ColabSensory| |BinderSensory|
   - for the `SMI`_ (similarity of matrix index)
@@ -112,6 +126,18 @@ Installation
 Using pip
 *********
 
+.. image:: https://pepy.tech/badge/hoggorm
+    :target: https://pepy.tech/project/hoggorm
+    :alt: PyPI Downloads
+
+.. image:: https://pepy.tech/badge/hoggorm/month
+    :target: https://pepy.tech/project/hoggorm/month
+    :alt: PyPI Downloads
+
+.. image:: https://pepy.tech/badge/hoggorm/week
+    :target: https://pepy.tech/project/hoggorm/week
+    :alt: PyPI Downloads
+
 Install hoggorm easily from the command line from the `PyPI - the Python Packaging Index`_.
 
 .. _PyPI - the Python Packaging Index: https://pypi.python.org/pypi
@@ -146,7 +172,7 @@ Documentation
 - Jupyter notebooks with `examples`_ of how to use Hoggorm together with the complementary plotting package `hoggormplot`_.
   
   
-.. _Read the Docs: http://hoggorm.readthedocs.io/en/latest
+.. _Read the Docs: https://hoggorm.readthedocs.io/en/latest/
 .. _examples: https://github.com/olivertomic/hoggorm/tree/master/examples
 .. _hoggormplot: https://github.com/olivertomic/hoggormPlot
 

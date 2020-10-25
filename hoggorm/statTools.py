@@ -4,7 +4,6 @@ import numpy
 import numpy.linalg
 
 
-
 def ortho(arr1, arr2):
     """
     This function orthogonalises arr1 with respect to arr2. The function then
@@ -42,7 +41,6 @@ def ortho(arr1, arr2):
     arr1_orth = numpy.dot((I - term3), arr1)
 
     return arr1_orth
-
 
 
 def center(arr, axis=0):
@@ -89,7 +87,6 @@ def center(arr, axis=0):
     return centX
 
 
-
 def standardise(arr, mode=0):
     """
     This function standardises the input array either
@@ -128,7 +125,6 @@ def standardise(arr, mode=0):
         centX = X - colMeans
         stdX = centX / colSTD
 
-
     # Standardisation of row-wise
     # Transpose array first, such that broadcasting procedure works easier.
     # After standardisation transpose back to get final array.
@@ -141,7 +137,6 @@ def standardise(arr, mode=0):
         stdX = numpy.transpose(stdTransX)
 
     return stdX
-
 
 
 def matrixRank(arr, tol=1e-8):
@@ -170,7 +165,7 @@ def matrixRank(arr, tol=1e-8):
 
     """
     if len(arr.shape) != 2:
-        raise ValueError('Input must be a 2-d array or Matrix object')
+        raise ValueError("Input must be a 2-d array or Matrix object")
 
     s = numpy.linalg.svd(arr, compute_uv=0)
     return numpy.sum(numpy.where(s > tol, 1, 0))

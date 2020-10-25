@@ -13,18 +13,18 @@ hoggorm is a Python package for explorative multivariate statistics in Python. I
 
 Unlike `scikit-learn`_, which is an excellent Python machine learning package focusing on classification and prediction, hoggorm rather aims at understanding and interpretation of the variance in the data. hoggorm also contains tools for prediction.
 
-.. _scikit-learn: http://scikit-learn.org/stable/
+.. _scikit-learn: https://scikit-learn.org/stable/
 
 .. note:: Results computed with the hoggorm package can be visualised using plotting functions implemented in the complementary `hoggormplot`_ package.
 
-.. _hoggormplot: http://hoggormplot.readthedocs.io/en/latest/index.html
+.. _hoggormplot: https://hoggormplot.readthedocs.io/en/latest/index.html
 
 
 Requirements
 ------------
 Make sure that Python 3.5 or higher is installed. A convenient way to install Python and many useful packages for scientific computing is to use the `Anaconda distribution`_.
 
-.. _Anaconda distribution: https://www.anaconda.com/download/
+.. _Anaconda distribution: https://www.anaconda.com/products/individual
 
 - numpy >= 1.11.3
 
@@ -37,7 +37,7 @@ Installation
 
 Install hoggorm easily from the command line from the `PyPI - the Python Packaging Index`_. 
 
-.. _PyPI - the Python Packaging Index: https://pypi.python.org/pypi
+.. _PyPI - the Python Packaging Index: https://pypi.org/
 
 .. code-block:: bash
 

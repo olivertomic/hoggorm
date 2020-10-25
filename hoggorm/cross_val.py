@@ -13,13 +13,12 @@ License: BSD Style.
 
 """
 
-
-
 import numpy as np
 
 try:
     from itertools import combinations
 except:  # Using Python < 2.6
+
     def combinations(seq, r=None):
         """Generator returning combinations of items from sequence <seq>
         taken <r> at a time. Order is not significant. If <r> is not given,
@@ -31,8 +30,8 @@ except:  # Using Python < 2.6
             yield []
         else:
             for i in range(len(seq)):
-                for cc in combinations(seq[i+1:], r-1):
-                    yield [seq[i]]+cc
+                for cc in combinations(seq[i + 1:], r - 1):
+                    yield [seq[i]] + cc
 
 
 ################################################################################
@@ -41,7 +40,6 @@ class LeaveOneOut(object):
     Leave-One-Out cross validation iterator:
     Provides train/test indexes to split data in train test sets
     """
-
     def __init__(self, n):
         """
         Leave-One-Out cross validation iterator:
@@ -69,21 +67,20 @@ class LeaveOneOut(object):
         """
         self.n = n
 
-
     def __iter__(self):
         n = self.n
         for i in range(n):
-            test_index  = np.zeros(n, dtype=np.bool)
+            test_index = np.zeros(n, dtype=np.bool)
             test_index[i] = True
             train_index = np.logical_not(test_index)
             yield train_index, test_index
 
-
     def __repr__(self):
-        return '%s.%s(n=%i)' % (self.__class__.__module__,
-                                self.__class__.__name__,
-                                self.n,
-                                )
+        return "%s.%s(n=%i)" % (
+            self.__class__.__module__,
+            self.__class__.__name__,
+            self.n,
+        )
 
 
 ################################################################################
@@ -93,7 +90,6 @@ class LeavePOut(object):
     Provides train/test indexes to split data in train test sets
 
     """
-
     def __init__(self, n, p):
         """
         Leave-P-Out cross validation iterator:
@@ -125,7 +121,6 @@ class LeavePOut(object):
         self.n = n
         self.p = p
 
-
     def __iter__(self):
         n = self.n
         p = self.p
@@ -136,9 +131,8 @@ class LeavePOut(object):
             train_index = np.logical_not(test_index)
             yield train_index, test_index
 
-
     def __repr__(self):
-        return '%s.%s(n=%i, p=%i)' % (
+        return "%s.%s(n=%i, p=%i)" % (
             self.__class__.__module__,
             self.__class__.__name__,
             self.n,
@@ -152,7 +146,6 @@ class KFold(object):
     K-Folds cross validation iterator:
     Provides train/test indexes to split data in train test sets
     """
-
     def __init__(self, n, k):
         """
         K-Folds cross validation iterator:
@@ -181,29 +174,27 @@ class KFold(object):
         -----
         All the folds have size trunc(n/k), the last one has the complementary
         """
-        assert k > 0, ValueError('cannot have k below 1')
-        assert k < n, ValueError('cannot have k=%d greater than %d' % (k, n))
+        assert k > 0, ValueError("cannot have k below 1")
+        assert k < n, ValueError("cannot have k=%d greater than %d" % (k, n))
         self.n = n
         self.k = k
-
 
     def __iter__(self):
         n = self.n
         k = self.k
-        j = np.int(np.ceil(n/k))
+        j = np.int(np.ceil(n / k))
 
         for i in range(k):
-            test_index  = np.zeros(n, dtype=np.bool)
-            if i < k-1:
-                test_index[i*j:(i+1)*j] = True
+            test_index = np.zeros(n, dtype=np.bool)
+            if i < k - 1:
+                test_index[i * j:(i + 1) * j] = True
             else:
-                test_index[i*j:] = True
+                test_index[i * j:] = True
             train_index = np.logical_not(test_index)
             yield train_index, test_index
 
-
     def __repr__(self):
-        return '%s.%s(n=%i, k=%i)' % (
+        return "%s.%s(n=%i, k=%i)" % (
             self.__class__.__module__,
             self.__class__.__name__,
             self.n,
@@ -217,7 +208,6 @@ class LeaveOneLabelOut(object):
     Leave-One-Label_Out cross-validation iterator:
     Provides train/test indexes to split data in train test sets
     """
-
     def __init__(self, labels):
         """
         Leave-One-Label_Out cross validation:
@@ -252,19 +242,17 @@ class LeaveOneLabelOut(object):
         """
         self.labels = labels
 
-
     def __iter__(self):
         # We make a copy here to avoid side-effects during iteration
         labels = np.array(self.labels, copy=True)
         for i in np.unique(labels):
-            test_index  = np.zeros(len(labels), dtype=np.bool)
+            test_index = np.zeros(len(labels), dtype=np.bool)
             test_index[labels == i] = True
             train_index = np.logical_not(test_index)
             yield train_index, test_index
 
-
     def __repr__(self):
-        return '%s.%s(labels=%s)' % (
+        return "%s.%s(labels=%s)" % (
             self.__class__.__module__,
             self.__class__.__name__,
             self.labels,
@@ -280,16 +268,16 @@ def split(train_indexes, test_indexes, *args):
     for arg in args:
         arg = np.asanyarray(arg)
         arg_train = arg[train_indexes]
-        arg_test  = arg[test_indexes]
+        arg_test = arg[test_indexes]
         ret.append(arg_train)
         ret.append(arg_test)
     return ret
 
 
-'''
+"""
  >>> cv = ho.LeaveOneLabelOut(X, y) # y making y optional and
 possible to add other arrays of the same shape[0] too
  >>> for X_train, y_train, X_test, y_test in cv:
  ...      print np.sqrt((model.fit(X_train, y_train).predict(X_test)
 - y_test) ** 2).mean())
-'''
+"""

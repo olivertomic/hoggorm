@@ -1,8 +1,5 @@
-# -*- coding: utf-8 -*-
-"""A setuptools based setup module.
-See:
-https://packaging.python.org/en/latest/distributing.html
-https://github.com/pypa/sampleproject
+#!/usr/bin/env python
+"""The setup script.
 
 How to make a new release:
 
@@ -23,7 +20,9 @@ Tag the new release
 > git tag -a vX.Y.Z -m "Tag release X.Y.Z"
 > git push origin --tags
 """
-from setuptools import setup, find_packages
+
+
+from setuptools import setup
 
 
 setup()
