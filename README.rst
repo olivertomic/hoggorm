@@ -14,14 +14,11 @@ hoggorm
 .. image:: http://joss.theoj.org/papers/10.21105/joss.00980/status.svg
    :target: https://doi.org/10.21105/joss.00980
 
-.. image:: https://codecov.io/gh/andife/hoggorm/branch/hogCI/graph/badge.svg?token=IWQHXZQY4F
-   :target: https://codecov.io/gh/andife/hoggorm/branch/hogCI
+.. image:: https://codecov.io/gh/olivertomic/hoggorm/branch/master/graph/badge.svg?token=IWQHXZQY4F
+   :target: https://codecov.io/gh/olivertomic/hoggorm/branch/master
 
-.. image:: https://github.com/andife/hoggorm/workflows/ci-build/badge.svg?branch=hogCI
-   :target: https://github.com/andife/hoggorm/actions?query=workflow%3Aci-build
-
-.. image:: https://travis-ci.com/andife/hoggorm.svg?branch=hogCI
-   :target: https://travis-ci.com/andife/hoggorm
+.. image:: https://github.com/olivertomic/hoggorm/workflows/ci-build/badge.svg?branch=hogCI
+   :target: https://github.com/olivertomic/hoggorm/actions?query=workflow%3Aci-build
 
 .. image:: https://app.codacy.com/project/badge/Grade/16c4487ca1b945a28af18f44f04be0d5    
     :target: https://www.codacy.com/gh/andife/hoggorm/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=andife/hoggorm&amp;utm_campaign=Badge_Grade
