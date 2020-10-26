@@ -13,9 +13,9 @@ hoggorm
 .. image:: https://codecov.io/gh/olivertomic/hoggorm/branch/master/graph/badge.svg?token=IWQHXZQY4F
    :target: https://codecov.io/gh/olivertomic/hoggorm/branch/master
 
-.. image:: https://github.com/olivertomic/hoggorm/workflows/ci-build/badge.svg?branch=hogCI
+.. image:: https://github.com/olivertomic/hoggorm/workflows/ci-build/badge.svg?branch=master
    :target: https://github.com/olivertomic/hoggorm/actions?query=workflow%3Aci-build
-
+   
 .. image:: https://app.codacy.com/project/badge/Grade/16c4487ca1b945a28af18f44f04be0d5    
     :target: https://www.codacy.com/gh/andife/hoggorm/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=andife/hoggorm&amp;utm_campaign=Badge_Grade
    
