@@ -15,10 +15,10 @@ class nipalsPLS2:
     PARAMETERS
     ----------
     arrX : numpy array
-        This is X in the PCR model. Number and order of objects (rows) must match those of ``arrY``.
+        This is X in the PLS2 model. Number and order of objects (rows) must match those of ``arrY``.
 
     arrY : numpy array
-        This is Y in the PCR model. Number and order of objects (rows) must match those of ``arrX``.
+        This is Y in the PLS2 model. Number and order of objects (rows) must match those of ``arrX``.
 
     numComp : int, optional
         An integer that defines how many components are to be computed. If not provided, the maximum possible number of components is used.
