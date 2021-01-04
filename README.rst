@@ -194,7 +194,7 @@ Bibtex entry:
       journal={The Journal of Open Source Software},
       volume={4},
       number={39},
-      year={2019}
+      year={2019},
       doi={10.21105/joss.00980},
       url={http://joss.theoj.org/papers/10.21105/joss.00980}
     }
