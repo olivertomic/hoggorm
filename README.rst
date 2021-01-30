@@ -1,10 +1,6 @@
 hoggorm
 =======
 
-.. image:: https://api.codacy.com/project/badge/Grade/b161e47219a04f6483dd47932237ea54
-   :alt: Codacy Badge
-   :target: https://app.codacy.com/gh/andife/hoggorm?utm_source=github.com&utm_medium=referral&utm_content=andife/hoggorm&utm_campaign=Badge_Grade_Settings
-
 .. image:: https://img.shields.io/pypi/l/hoggorm.svg
     :target: https://github.com/olivertomic/hoggorm/blob/master/LICENSE
 
@@ -20,7 +16,8 @@ hoggorm
 .. image:: https://github.com/olivertomic/hoggorm/workflows/ci-build/badge.svg?branch=master
    :target: https://github.com/olivertomic/hoggorm/actions?query=workflow%3Aci-build
    
-.. image:: https://app.codacy.com/project/badge/Grade/16c4487ca1b945a28af18f44f04be0d5    
+.. image:: https://app.codacy.com/project/badge/Grade/16c4487ca1b945a28af18f44f04be0d5
+    :alt: Codacy Badge	
     :target: https://www.codacy.com/gh/andife/hoggorm/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=andife/hoggorm&amp;utm_campaign=Badge_Grade
    
 .. image:: https://bestpractices.coreinfrastructure.org/projects/4359/badge
