@@ -109,7 +109,7 @@ Below are links to some Jupyter notebooks that illustrate how to use hoggorm and
 
 Requirements
 ------------
-Make sure that Python 3.5 or higher is installed. A convenient way to install Python and many useful packages for scientific computing is to use the `Anaconda distribution`_.
+Make sure that Python 3.6 or higher is installed. A convenient way to install Python and many useful packages for scientific computing is to use the `Anaconda distribution`_.
 
 .. _Anaconda distribution: https://www.anaconda.com/download/
 
